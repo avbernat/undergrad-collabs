@@ -1,0 +1,43 @@
+---
+title: "Title"
+author: "Ana"
+date: "8/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# some libraries you'll need for the Kruskal-Wallis test
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Read the data**
+
+```{r}
+
+```
+
+
+```{r}
+# y = distance
+# x = chamber
+pwc <- data %>% 
+  dunn_test(y ~ x, p.adjust.method = "bonferroni")
+pwc <- pwc %>% add_xy_position(x = "x")
+
+res.kruskal <- data %>% kruskal_test(y ~ x)
+res.kruskal
+
+ggboxplot(data, x = "x", y = "y") +
+  stat_pvalue_manual(pwc, hide.ns = TRUE) +
+  labs(
+    subtitle = get_test_label(res.kruskal, detailed = TRUE),
+    caption = get_pwc_label(pwc)
+  )
+```
+
+
+
