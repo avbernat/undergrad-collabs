@@ -427,8 +427,12 @@ cls()
 #data_path = r"/Users/anasilberg/Desktop/all_dispersal_data_latest4.csv"
 
 # Winter 2020
-path = r"/Users/anasilberg/Desktop/voltage_noise/edits/standardized_files/"
-data_path = r"/Users/anasilberg/Desktop/voltage_noise/voltage_noise_edits/data/all_flight_trials-time-processed-July14.2020.csv"
+folderpath = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise"
+path = folderpath + "/standardized_files/" 
+datapath = folderpath + "/data/all_flight_trials-time-processed-Aug6.2020.csv"
+
+#path = r"/Users/anasilberg/Desktop/voltage_noise/edits/standardized_files/"
+#data_path = r"/Users/anasilberg/Desktop/voltage_noise/voltage_noise_edits/data/all_flight_trials-time-processed-July14.2020.csv"
 
 #row_IDs = get_IDs(data_path) #uncomment this if file does not have the ID in its name  
 row_IDs=[] #empty list
@@ -611,7 +615,8 @@ for file in dir_list:
 
 # All Flight Stats Summary File
 
-outpath = r"/Users/anasilberg/Desktop/"
+#outpath = r"/Users/anasilberg/Desktop/"
+outpath = folderpath + "/data/"
 with open(outpath + "flight_stats_summary_winter2020.csv", "w") as csv_file:
     writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys())
     writer.writeheader()

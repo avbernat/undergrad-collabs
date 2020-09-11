@@ -17,10 +17,13 @@ from datetime import datetime, date
 # Merge 1. Demographics data with flight trial data.
 #***************************************************************************************
 
-main_path = r"/Users/anasilberg/Desktop/voltage_noise/voltage_noise_edits/data/"
-
+main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/data/"
 demographics_data = main_path + "demographic_data_winter2020-coors.corrected.csv"
-trial_data = main_path + "all_flight_trials-time-processed-July14.2020.csv" #renamed from Aug6
+trial_data = main_path + "all_flight_trials-time-processed-Aug6.2020.csv"
+
+#main_path = r"/Users/anasilberg/Desktop/voltage_noise/voltage_noise_edits/data/"
+#demographics_data = main_path + "demographic_data_winter2020-coors.corrected.csv"
+#trial_data = main_path + "all_flight_trials-time-processed-July14.2020.csv" #renamed from Aug6
 
 county_dict = {"Gainesville": "Alachua",
                "Homestead": "Miami-Dade",
