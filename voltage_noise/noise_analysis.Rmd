@@ -110,7 +110,7 @@ ggplot(data, aes(chamber, distance)) +
 
 A Kruskal-Wallis test was conducted to examine the differences on distance flown (m) by bugs who did not fly according to chamber. No significant differences (Chi-square = 1.13, p = 0.77, df = 3) were found among the four chamber categories.
 
-If there was a difference, then you would say there was a statistically significant difference in pain score between the different chambers (....), with mean rank distance of ___ for chamber x, ____ for chamber y, ____ for chamber z, etc.
+If there was a difference, then you would say there was a statistically significant difference in distance between the different chambers (....), with mean rank distance of ___ for chamber x, ____ for chamber y, ____ for chamber z, etc.
 
 **Sources:**
 
