@@ -73,7 +73,7 @@ with open(trial_data, "r") as all_data:
     reader = csv.DictReader(all_data)
     for r in reader:
         row_data = {}
-        ID_num = r["ID"] #removed \ufeff
+        ID_num = r["\ufeffID"] #removed \ufeff
         population = r["population"]
         try:
             sex = sex_dict[ID_num]
@@ -234,7 +234,7 @@ morph_measurements = {}
 with open(morphology_data, "r") as morph_data:
     reader = csv.DictReader(morph_data)
     for row in reader:
-        ID = row["ID"] #removed \ufeff
+        ID = row["\ufeffID"] #removed \ufeff
         sex = row["sex"]
         pop = row["population"]
         
