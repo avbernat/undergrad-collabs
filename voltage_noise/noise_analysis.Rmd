@@ -1,37 +1,59 @@
 ---
-title: "Title"
-author: "Ana & Anastasia"
-date: "8/13/2020"
+title: "Kruskal-Wallis test for noise analysis"
+date: "9/11/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm(list=ls()) # list=ls() is base in this command that means you are referring to all the objects present in the workspace
+
 # some libraries you'll need for the Kruskal-Wallis test
 library(tidyverse)
 library(ggpubr)
 library(rstatix)
+library(knitr)
+library(ggplot2)
 
+dir = "~/Desktop/git_repositories/undergrad-collabs/voltage_noise/"
+setwd(dir)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 **Read the data**
 
 ```{r}
-data = 
+data = read_csv("data/allnoise_flight_data-Winter2020.csv")
+data
 ```
 
+**Summary Stats**
 
 ```{r}
-# y = distance
-# x = chamber
-pwc <- data %>% 
-  dunn_test(y ~ x, p.adjust.method = "bonferroni")
-pwc <- pwc %>% add_xy_position(x = "x")
+# count 
+data$tested_b <- 0
+data$tested_b[data$tested == "yes"] <- 1
 
-res.kruskal <- data %>% kruskal_test(y ~ x)
+tapply(X=data$tested_b, INDEX=data$chamber, FUN=sum, na.rm=T)
+
+# sum of distances
+tapply(X=data$distance, INDEX=data$chamber, FUN=sum, na.rm=T)
+
+# mean of distances
+tapply(X=data$distance, INDEX=data$chamber, FUN=mean, na.rm=T)
+```
+
+**Kruskal-Wallis**
+
+```{r}
+# pwc = "Pairwise Wilcoxon test" between groups
+pwc <- data %>% 
+  dunn_test(distance ~ chamber, p.adjust.method = "bonferroni")
+pwc <- pwc %>% add_xy_position(x = "chamber")
+
+res.kruskal <- data %>% kruskal_test(distance ~ chamber)
 res.kruskal
 
-ggboxplot(data, x = "x", y = "y") +
+ggboxplot(data, x = "chamber", y = "distance") +
   stat_pvalue_manual(pwc, hide.ns = TRUE) +
   labs(
     subtitle = get_test_label(res.kruskal, detailed = TRUE),
@@ -39,5 +61,60 @@ ggboxplot(data, x = "x", y = "y") +
   )
 ```
 
+Kruskal-Wallis (sometimes called the "one-way ANOVA on ranks") is a rank-based nonparametric test that be used to detmine if there are statistically significant differences between two or more groups of an independent variable (e.g. chamber) or ordinal dependent variable. It is important to notice that the Kruskal-Wallis H test is an omnibus test statistic and cannot tell you which specific groups your independent variable are statistically significantly different from each other; it tells you that at least two groups were different.
 
+Since you may have three or more groups in your study design, determining which of these groups differ from each other is important. You can do this using a post hoc test.
+
+**4 Assumptions**
+
+0.) Kruskal-Wallis H test does not assume normality.
+
+1.) dependent variable should be measured at teh ordinal or continuous level (i.e. interval or ratio). Yes, we have that - distance is continuous.
+
+2.) independent variable should consist of two or more categorical, independent groups. Yes, chambers are independent groups.
+
+3.) should have independence of observations, which means that there is no relationship between the observations in each group or between the groups themselves. 
+
+4.) need to determine whether the distribution in each group have the same shape (which also means the same variability). This will change how you can interpret the results. If they do have the same shape, can use the K-W to compare the **medians** of your dependent variable. If not, then you can compare the **mean ranks**.
+
+```{r}
+ggplot(data, aes(x=distance, color=chamber)) +
+  geom_histogram(fill="white")
+```
+
+Can see that the distributions do not have the same shape.
+
+Can also plot violin plots instead of boxplots to help visualize more their shapes.
+
+```{r}
+pwc <- data %>% 
+  dunn_test(distance ~ chamber, p.adjust.method = "bonferroni")
+pwc <- pwc %>% add_xy_position(x = "chamber")
+
+pwc # can see differences between test groups if print pwc. None were significant.
+
+ggplot(data, aes(chamber, distance)) + 
+  geom_violin() +
+    labs(
+    subtitle = get_test_label(res.kruskal, detailed = TRUE), 
+    caption = get_pwc_label(pwc)
+    ) + 
+  theme(legend.position="none") +
+  xlab("chamber") +
+  ylab("distance (m)") +
+  geom_boxplot(width=0.1) +
+  stat_pvalue_manual(pwc, hide.ns = TRUE)
+```
+
+**Reporting on the results:**
+
+A Kruskal-Wallis test was conducted to examine the differences on distance flown (m) by bugs who did not fly according to chamber. No significant differences (Chi-square = 1.13, p = 0.77, df = 3) were found among the four chamber categories.
+
+If there was a difference, then you would say there was a statistically significant difference in pain score between the different chambers (....), with mean rank distance of ___ for chamber x, ____ for chamber y, ____ for chamber z, etc.
+
+**Sources:**
+
+Kruskal-Wallis Test in R. *Datanovia*. https://www.datanovia.com/en/lessons/kruskal-wallis-test-in-r/.
+
+Kruskal-Wallis H test using SPSS Statistics. *Laerd statistics*. https://statistics.laerd.com/spss-tutorials/kruskal-wallis-h-test-using-spss-statistics.php.
 
