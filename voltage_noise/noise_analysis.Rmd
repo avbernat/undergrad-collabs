@@ -1,6 +1,6 @@
 ---
 title: "Title"
-author: "Ana"
+author: "Ana & Anastasia"
 date: "8/13/2020"
 output: html_document
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Read the data**
 
 ```{r}
-
+data = 
 ```
 
 
