@@ -16,7 +16,7 @@ username=os.getlogin() #package that talks to operating system
 #print(username)
 
 #Winter 2020
-path = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/noise_txt_files/"
+path = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/test_files/"
 #print(path)
 dir_list = sorted(os.listdir(path))
 
@@ -33,20 +33,30 @@ print("Files and directories in", path, "' :")
 #************************************************************************************************************
 
 def peak_standardization(column):
-    format_column = [] # column of rounded integers
+    format_column = [] # column of rounded values to two decimal places
     new_list=[]
     peaks=[]
     
     for i in range(0, len(column)):
         format_column.append(round(column[i], 2))
 
+    print(format_column[0:10])
     # Threshold values can be modified accordingly.
     channel_mean = (sum(format_column)/len(format_column))
     min_val=round(channel_mean - 0.01, 2) # The default values are set to deliver a fine tune signal standardization
     max_val=round(channel_mean + 0.02, 2) # This max value is .02 + mean rounded to the second decimal place
 
+    print("mean:", channel_mean)
+    print("min value:", min_val)
+    print("max value:", max_val)
+
     for ii in range(0, len(format_column)):
         x=(format_column[ii]-min_val)/(max_val-min_val)
+        if ii == 0 or ii == 1:
+            print("x:", x)
+            print("numerator:", (format_column[ii]-min_val))
+            print("demonator:", (max_val-min_val))
+
         if x < -2:  # used negative 2 a stronger cut off when determining what is a dip in voltage. ??? -2
             new_list.append(1) 
         else:
