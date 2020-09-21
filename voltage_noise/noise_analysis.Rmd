@@ -30,7 +30,7 @@ data
 
 ```{r}
 # count 
-data$tested_b <- 0
+data$tested_b <- 0 #initialized a column, baseline  
 data$tested_b[data$tested == "yes"] <- 1
 
 tapply(X=data$tested_b, INDEX=data$chamber, FUN=sum, na.rm=T)
