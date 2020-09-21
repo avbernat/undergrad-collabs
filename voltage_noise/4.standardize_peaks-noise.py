@@ -17,7 +17,9 @@ username=os.getlogin() #package that talks to operating system
 
 #Winter 2020
 path = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/test_files/"
+
 #print(path)
+
 dir_list = sorted(os.listdir(path))
 
 print("Files and directories in", path, "' :")
@@ -39,12 +41,17 @@ def peak_standardization(column):
     
     for i in range(0, len(column)):
         format_column.append(round(column[i], 2))
+   
+    print(format_column[0:10])
 
     print(format_column[0:10])
     # Threshold values can be modified accordingly.
     channel_mean = (sum(format_column)/len(format_column))
     min_val=round(channel_mean - 0.01, 2) # The default values are set to deliver a fine tune signal standardization
+    print(channel_mean)
+    print(min_val)
     max_val=round(channel_mean + 0.02, 2) # This max value is .02 + mean rounded to the second decimal place
+    print(max_val)
 
     print("mean:", channel_mean)
     print("min value:", min_val)
@@ -61,6 +68,13 @@ def peak_standardization(column):
             new_list.append(1) 
         else:
             new_list.append(0) 
+
+        if ii == 0 or ii==1:
+            print("x:", x)
+            print("numerator:",format_column[ii]-min_val)
+            print("denominator:",max_val-min_val)
+
+
 
     for iii in range(0, len(new_list)-1):
         if new_list[iii] > new_list[iii-1] and new_list[iii] >= new_list[iii+1]:
