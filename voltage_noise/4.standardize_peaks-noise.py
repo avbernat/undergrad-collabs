@@ -11,10 +11,13 @@ import os
 #path = "/Users/anastasiabernat/Desktop/Flight trials_WinDAQ Recordings_Fall 2019/Text Files/"
 #path = "/Users/anastasiabernat/Desktop/odd_text_files/"
 
-#Winter 2020
-path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/noise_txt_files/"
-#path = r"/Users/anasilberg/Desktop/voltage_noise/edits/texts/"
 
+username=os.getlogin() #package that talks to operating system
+#print(username)
+
+#Winter 2020
+path = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/noise_txt_files/"
+#print(path)
 dir_list = sorted(os.listdir(path))
 
 print("Files and directories in", path, "' :")
@@ -120,7 +123,7 @@ for file in dir_list:
     #************************************************************************************************************
     
     #folderpath = r"/Users/anasilberg/Desktop/voltage_noise/edits/standardized_files/standardized_peaks_"
-    folderpath = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/standardized_files/standardized_peaks_"
+    folderpath = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/standardized_files/standardized_peaks_"
     OutputFile = open(folderpath + str(file), mode="w")
     for i in range(0, len(Lines)):
         OutputFile.write('%.2f' % time_column[i] + ", " +
