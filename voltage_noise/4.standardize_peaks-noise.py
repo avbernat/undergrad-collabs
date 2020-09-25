@@ -62,13 +62,13 @@ def peak_standardization(column):
             print("denominator:",max_val-min_val)
 
            
-    for ii in range(0, len(new_list)-1): 
+    for j in range(0, len(new_list)-1): 
         # range(1, len(new_list)-1); when we evaluate for i=0, new_list[0 -1]= last element of new list
 
-        vals = f"iii = {ii}, new_list[{ii}] = {new_list[ii]}, new_list[{ii-1}] = {new_list[ii-1]}, new_list[{ii+1}] = {new_list[ii+1]}"
+        vals = f"iii = {j}, new_list[{j}] = {new_list[j]}, new_list[{j-1}] = {new_list[j-1]}, new_list[{j+1}] = {new_list[j+1]}"
         print(vals) #tells us for each value the three things we compared to one another 
        
-        if new_list[ii] > new_list[ii-1] and new_list[ii] >= new_list[ii+1]: 
+        if new_list[j] > new_list[j-1] and new_list[j] >= new_list[j+1]: 
             peaks.append(1)
             #why don't we start range at 1 and not include line 86? AB: try running and see what happens if you remove the -1 
         else:
