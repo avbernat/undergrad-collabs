@@ -11,7 +11,7 @@ import os
 # OUTPUT: peaks, a list of floats. 
 #************************************************************************************************************
 
-def peak_standardization(column):
+def peak_standardization(column, is_noise):
     format_column = [] # column of voltage values rounded to two decimal places
     new_list=[]
     peaks=[]
@@ -25,7 +25,7 @@ def peak_standardization(column):
     channel_mean = (sum(format_column)/len(format_column))
     min_val=round(channel_mean - 0.01, 2) # The default values are set to deliver a fine tune signal standardization
     max_val=round(channel_mean + 0.02, 2) # This max value is .02 + mean rounded to the second decimal place
-
+    # threshold at 0.07 for min_val
     print("mean: ", channel_mean)
     print("min value: ", min_val)
     print("max value: ", max_val)
@@ -50,6 +50,10 @@ def peak_standardization(column):
         # Peak vs. nonpeak threshold  
         if x < -2:  # used negative 2 a stronger cut off when determining what is a dip in voltage. 
         #If our voltage value twice as far below the min value as the min value is from the max value
+            #if format_column[v] < min_val and format_column[v] > 4.0:
+                #print(format_column[v])
+            if is_noise:
+                print(format_column[v])
             new_list.append(1)  # define as peak
         else:
             new_list.append(0) # not a peak
@@ -61,14 +65,14 @@ def peak_standardization(column):
             print("numerator:",format_column[v]-min_val)
             print("denominator:",max_val-min_val)
 
-           
+
+    print("Number of 1's:", sum(new_list)) 
+
     for j in range(0, len(new_list)-1): 
         # range(1, len(new_list)-1); when we evaluate for i=0, new_list[0 -1]= last element of new list
 
-            #range(1, len(new_list)-1); when we evaluate for i=0, new_list[0-1]= last element of new list
-
         vals = f"j = {j}, new_list[{j}] = {new_list[j]}, new_list[{j-1}] = {new_list[j-1]}, new_list[{j+1}] = {new_list[j+1]}"
-        print(vals) #tells us for each value the three things we compared to one another 
+        #print(vals) #tells us for each value the three things we compared to one another 
        
         if new_list[j] > new_list[j-1] and new_list[j] >= new_list[j+1]: 
             peaks.append(1)
@@ -76,7 +80,8 @@ def peak_standardization(column):
         else:
             peaks.append(0)
     peaks.append(0)  
-
+    
+    print("Number of peaks:", sum(peaks)) 
     return peaks 
 
 #new_list evaluates whether voltage vlaue is significant or is it very low relative to max to min range 
@@ -95,13 +100,15 @@ def peak_standardization(column):
 #Winter 2020
 username=os.getlogin() # package that talks to operating system
 path = f"/Users/{username}/Desktop/git_repositories/undergrad-collabs/voltage_noise/test_files/"
-print(path)
+#print(path)
 
 dir_list = sorted(os.listdir(path))
 
 print("Files and directories in", path, "' :")
-    
+
+is_noise = True
 for file in dir_list:
+    print(file)
     if file.startswith("."):
         continue #ignore
     filepath = path + str(file)
@@ -141,7 +148,8 @@ for file in dir_list:
 
     InputFile.close()
 
-    voltage_column = peak_standardization(voltage_column) 
+    voltage_column = peak_standardization(voltage_column, is_noise) 
+    is_noise=False
     #datetime_column = peak_standardization(datetime_column)
     #third_column = peak_standardization(third_column)
     #fourth_column = peak_standardization(fourth_column)
