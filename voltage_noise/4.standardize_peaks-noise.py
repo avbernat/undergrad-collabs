@@ -76,7 +76,7 @@ def peak_standardization(column):
             print("denominator:",max_val-min_val)
 
 
-            #range(1, len(new_list)-1); when we evaluate for i=0, new_list[0 -1]= last element of new list
+            #range(1, len(new_list)-1); when we evaluate for i=0, new_list[0-1]= last element of new list
     for iii in range(0, len(new_list)-1): 
         vals = f"iii = {iii}, new_list[{iii}] = {new_list[iii]}, new_list[{iii-1}] = {new_list[iii-1]}, new_list[{iii+1}] = {new_list[iii+1]}"
         print(vals) #tells us for each value the three things we compared to one another 
