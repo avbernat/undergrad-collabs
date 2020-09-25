@@ -39,7 +39,7 @@ def peak_standardization(column):
     new_list=[]
     peaks=[]
     
-    for i in range(0, len(column)):
+    for i in range(0, len(column)): #rounds data
         format_column.append(round(column[i], 2))
    
     print(format_column[0:10])
@@ -48,44 +48,49 @@ def peak_standardization(column):
     # Threshold values can be modified accordingly.
     channel_mean = (sum(format_column)/len(format_column))
     min_val=round(channel_mean - 0.01, 2) # The default values are set to deliver a fine tune signal standardization
-    print(channel_mean)
-    print(min_val)
     max_val=round(channel_mean + 0.02, 2) # This max value is .02 + mean rounded to the second decimal place
-    print(max_val)
 
-    print("mean:", channel_mean)
-    print("min value:", min_val)
-    print("max value:", max_val)
+    print("mean: ", channel_mean)
+    print("min value: ", min_val)
+    print("max value: ", max_val)
 
-    for ii in range(0, len(format_column)):
-        x=(format_column[ii]-min_val)/(max_val-min_val)
-        if ii == 0 or ii == 1:
+    for ii in range(0, len(format_column)):  
+    #finding instances how voltage value compares to min (ie if less than min by a lot)
+        x=(format_column[ii]-min_val)/(max_val-min_val) 
+        #x says how far we are to min relative to how far the max is from the min. 
+        #Is there a statistical name for x?
+        if ii == 0 or ii == 1: #if x =1, max_val = min_val
             print("x:", x)
             print("numerator:", (format_column[ii]-min_val))
-            print("demonator:", (max_val-min_val))
+            print("denominator:", (max_val-min_val))
 
-        if x < -2:  # used negative 2 a stronger cut off when determining what is a dip in voltage. ??? -2
-            new_list.append(1) 
+        if x < -2:  # used negative 2 a stronger cut off when determining what is a dip in voltage. 
+        #If our voltage value twice as far below the min value as the min value is from the max value
+            new_list.append(1)  
         else:
             new_list.append(0) 
-
+#tells us when there is a really low value; how do all these zeroes and ones get understood as a peak
         if ii == 0 or ii==1:
             print("x:", x)
             print("numerator:",format_column[ii]-min_val)
             print("denominator:",max_val-min_val)
 
 
-
-    for iii in range(0, len(new_list)-1):
-        if new_list[iii] > new_list[iii-1] and new_list[iii] >= new_list[iii+1]:
+            #range(1, len(new_list)-1); when we evaluate for i=0, new_list[0 -1]= last element of new list
+    for iii in range(0, len(new_list)-1): 
+        vals = f"iii = {iii}, new_list[{iii}] = {new_list[iii]}, new_list[{iii-1}] = {new_list[iii-1]}, new_list[{iii+1}] = {new_list[iii+1]}"
+        print(vals) #tells us for each value the three things we compared to one another 
+       
+        if new_list[iii] > new_list[iii-1] and new_list[iii] >= new_list[iii+1]: 
             peaks.append(1)
+            #why don't we start range at 1 and not include line 86?
         else:
             peaks.append(0)
-    peaks.append(0)
+    peaks.append(0)  
 
     return peaks 
 
-
+#new_list evaluates whether voltage vlaue is significant or is it very low relative to max to min range 
 #************************************************************************************************************
 # The flight data file can be called by either defining the complete filepath (for example c:\desktop\recordings
 # \filename.txt) or defining a default path in the section "write the path here" that will be automatically
@@ -95,7 +100,7 @@ def peak_standardization(column):
 
 for file in dir_list:
     if file.startswith("."):
-        continue
+        continue #ignore
     filepath = path + str(file)
     #print(filepath)
 #    filename = input("File path -> ")
@@ -133,7 +138,7 @@ for file in dir_list:
 
     InputFile.close()
 
-    voltage_column = peak_standardization(voltage_column)
+    voltage_column = peak_standardization(voltage_column) 
     #datetime_column = peak_standardization(datetime_column)
     #third_column = peak_standardization(third_column)
     #fourth_column = peak_standardization(fourth_column)
