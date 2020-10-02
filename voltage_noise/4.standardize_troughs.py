@@ -52,10 +52,7 @@ def trough_standardization(column, dev):
 
     troughs.append(0)
 
-    # Stats Print Statements:
-    #print("   mean volt : ", round(channel_mean,2))
-    print("   Number of 1's:", sum(int_list))
-    print("   Number of troughs:", sum(troughs))
+    print("   Number of 1's:", sum(int_list), "   Number of troughs:", sum(troughs), end=' ')
     
     return troughs 
 
@@ -66,11 +63,14 @@ def trough_standardization(column, dev):
 # channels is different the script needs to be edited accordingly.
 #************************************************************************************************************
 
-path = r"/Users/anastasiabernat/Desktop/Flight_scripts/test_files/"
+path = r"/Users/anastasiabernat/Desktop/Flight_scripts/split_files/"
 dir_list = sorted(os.listdir(path))
-fig, axs = plt.subplots(round(len(dir_list)/4),4, figsize=(15, 6), facecolor='w', edgecolor='k')
 
-print("Files in", path, "' :")
+row = round(len(dir_list)/3)
+fig, axs = plt.subplots(row,4, figsize=(15, 3*row), facecolor='w', edgecolor='k')
+fig.tight_layout(pad=6.0)
+
+print("Files in '", path, "' :")
 
 f=0
 for file in dir_list:
@@ -91,16 +91,27 @@ for file in dir_list:
 
     InputFile.close()
 
-    # Plotting diagnostics to identity noise or overly-sensitive files
+    #************************************************************************************************************
+    # Plot diagnostics to identity noise or files with overly-sensitive troughs. Files with little noise and
+    # large troughs will be durable to small changes in deviations. Default here is to test how changes in
+    # the min deviation value changes the number of troughs; however, other threshold values such as max
+    # deviation and the x value threshold.
+    #************************************************************************************************************
+
     deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 1]
     num_troughs = []
     for volt_dev in deviations:
         voltage_col = trough_standardization(voltage_column, volt_dev)
         num_troughs.append(sum(voltage_col))
-    
-    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b')
+        print("   Min deviation val:", volt_dev)
+        
+    axs = axs.flatten()
+    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') # something weird here.
+    # AttributeError: 'numpy.ndarray' object has no attribute 'plot'
     axs[f].set_ylim([min(num_troughs)-1, max(num_troughs)+1])
-    axs[f].title.set_text('Max-Min=%i' %(max(num_troughs)-min(num_troughs)))
+    axs[f].title.set_text(file + '\nMax-Min=%i' %(max(num_troughs)-min(num_troughs)))
+    axs[f].set_xlabel("min_val Deviation")
+    axs[f].set_ylabel("Number of Troughs")
                                                              
     for x,y in zip(deviations, num_troughs):
         label=y
@@ -108,16 +119,16 @@ for file in dir_list:
     f += 1
 
     #************************************************************************************************************
-    # Define the filepath of the output file. Add more channels to the write command line if needed. 
+    # Define the filepath of the output file. Add more channels to the write command line if needed.
+    # Also, define the voltage_col with the specific min deviation value argument above if needed. The default
+    # here is a min deviation value of - 1 V.
     #************************************************************************************************************
     
-    outpath = r"/Users/anastasiabernat/Desktop/Flight_scripts/standardized_files/stand_troughs_"
+    outpath = r"/Users/anastasiabernat/Desktop/Flight_scripts/standardized_files/standardized_"
     OutputFile = open(outpath + str(file), mode="w")
     for i in range(0, len(Lines)):
         OutputFile.write('%.2f' % time_column[i] + ", " +
                          '%.2f' % voltage_col[i] + "\n")
     OutputFile.close()
 
-fig.savefig("full_fig.png") 
-
-# files with little noise should be durable to small changes in deviations 
+fig.savefig("trough_diagnostic.png") 
