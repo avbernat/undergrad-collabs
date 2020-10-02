@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 
-def trough_standardization(column, dev):
+def trough_standardization(column, dev_min, dev_max):
     
     #************************************************************************************************************
     #
@@ -10,10 +10,10 @@ def trough_standardization(column, dev):
     # INPUT:    List of voltage values as floats.
     #
     # PROCESS:  Voltage values are rounded to two decimal places and appended to the volt_column. A confidence
-    #           interval is defined aroudn the mean voltage value using a low (min_value) and high (max_value)
+    #           interval is defined around the mean voltage value using a low (min_value) and high (max_value)
     #           threshold. These values can be defined by the user according to the characteristics of the
     #           voltage recording data. Voltages at or higher than the min value of the confidence interval
-    #           are set to 0 while voltages far below the min_value are set to 1 and identity the presence
+    #           are set to 0 while voltages far below the min_value are set to 1 and identify the presence
     #           of a trough. Thus, a trough can be defined as any large deviance in voltage that is due to
     #           noise or chance. Finally, a list of troughs is created after compressing sequences of 
     #           trough-like identifiers into a single identifier (e.g. compressed sequences of 1s to a single
@@ -30,12 +30,13 @@ def trough_standardization(column, dev):
     int_list =[] # sequences of 0s and 1s. 
     troughs=[]
     
+    print("dev_min is ", dev_min,"    dev_max is ", dev_max)
     for i in range(0, len(column)): 
         volt_column.append(round(column[i], 2))
     
     channel_mean = (sum(volt_column)/len(volt_column))
-    min_val=round(channel_mean - dev, 2) # * # 0.01
-    max_val=round(channel_mean + 0.02, 2) # *
+    min_val=round(channel_mean - dev_min, 2) # * # 0.01 #How min_value is defined--> deviation
+    max_val=round(channel_mean + dev_max, 2) # *
  
     for v in range(0, len(volt_column)):  
         x=(volt_column[v]-min_val)/(max_val-min_val) 
@@ -44,6 +45,9 @@ def trough_standardization(column, dev):
         else:
             int_list.append(0)
 
+    #The if conditional on line 50 looks at the j, j-1, j+1 indices of int_list. 
+    #If we start at 0, the first comparison in the loop looks at 0, -1, and 1
+    #We should start by comparing 0, 1, and 2. The range should start at 1 instead of 0. 
     for j in range(0, len(int_list)-1): 
         if int_list[j] > int_list[j-1] and int_list[j] >= int_list[j+1]: 
             troughs.append(1)
@@ -66,7 +70,8 @@ def trough_standardization(column, dev):
 # channels is different the script needs to be edited accordingly.
 #************************************************************************************************************
 
-path = r"/Users/anastasiabernat/Desktop/Flight_scripts/test_files/"
+username=os.getlogin() # package that talks to operating system
+path = f"/Users/{username}/Desktop/Flight_scripts/test_files/"
 dir_list = sorted(os.listdir(path))
 fig, axs = plt.subplots(round(len(dir_list)/4),4, figsize=(15, 6), facecolor='w', edgecolor='k')
 
@@ -92,13 +97,16 @@ for file in dir_list:
     InputFile.close()
 
     # Plotting diagnostics to identity noise or overly-sensitive files
-    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 1]
+    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 1] 
     num_troughs = []
-    for volt_dev in deviations:
-        voltage_col = trough_standardization(voltage_column, volt_dev)
+
+    #volt_dev_max = 0.02
+    for volt_dev_min in deviations:
+        for volt_dev_max in deviations:
+            voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max)
         num_troughs.append(sum(voltage_col))
     
-    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b')
+    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') 
     axs[f].set_ylim([min(num_troughs)-1, max(num_troughs)+1])
     axs[f].title.set_text('Max-Min=%i' %(max(num_troughs)-min(num_troughs)))
                                                              
@@ -111,7 +119,8 @@ for file in dir_list:
     # Define the filepath of the output file. Add more channels to the write command line if needed. 
     #************************************************************************************************************
     
-    outpath = r"/Users/anastasiabernat/Desktop/Flight_scripts/standardized_files/stand_troughs_"
+
+    outpath = f"/Users/{username}/Desktop/Flight_scripts/standardized_files/stand_troughs_"
     OutputFile = open(outpath + str(file), mode="w")
     for i in range(0, len(Lines)):
         OutputFile.write('%.2f' % time_column[i] + ", " +

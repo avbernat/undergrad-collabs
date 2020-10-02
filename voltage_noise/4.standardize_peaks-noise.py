@@ -73,7 +73,7 @@ def peak_standardization(column, is_noise):
 
         vals = f"j = {j}, new_list[{j}] = {new_list[j]}, new_list[{j-1}] = {new_list[j-1]}, new_list[{j+1}] = {new_list[j+1]}"
         #print(vals) #tells us for each value the three things we compared to one another 
-       
+         
         if new_list[j] > new_list[j-1] and new_list[j] >= new_list[j+1]: 
             peaks.append(1)
             #why don't we start range at 1 and not include line 86? AB: try running and see what happens if you remove the -1 
@@ -84,7 +84,7 @@ def peak_standardization(column, is_noise):
     print("Number of peaks:", sum(peaks)) 
     return peaks 
 
-#new_list evaluates whether voltage vlaue is significant or is it very low relative to max to min range 
+#new_list evaluates whether voltage value is significant or is it very low relative to max to min range 
 
 #************************************************************************************************************
 # The flight data file can be called by defining the complete file directory path or defining a default path in
