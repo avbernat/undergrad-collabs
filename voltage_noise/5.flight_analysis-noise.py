@@ -82,7 +82,7 @@ def speed_list(time):
                     speed_channel[x] = 0
 
         else:
-            print ("Has only one peak - impossible to calculate motion stats")
+            print ("Has only one trough - impossible to calculate motion stats")
     else:
         print ("Channel is empty")
         
@@ -220,26 +220,21 @@ def flying_bouts(time, speed, recording_duration):
     events_3600=0
     events_14400=0
     events_more_14400=0
-    print("OG Time list: ", time)
+    #print("OG Time list: ", time)
     if len(time) > 2:
         # Here, it appends the first trough time to store the first bout time if it stands distant enough from the second bout time.
         # if not this chunk is skipped. Don't want the second value stored 
         if float(time[1]) < float(time[0]) + 20: 
-            print(time[0])
-            print(time[1])
             bout_time.append(time[0])
    
         for i in range(0, len(time)-1):
             if float(time[i+1]) >= float(time[i]) + 20: # no longer than 20s between troughs
                 bout_time.append(time[i])
                 bout_time.append(time[i+1])
-        print("Bout list after filtering: ", bout_time)
-        print(bout_time[-1])
-        print(time[-1])
      
         if bout_time[-1] != time[-1]: # if the last value of bout_time not the same as the time than add it...(possibly miss some?)
             bout_time.append(time[-1])
-        print("Dict:", sorted(list(set(bout_time))))
+        #print("Dict:", sorted(list(set(bout_time))))
         #***************************************************************************************************************************
         #clean the flying bout time event list from redundant values using set().
         #***************************************************************************************************************************
@@ -254,7 +249,7 @@ def flying_bouts(time, speed, recording_duration):
         for iiii in range(0, len(to_remove)):
             while to_remove[iiii] in bout_time:
                 bout_time.remove(to_remove[iiii])
-        print(bout_time)
+        #print(bout_time)
         #***************************************************************************************************************************
         #calculates the flight descriptive statistics
         #***************************************************************************************************************************
@@ -341,7 +336,7 @@ def graph(time, speed):
 # \filename.txt).
 #************************************************************************************************************
 
-main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts"
+main_path = r"/Users/anasilberg/Desktop/git_repositories/undergrad-collabs/voltage_noise"
 path = main_path + "/standardized_files/"
 
 print(path, "\n")
@@ -350,6 +345,7 @@ big_list=[]
 
 dir_list = sorted(os.listdir(path))
 for file in dir_list:
+    print(file)
     filepath = path + str(file)
     tot_duration = recording_duration(filepath)
 

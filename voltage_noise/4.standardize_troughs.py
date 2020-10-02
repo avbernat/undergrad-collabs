@@ -45,7 +45,7 @@ def trough_standardization(column, dev_min, dev_max):
         else:
             int_list.append(0)
 
-    #The if conditional on line 50 looks at the j, j-1, j+1 indices of int_list. 
+    #The if conditional on line 51 looks at the j, j-1, j+1 indices of int_list. 
     #If we start at 0, the first comparison in the loop looks at 0, -1, and 1
     #We should start by comparing 0, 1, and 2. The range should start at 1 instead of 0. 
     for j in range(0, len(int_list)-1): 
@@ -74,7 +74,7 @@ path = f"/Users/{username}/Desktop/Flight_scripts/test_files/"
 #path = r"/Users/anastasiabernat/Desktop/Flight_scripts/split_files/"
 dir_list = sorted(os.listdir(path))
 
-row = round(len(dir_list)/3)
+row = round(len(dir_list)/3)*10
 fig, axs = plt.subplots(row,4, figsize=(15, 3*row), facecolor='w', edgecolor='k')
 fig.tight_layout(pad=6.0)
 
@@ -107,31 +107,31 @@ for file in dir_list:
     # deviation and the x value threshold.
     #************************************************************************************************************
 
-    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 1]
-    num_troughs = []
-
+    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
+    row_list=[]
     #volt_dev_max = 0.02
     for volt_dev_min in deviations:
+        num_troughs = []
+        row={} #{} for dictionaries
         for volt_dev_max in deviations:
             voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max)
-        num_troughs.append(sum(voltage_col))
-
+            num_troughs.append(sum(voltage_col))
+            print("volt_dev_max is :", volt_dev_max)
+        print("volt_dev_min is :", volt_dev_min)
+        row_list.append(row)
     
-    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') 
-
-        print("   Min deviation val:", volt_dev)
-        
-    axs = axs.flatten()
-    axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') # something weird here.
-    axs[f].set_ylim([min(num_troughs)-1, max(num_troughs)+1])
-    axs[f].title.set_text(file + '\nMax-Min=%i' %(max(num_troughs)-min(num_troughs)))
-    axs[f].set_xlabel("min_val Deviation")
-    axs[f].set_ylabel("Number of Troughs")
+        axs = axs.flatten()
+        axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') # something weird here.
+        axs[f].set_ylim([min(num_troughs)-1, max(num_troughs)+1])
+        axs[f].title.set_text(file + '\nMax-Min=%i' %(max(num_troughs)-min(num_troughs)))
+        axs[f].set_xlabel("min_val Deviation")
+        axs[f].set_ylabel("Number of Troughs")
                                                              
-    for x,y in zip(deviations, num_troughs):
-        label=y
-        axs[f].annotate(label,(x,y), textcoords="offset points", xytext=(10,5), ha='center')
-    f += 1
+        for x,y in zip(deviations, num_troughs):
+            label=y
+            axs[f].annotate(label,(x,y), textcoords="offset points", xytext=(10,5), ha='center')
+        f += 1
+    #voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max)
 
     #************************************************************************************************************
     # Define the filepath of the output file. Add more channels to the write command line if needed.
