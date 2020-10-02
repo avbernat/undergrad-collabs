@@ -1,0 +1,907 @@
+Files in /Users/anasilberg/Desktop/Flight_scripts/test_files/ ' :
+
+ T1_set001-2-17-2020-A2_318.txt
+dev_min is  0.01     dev_max is  0.01
+   Number of 1's: 27846
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.02
+   Number of 1's: 27552
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.03
+   Number of 1's: 27272
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.04
+   Number of 1's: 27007
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.05
+   Number of 1's: 26784
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.06
+   Number of 1's: 26580
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.07
+   Number of 1's: 26365
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.08
+   Number of 1's: 26174
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  0.09
+   Number of 1's: 25932
+   Number of troughs: 2895
+dev_min is  0.01     dev_max is  1
+   Number of 1's: 17088
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.01
+   Number of 1's: 27423
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.02
+   Number of 1's: 27143
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.03
+   Number of 1's: 26891
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.04
+   Number of 1's: 26784
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.05
+   Number of 1's: 26456
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.06
+   Number of 1's: 26265
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.07
+   Number of 1's: 26056
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.08
+   Number of 1's: 25932
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  0.09
+   Number of 1's: 25648
+   Number of troughs: 2895
+dev_min is  0.02     dev_max is  1
+   Number of 1's: 16975
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.01
+   Number of 1's: 27007
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.02
+   Number of 1's: 26891
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.03
+   Number of 1's: 26673
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.04
+   Number of 1's: 26456
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.05
+   Number of 1's: 26174
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.06
+   Number of 1's: 26056
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.07
+   Number of 1's: 25832
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.08
+   Number of 1's: 25648
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  0.09
+   Number of 1's: 25384
+   Number of troughs: 2895
+dev_min is  0.03     dev_max is  1
+   Number of 1's: 16872
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.01
+   Number of 1's: 26673
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.02
+   Number of 1's: 26456
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.03
+   Number of 1's: 26265
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.04
+   Number of 1's: 26056
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.05
+   Number of 1's: 25832
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.06
+   Number of 1's: 25648
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.07
+   Number of 1's: 25483
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.08
+   Number of 1's: 25302
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  0.09
+   Number of 1's: 25134
+   Number of troughs: 2895
+dev_min is  0.04     dev_max is  1
+   Number of 1's: 16713
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.01
+   Number of 1's: 26365
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.02
+   Number of 1's: 26174
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.03
+   Number of 1's: 25932
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.04
+   Number of 1's: 25727
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.05
+   Number of 1's: 25567
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.06
+   Number of 1's: 25384
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.07
+   Number of 1's: 25216
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.08
+   Number of 1's: 25037
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  0.09
+   Number of 1's: 24867
+   Number of troughs: 2895
+dev_min is  0.05     dev_max is  1
+   Number of 1's: 16607
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.01
+   Number of 1's: 26056
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.02
+   Number of 1's: 25832
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.03
+   Number of 1's: 25648
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.04
+   Number of 1's: 25567
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.05
+   Number of 1's: 25302
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.06
+   Number of 1's: 25134
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.07
+   Number of 1's: 24952
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.08
+   Number of 1's: 24867
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  0.09
+   Number of 1's: 24672
+   Number of troughs: 2895
+dev_min is  0.06     dev_max is  1
+   Number of 1's: 16536
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.01
+   Number of 1's: 25727
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.02
+   Number of 1's: 25648
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.03
+   Number of 1's: 25483
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.04
+   Number of 1's: 25302
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.05
+   Number of 1's: 25037
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.06
+   Number of 1's: 24952
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.07
+   Number of 1's: 24810
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.08
+   Number of 1's: 24672
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  0.09
+   Number of 1's: 24435
+   Number of troughs: 2895
+dev_min is  0.07     dev_max is  1
+   Number of 1's: 16432
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.01
+   Number of 1's: 25483
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.02
+   Number of 1's: 25302
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.03
+   Number of 1's: 25134
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.04
+   Number of 1's: 24952
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.05
+   Number of 1's: 24810
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.06
+   Number of 1's: 24672
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.07
+   Number of 1's: 24508
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.08
+   Number of 1's: 24363
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  0.09
+   Number of 1's: 24239
+   Number of troughs: 2895
+dev_min is  0.08     dev_max is  1
+   Number of 1's: 16292
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.01
+   Number of 1's: 25216
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.02
+   Number of 1's: 25037
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.03
+   Number of 1's: 24867
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.04
+   Number of 1's: 24748
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.05
+   Number of 1's: 24590
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.06
+   Number of 1's: 24435
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.07
+   Number of 1's: 24309
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.08
+   Number of 1's: 24166
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  0.09
+   Number of 1's: 24043
+   Number of troughs: 2895
+dev_min is  0.09     dev_max is  1
+   Number of 1's: 16179
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.01
+   Number of 1's: 13483
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.02
+   Number of 1's: 13402
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.03
+   Number of 1's: 13361
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.04
+   Number of 1's: 13288
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.05
+   Number of 1's: 13192
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.06
+   Number of 1's: 13127
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.07
+   Number of 1's: 13079
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.08
+   Number of 1's: 13007
+   Number of troughs: 2895
+dev_min is  1     dev_max is  0.09
+   Number of 1's: 12869
+   Number of troughs: 2895
+dev_min is  1     dev_max is  1
+   Number of 1's: 0
+   Number of troughs: 0
+
+ T1_set004-2-20-2020-A4_371.txt
+dev_min is  0.01     dev_max is  0.01
+   Number of 1's: 7371
+   Number of troughs: 813
+dev_min is  0.01     dev_max is  0.02
+   Number of 1's: 7231
+   Number of troughs: 811
+dev_min is  0.01     dev_max is  0.03
+   Number of 1's: 7132
+   Number of troughs: 810
+dev_min is  0.01     dev_max is  0.04
+   Number of 1's: 7041
+   Number of troughs: 809
+dev_min is  0.01     dev_max is  0.05
+   Number of 1's: 6976
+   Number of troughs: 809
+dev_min is  0.01     dev_max is  0.06
+   Number of 1's: 6913
+   Number of troughs: 809
+dev_min is  0.01     dev_max is  0.07
+   Number of 1's: 6837
+   Number of troughs: 808
+dev_min is  0.01     dev_max is  0.08
+   Number of 1's: 6773
+   Number of troughs: 808
+dev_min is  0.01     dev_max is  0.09
+   Number of 1's: 6700
+   Number of troughs: 807
+dev_min is  0.01     dev_max is  1
+   Number of 1's: 4012
+   Number of troughs: 802
+dev_min is  0.02     dev_max is  0.01
+   Number of 1's: 7180
+   Number of troughs: 811
+dev_min is  0.02     dev_max is  0.02
+   Number of 1's: 7086
+   Number of troughs: 809
+dev_min is  0.02     dev_max is  0.03
+   Number of 1's: 7009
+   Number of troughs: 809
+dev_min is  0.02     dev_max is  0.04
+   Number of 1's: 6948
+   Number of troughs: 809
+dev_min is  0.02     dev_max is  0.05
+   Number of 1's: 6867
+   Number of troughs: 809
+dev_min is  0.02     dev_max is  0.06
+   Number of 1's: 6809
+   Number of troughs: 808
+dev_min is  0.02     dev_max is  0.07
+   Number of 1's: 6738
+   Number of troughs: 807
+dev_min is  0.02     dev_max is  0.08
+   Number of 1's: 6668
+   Number of troughs: 807
+dev_min is  0.02     dev_max is  0.09
+   Number of 1's: 6606
+   Number of troughs: 807
+dev_min is  0.02     dev_max is  1
+   Number of 1's: 3975
+   Number of troughs: 802
+dev_min is  0.03     dev_max is  0.01
+   Number of 1's: 7041
+   Number of troughs: 809
+dev_min is  0.03     dev_max is  0.02
+   Number of 1's: 7009
+   Number of troughs: 809
+dev_min is  0.03     dev_max is  0.03
+   Number of 1's: 6948
+   Number of troughs: 809
+dev_min is  0.03     dev_max is  0.04
+   Number of 1's: 6837
+   Number of troughs: 808
+dev_min is  0.03     dev_max is  0.05
+   Number of 1's: 6773
+   Number of troughs: 808
+dev_min is  0.03     dev_max is  0.06
+   Number of 1's: 6700
+   Number of troughs: 807
+dev_min is  0.03     dev_max is  0.07
+   Number of 1's: 6668
+   Number of troughs: 807
+dev_min is  0.03     dev_max is  0.08
+   Number of 1's: 6573
+   Number of troughs: 806
+dev_min is  0.03     dev_max is  0.09
+   Number of 1's: 6520
+   Number of troughs: 806
+dev_min is  0.03     dev_max is  1
+   Number of 1's: 3948
+   Number of troughs: 802
+dev_min is  0.04     dev_max is  0.01
+   Number of 1's: 6976
+   Number of troughs: 809
+dev_min is  0.04     dev_max is  0.02
+   Number of 1's: 6913
+   Number of troughs: 809
+dev_min is  0.04     dev_max is  0.03
+   Number of 1's: 6837
+   Number of troughs: 808
+dev_min is  0.04     dev_max is  0.04
+   Number of 1's: 6738
+   Number of troughs: 807
+dev_min is  0.04     dev_max is  0.05
+   Number of 1's: 6700
+   Number of troughs: 807
+dev_min is  0.04     dev_max is  0.06
+   Number of 1's: 6641
+   Number of troughs: 807
+dev_min is  0.04     dev_max is  0.07
+   Number of 1's: 6573
+   Number of troughs: 806
+dev_min is  0.04     dev_max is  0.08
+   Number of 1's: 6497
+   Number of troughs: 806
+dev_min is  0.04     dev_max is  0.09
+   Number of 1's: 6474
+   Number of troughs: 806
+dev_min is  0.04     dev_max is  1
+   Number of 1's: 3932
+   Number of troughs: 802
+dev_min is  0.05     dev_max is  0.01
+   Number of 1's: 6837
+   Number of troughs: 808
+dev_min is  0.05     dev_max is  0.02
+   Number of 1's: 6773
+   Number of troughs: 808
+dev_min is  0.05     dev_max is  0.03
+   Number of 1's: 6700
+   Number of troughs: 807
+dev_min is  0.05     dev_max is  0.04
+   Number of 1's: 6641
+   Number of troughs: 807
+dev_min is  0.05     dev_max is  0.05
+   Number of 1's: 6573
+   Number of troughs: 806
+dev_min is  0.05     dev_max is  0.06
+   Number of 1's: 6520
+   Number of troughs: 806
+dev_min is  0.05     dev_max is  0.07
+   Number of 1's: 6474
+   Number of troughs: 806
+dev_min is  0.05     dev_max is  0.08
+   Number of 1's: 6419
+   Number of troughs: 805
+dev_min is  0.05     dev_max is  0.09
+   Number of 1's: 6363
+   Number of troughs: 805
+dev_min is  0.05     dev_max is  1
+   Number of 1's: 3897
+   Number of troughs: 802
+dev_min is  0.06     dev_max is  0.01
+   Number of 1's: 6738
+   Number of troughs: 807
+dev_min is  0.06     dev_max is  0.02
+   Number of 1's: 6668
+   Number of troughs: 807
+dev_min is  0.06     dev_max is  0.03
+   Number of 1's: 6606
+   Number of troughs: 807
+dev_min is  0.06     dev_max is  0.04
+   Number of 1's: 6548
+   Number of troughs: 806
+dev_min is  0.06     dev_max is  0.05
+   Number of 1's: 6497
+   Number of troughs: 806
+dev_min is  0.06     dev_max is  0.06
+   Number of 1's: 6448
+   Number of troughs: 805
+dev_min is  0.06     dev_max is  0.07
+   Number of 1's: 6388
+   Number of troughs: 805
+dev_min is  0.06     dev_max is  0.08
+   Number of 1's: 6339
+   Number of troughs: 805
+dev_min is  0.06     dev_max is  0.09
+   Number of 1's: 6295
+   Number of troughs: 804
+dev_min is  0.06     dev_max is  1
+   Number of 1's: 3874
+   Number of troughs: 802
+dev_min is  0.07     dev_max is  0.01
+   Number of 1's: 6641
+   Number of troughs: 807
+dev_min is  0.07     dev_max is  0.02
+   Number of 1's: 6573
+   Number of troughs: 806
+dev_min is  0.07     dev_max is  0.03
+   Number of 1's: 6548
+   Number of troughs: 806
+dev_min is  0.07     dev_max is  0.04
+   Number of 1's: 6474
+   Number of troughs: 806
+dev_min is  0.07     dev_max is  0.05
+   Number of 1's: 6419
+   Number of troughs: 805
+dev_min is  0.07     dev_max is  0.06
+   Number of 1's: 6363
+   Number of troughs: 805
+dev_min is  0.07     dev_max is  0.07
+   Number of 1's: 6339
+   Number of troughs: 805
+dev_min is  0.07     dev_max is  0.08
+   Number of 1's: 6258
+   Number of troughs: 804
+dev_min is  0.07     dev_max is  0.09
+   Number of 1's: 6220
+   Number of troughs: 804
+dev_min is  0.07     dev_max is  1
+   Number of 1's: 3840
+   Number of troughs: 802
+dev_min is  0.08     dev_max is  0.01
+   Number of 1's: 6573
+   Number of troughs: 806
+dev_min is  0.08     dev_max is  0.02
+   Number of 1's: 6520
+   Number of troughs: 806
+dev_min is  0.08     dev_max is  0.03
+   Number of 1's: 6474
+   Number of troughs: 806
+dev_min is  0.08     dev_max is  0.04
+   Number of 1's: 6388
+   Number of troughs: 805
+dev_min is  0.08     dev_max is  0.05
+   Number of 1's: 6363
+   Number of troughs: 805
+dev_min is  0.08     dev_max is  0.06
+   Number of 1's: 6317
+   Number of troughs: 804
+dev_min is  0.08     dev_max is  0.07
+   Number of 1's: 6258
+   Number of troughs: 804
+dev_min is  0.08     dev_max is  0.08
+   Number of 1's: 6201
+   Number of troughs: 804
+dev_min is  0.08     dev_max is  0.09
+   Number of 1's: 6161
+   Number of troughs: 802
+dev_min is  0.08     dev_max is  1
+   Number of 1's: 3810
+   Number of troughs: 802
+dev_min is  0.09     dev_max is  0.01
+   Number of 1's: 6474
+   Number of troughs: 806
+dev_min is  0.09     dev_max is  0.02
+   Number of 1's: 6419
+   Number of troughs: 805
+dev_min is  0.09     dev_max is  0.03
+   Number of 1's: 6363
+   Number of troughs: 805
+dev_min is  0.09     dev_max is  0.04
+   Number of 1's: 6317
+   Number of troughs: 804
+dev_min is  0.09     dev_max is  0.05
+   Number of 1's: 6258
+   Number of troughs: 804
+dev_min is  0.09     dev_max is  0.06
+   Number of 1's: 6220
+   Number of troughs: 804
+dev_min is  0.09     dev_max is  0.07
+   Number of 1's: 6189
+   Number of troughs: 803
+dev_min is  0.09     dev_max is  0.08
+   Number of 1's: 6122
+   Number of troughs: 802
+dev_min is  0.09     dev_max is  0.09
+   Number of 1's: 6088
+   Number of troughs: 802
+dev_min is  0.09     dev_max is  1
+   Number of 1's: 3781
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.01
+   Number of 1's: 3037
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.02
+   Number of 1's: 3013
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.03
+   Number of 1's: 2992
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.04
+   Number of 1's: 2968
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.05
+   Number of 1's: 2946
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.06
+   Number of 1's: 2926
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.07
+   Number of 1's: 2909
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.08
+   Number of 1's: 2879
+   Number of troughs: 802
+dev_min is  1     dev_max is  0.09
+   Number of 1's: 2842
+   Number of troughs: 802
+dev_min is  1     dev_max is  1
+   Number of 1's: 0
+   Number of troughs: 0
+
+ T1_set004-2-20-2020-B3_176.txt
+dev_min is  0.01     dev_max is  0.01
+   Number of 1's: 26960
+   Number of troughs: 277
+dev_min is  0.01     dev_max is  0.02
+   Number of 1's: 13227
+   Number of troughs: 312
+dev_min is  0.01     dev_max is  0.03
+   Number of 1's: 7580
+   Number of troughs: 206
+dev_min is  0.01     dev_max is  0.04
+   Number of 1's: 6090
+   Number of troughs: 193
+dev_min is  0.01     dev_max is  0.05
+   Number of 1's: 3632
+   Number of troughs: 160
+dev_min is  0.01     dev_max is  0.06
+   Number of 1's: 1575
+   Number of troughs: 120
+dev_min is  0.01     dev_max is  0.07
+   Number of 1's: 428
+   Number of troughs: 48
+dev_min is  0.01     dev_max is  0.08
+   Number of 1's: 359
+   Number of troughs: 21
+dev_min is  0.01     dev_max is  0.09
+   Number of 1's: 339
+   Number of troughs: 13
+dev_min is  0.01     dev_max is  1
+   Number of 1's: 240
+   Number of troughs: 13
+dev_min is  0.02     dev_max is  0.01
+   Number of 1's: 9010
+   Number of troughs: 254
+dev_min is  0.02     dev_max is  0.02
+   Number of 1's: 6090
+   Number of troughs: 193
+dev_min is  0.02     dev_max is  0.03
+   Number of 1's: 3632
+   Number of troughs: 160
+dev_min is  0.02     dev_max is  0.04
+   Number of 1's: 1575
+   Number of troughs: 120
+dev_min is  0.02     dev_max is  0.05
+   Number of 1's: 622
+   Number of troughs: 77
+dev_min is  0.02     dev_max is  0.06
+   Number of 1's: 359
+   Number of troughs: 21
+dev_min is  0.02     dev_max is  0.07
+   Number of 1's: 339
+   Number of troughs: 13
+dev_min is  0.02     dev_max is  0.08
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.02     dev_max is  0.09
+   Number of 1's: 330
+   Number of troughs: 12
+dev_min is  0.02     dev_max is  1
+   Number of 1's: 240
+   Number of troughs: 13
+dev_min is  0.03     dev_max is  0.01
+   Number of 1's: 4936
+   Number of troughs: 151
+dev_min is  0.03     dev_max is  0.02
+   Number of 1's: 2350
+   Number of troughs: 130
+dev_min is  0.03     dev_max is  0.03
+   Number of 1's: 981
+   Number of troughs: 96
+dev_min is  0.03     dev_max is  0.04
+   Number of 1's: 428
+   Number of troughs: 48
+dev_min is  0.03     dev_max is  0.05
+   Number of 1's: 340
+   Number of troughs: 14
+dev_min is  0.03     dev_max is  0.06
+   Number of 1's: 333
+   Number of troughs: 13
+dev_min is  0.03     dev_max is  0.07
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.03     dev_max is  0.08
+   Number of 1's: 330
+   Number of troughs: 12
+dev_min is  0.03     dev_max is  0.09
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.03     dev_max is  1
+   Number of 1's: 239
+   Number of troughs: 13
+dev_min is  0.04     dev_max is  0.01
+   Number of 1's: 1575
+   Number of troughs: 120
+dev_min is  0.04     dev_max is  0.02
+   Number of 1's: 981
+   Number of troughs: 96
+dev_min is  0.04     dev_max is  0.03
+   Number of 1's: 359
+   Number of troughs: 21
+dev_min is  0.04     dev_max is  0.04
+   Number of 1's: 339
+   Number of troughs: 13
+dev_min is  0.04     dev_max is  0.05
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.04     dev_max is  0.06
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.04     dev_max is  0.07
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.04     dev_max is  0.08
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.04     dev_max is  0.09
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.04     dev_max is  1
+   Number of 1's: 239
+   Number of troughs: 13
+dev_min is  0.05     dev_max is  0.01
+   Number of 1's: 622
+   Number of troughs: 77
+dev_min is  0.05     dev_max is  0.02
+   Number of 1's: 359
+   Number of troughs: 21
+dev_min is  0.05     dev_max is  0.03
+   Number of 1's: 333
+   Number of troughs: 13
+dev_min is  0.05     dev_max is  0.04
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  0.05
+   Number of 1's: 330
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  0.06
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  0.07
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  0.08
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  0.09
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.05     dev_max is  1
+   Number of 1's: 239
+   Number of troughs: 13
+dev_min is  0.06     dev_max is  0.01
+   Number of 1's: 340
+   Number of troughs: 14
+dev_min is  0.06     dev_max is  0.02
+   Number of 1's: 333
+   Number of troughs: 13
+dev_min is  0.06     dev_max is  0.03
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.04
+   Number of 1's: 330
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.05
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.06
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.07
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.08
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  0.09
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.06     dev_max is  1
+   Number of 1's: 237
+   Number of troughs: 13
+dev_min is  0.07     dev_max is  0.01
+   Number of 1's: 331
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.02
+   Number of 1's: 330
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.03
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.04
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.05
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.06
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.07
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.08
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  0.09
+   Number of 1's: 326
+   Number of troughs: 12
+dev_min is  0.07     dev_max is  1
+   Number of 1's: 236
+   Number of troughs: 13
+dev_min is  0.08     dev_max is  0.01
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.02
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.03
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.04
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.05
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.06
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.07
+   Number of 1's: 326
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.08
+   Number of 1's: 326
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  0.09
+   Number of 1's: 325
+   Number of troughs: 12
+dev_min is  0.08     dev_max is  1
+   Number of 1's: 235
+   Number of troughs: 14
+dev_min is  0.09     dev_max is  0.01
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.02
+   Number of 1's: 328
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.03
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.04
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.05
+   Number of 1's: 327
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.06
+   Number of 1's: 326
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.07
+   Number of 1's: 325
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.08
+   Number of 1's: 324
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  0.09
+   Number of 1's: 324
+   Number of troughs: 12
+dev_min is  0.09     dev_max is  1
+   Number of 1's: 234
+   Number of troughs: 15
+dev_min is  1     dev_max is  0.01
+   Number of 1's: 214
+   Number of troughs: 19
+dev_min is  1     dev_max is  0.02
+   Number of 1's: 214
+   Number of troughs: 19
+dev_min is  1     dev_max is  0.03
+   Number of 1's: 214
+   Number of troughs: 19
+dev_min is  1     dev_max is  0.04
+   Number of 1's: 214
+   Number of troughs: 19
+dev_min is  1     dev_max is  0.05
+   Number of 1's: 213
+   Number of troughs: 20
+dev_min is  1     dev_max is  0.06
+   Number of 1's: 210
+   Number of troughs: 20
+dev_min is  1     dev_max is  0.07
+   Number of 1's: 210
+   Number of troughs: 20
+dev_min is  1     dev_max is  0.08
+   Number of 1's: 208
+   Number of troughs: 20
+dev_min is  1     dev_max is  0.09
+   Number of 1's: 206
+   Number of troughs: 20
+dev_min is  1     dev_max is  1
+   Number of 1's: 0
+   Number of troughs: 0
