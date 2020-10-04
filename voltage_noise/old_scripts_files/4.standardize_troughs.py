@@ -10,10 +10,10 @@ def trough_standardization(column, dev_min, dev_max):
     # INPUT:    List of voltage values as floats.
     #
     # PROCESS:  Voltage values are rounded to two decimal places and appended to the volt_column. A confidence
-    #           interval is defined aroudn the mean voltage value using a low (min_value) and high (max_value)
+    #           interval is defined around the mean voltage value using a low (min_value) and high (max_value)
     #           threshold. These values can be defined by the user according to the characteristics of the
     #           voltage recording data. Voltages at or higher than the min value of the confidence interval
-    #           are set to 0 while voltages far below the min_value are set to 1 and identity the presence
+    #           are set to 0 while voltages far below the min_value are set to 1 and identify the presence
     #           of a trough. Thus, a trough can be defined as any large deviance in voltage that is due to
     #           noise or chance. Finally, a list of troughs is created after compressing sequences of 
     #           trough-like identifiers into a single identifier (e.g. compressed sequences of 1s to a single
@@ -30,11 +30,12 @@ def trough_standardization(column, dev_min, dev_max):
     int_list =[] # sequences of 0s and 1s. 
     troughs=[]
     
+    print("dev_min is ", dev_min,"    dev_max is ", dev_max)
     for i in range(0, len(column)): 
         volt_column.append(round(column[i], 2))
     
     channel_mean = (sum(volt_column)/len(volt_column))
-    min_val=round(channel_mean - dev_min, 2) # * 
+    min_val=round(channel_mean - dev_min, 2) # * # 0.01 #How min_value is defined--> deviation
     max_val=round(channel_mean + dev_max, 2) # *
  
     for v in range(0, len(volt_column)):  
@@ -44,6 +45,9 @@ def trough_standardization(column, dev_min, dev_max):
         else:
             int_list.append(0)
 
+    #The if conditional on line 51 looks at the j, j-1, j+1 indices of int_list. 
+    #If we start at 0, the first comparison in the loop looks at 0, -1, and 1
+    #We should start by comparing 0, 1, and 2. The range should start at 1 instead of 0. 
     for j in range(0, len(int_list)-1): 
         if int_list[j] > int_list[j-1] and int_list[j] >= int_list[j+1]: 
             troughs.append(1)
@@ -52,7 +56,7 @@ def trough_standardization(column, dev_min, dev_max):
 
     troughs.append(0)
 
-    print("   Num of 1's:", sum(int_list), "   Num of troughs:", sum(troughs), end=' ')
+    print("   Number of 1's:", sum(int_list), "   Number of troughs:", sum(troughs), end=' ')
     
     return troughs 
 
@@ -63,19 +67,22 @@ def trough_standardization(column, dev_min, dev_max):
 # channels is different the script needs to be edited accordingly.
 #************************************************************************************************************
 
-main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/"
-path = main_path + "test_files/"
+
+username=os.getlogin() # package that talks to operating system
+path = f"/Users/{username}/Desktop/Flight_scripts/test_files/"
+
+#path = r"/Users/anastasiabernat/Desktop/Flight_scripts/split_files/"
 dir_list = sorted(os.listdir(path))
 
-rows = round(len(dir_list)) * 2 
-fig, axs = plt.subplots(rows,5, figsize=(20, 4*rows), facecolor='w', edgecolor='k')
+row = round(len(dir_list)/3)*10
+fig, axs = plt.subplots(row,4, figsize=(15, 3*row), facecolor='w', edgecolor='k')
 fig.tight_layout(pad=6.0)
 
 print("Files in '", path, "' :")
 
-f = 0
+f=0
 for file in dir_list:
-    
+
     print("\n", file)
     filepath = path + str(file)
     InputFile = open(filepath, mode="r", encoding='latin-1')
@@ -92,6 +99,7 @@ for file in dir_list:
 
     InputFile.close()
 
+
     #************************************************************************************************************
     # Plot diagnostics to identity noise or files with overly-sensitive troughs. Files with little noise and
     # large troughs will be durable to small changes in deviations. Default here is to test how changes in
@@ -99,44 +107,46 @@ for file in dir_list:
     # deviation and the x value threshold.
     #************************************************************************************************************
 
-    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10]
+    deviations = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
+    row_list=[]
+    #volt_dev_max = 0.02
     for volt_dev_min in deviations:
         num_troughs = []
+        row={} #{} for dictionaries
         for volt_dev_max in deviations:
             voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max)
             num_troughs.append(sum(voltage_col))
-            print("   Min Dev: ", volt_dev_min, "   Max Dev: ", volt_dev_max)
-            
+            print("volt_dev_max is :", volt_dev_max)
+        print("volt_dev_min is :", volt_dev_min)
+        row_list.append(row)
+    
         axs = axs.flatten()
-        axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b')
+        axs[f].plot(deviations, num_troughs, linestyle='--', marker='o', color='b') # something weird here.
         axs[f].set_ylim([min(num_troughs)-1, max(num_troughs)+1])
         axs[f].title.set_text(file + '\nMax-Min=%i' %(max(num_troughs)-min(num_troughs)))
-        axs[f].set_xlabel("Max Val")
+        axs[f].set_xlabel("min_val Deviation")
         axs[f].set_ylabel("Number of Troughs")
-        axs[f].text(0.75, 0.9, "Min Val=%.2f" %volt_dev_min, ha='center', va='center', transform=axs[f].transAxes)
-        
+                                                             
         for x,y in zip(deviations, num_troughs):
             label=y
             axs[f].annotate(label,(x,y), textcoords="offset points", xytext=(10,5), ha='center')
         f += 1
-        
-    # voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max) # *
-    
+    #voltage_col = trough_standardization(voltage_column, volt_dev_min, volt_dev_max)
+
     #************************************************************************************************************
     # Define the filepath of the output file. Add more channels to the write command line if needed.
-    # Also, define the voltage_col with the specific min and max deviation value argument above on line 123
-    # if desired. The default here is a min deviation and max deviation value of 0.1 V.
+    # Also, define the voltage_col with the specific min deviation value argument above if needed. The default
+    # here is a min deviation value of - 1 V.
     #************************************************************************************************************
     
-    outpath = main_path + "standardized_files/"
-    OutputFile = open(outpath +" standardized_" + str(file), mode="w")
+
+    outpath = f"/Users/{username}/Desktop/Flight_scripts/standardized_files/stand_troughs_"
+
+    #outpath = r"/Users/anastasiabernat/Desktop/Flight_scripts/standardized_files/standardized_"
+    OutputFile = open(outpath + str(file), mode="w")
     for i in range(0, len(Lines)):
         OutputFile.write('%.2f' % time_column[i] + ", " +
                          '%.2f' % voltage_col[i] + "\n")
     OutputFile.close()
 
 fig.savefig("trough_diagnostic.png") 
-
-#**********************************************************************************************
-# This file has been modified from Attisano et al. 2015.
-#**********************************************************************************************

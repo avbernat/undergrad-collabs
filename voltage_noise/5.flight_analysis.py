@@ -7,10 +7,8 @@ import time
 start = time.time()
 
 #**********************************************************************************************
-#
 # Call blockPrint() before function to disable print statements. Call enableprint() when want
 # print statements to continue.To disable all printing, start blocking at the top of the file
-#
 #**********************************************************************************************
 
 def blockPrint():
@@ -54,8 +52,8 @@ def speed_list(time):
     #
     #           Moreover, due to the low friction of the magnetic bearing, the mill's arm stops rotating some time after the
     #           insect ends its flying bout. This function includes an optional speed correction loop to account for these
-    #           additional rotations that uses threshold speed value below which the speed is set to 0. The threshold speed
-    #           value needs to be choosen with care when working with slow flying insects.
+    #           additional rotations. It does so by using a threshold speed value which sets those additional rotations to zero.
+    #           The threshold speed value needs to be choosen with care when working with slow flying insects.
     #   
     #           Finally, this function automatically accounts for unused or empty channels and for instances in which only one
     #           flight event occurred.
@@ -77,12 +75,12 @@ def speed_list(time):
                 else:
                     speed_channel.append(9999) 
             
-            for x in range(0, len(speed_channel)):
-                if float(speed_channel[x]) < 0.1: # Optional error correction. Modify the threshold speed value accordingly.
+            for x in range(0, len(speed_channel)): # Optional speed correction.
+                if float(speed_channel[x]) < 0.1: 
                     speed_channel[x] = 0
 
         else:
-            print ("Has only one trough - impossible to calculate motion stats")
+            print ("Has only one peak - impossible to calculate motion stats")
     else:
         print ("Channel is empty")
         
@@ -102,8 +100,8 @@ def distance(time, speed):
     #           or very fast flying insects to create a more fine-tuned threshold. Then, for every iteration in the speed list,
     #           the circular distance in which an insect traveled is incrementally added to a running sum.
     #
-    #           Next, the filtered time and speed lists are further filters out long gaps (greater than 7s in this example) that
-    #           occur between two consecutive flying bouts. This gap value can also be modified by the user.
+    #           Then, the following loop filters out long gaps (greater than 7s in this example) that occur between two
+    #           consecutive flying bouts. This gap value can also be modified by the user.
     #
     #           Finally, the average speed is calculated.
     #
@@ -131,7 +129,7 @@ def distance(time, speed):
             time_final.append(time_new[0])
             speed_final.append(speed_new[0])
             for j in range(0, len(time_new)-1):
-                if float(time_new[j+1]) <= float(time_new[j]) + 7: # The gap value can be changed accordingly
+                if float(time_new[j+1]) - float(time_new[j]) <= 7: # The gap value can be changed accordingly
                     time_final.append(time_new[j+1])
                     speed_final.append(speed_new[j+1])
             average_speed = sum(speed_final)/len(speed_final)
@@ -174,27 +172,30 @@ def flying_bouts(time, speed, recording_duration):
     #
     # INPUT:    Fltered time and speed lists as well as the total duration of the flight recording.
     #
-    # PROCESS:  First a bout_time list is created full of time values where time gaps are no longer than 20 seconds
-    #           between consecutive time elements of the list.
+    # PROCESS:  Part 1. The time difference between troughs are assessed. If the difference between the second and the first
+    #           times are less than 20 seconds, then the first time value is stored in the bout_time list because it indicates
+    #           the start of the first bout. However, if they are more than 20 seconds then each time is a different bout
+    #           and their differences are evaluated like all other time differences. Thus, any consecutive time gap that
+    #           is greater than 20 seconds will have both values are appended to bout_time where the the earlier value
+    #           indicates the end of one bout and the later value indicates the beginning of new bout. The last time value
+    #           is also stored in bout_time in order to store the end time value of the last bout.
     #
-    # OUTPUT:   Returns the duration of the shortest and longest bouts in seconds, the entire flight duration in seconds, and
-    #           the percentage of time spent in flight over total recording duration.
+    #           Part 2. To calculate the bout durations, the even index values are subtracted by the odd index values of the
+    #           bout_list since they indicate the final and initial times of the bout. Then, the total time spent flying is
+    #           calculated by taking the sum of the bout durations. The total percentage spent flying is also calculated as
+    #           well as the longest bout. Finally, a series of specific duration ranges are use to calculate the number of
+    #           bout events, the percentage of total flight time, and the total duration within the range. Below, the bout
+    #           durations were set at ranges 60-300s, 300-900s, 900-3600s, 3600-14400s and >14400s.
     #
-    # This function returns duration of the shortest and longest bouts in seconds, entire flight duration in seconds and
-    # percentage of time spent in flight over time spent at rest.
+    # OUTPUT:   Returns all flight statistics calculated in Part 2.
     #
-    # The function also returns the number of flying bouts of a
-    # specified duration and their respective duration expressed as percentage of the entire time spent in flight. In the example
-    # below the bouts duration were set at 60-300s, 300-900s, 900-3600s, 3600-14400s and >14400s. The recording time was set at
-    # 8h (28800s). 
     #***************************************************************************************************************************
-
-    bout_time = []
-    to_remove=[]
+    
+    bout_time = [] 
     
     t_odd = []
     t_even = []
-    tot_t = []
+    bout_durations = [] 
     
     last_time = 0
     diff = 0
@@ -220,65 +221,61 @@ def flying_bouts(time, speed, recording_duration):
     events_3600=0
     events_14400=0
     events_more_14400=0
-    #print("OG Time list: ", time)
+
     if len(time) > 2:
-        # Here, it appends the first trough time to store the first bout time if it stands distant enough from the second bout time.
-        # if not this chunk is skipped. Don't want the second value stored 
-        if float(time[1]) < float(time[0]) + 20: 
+        
+        #*********************************************************************************
+        # Part 1. Identifying and storing the beginning and end time values of each bout.
+        #*********************************************************************************
+
+        if float(time[1]) - float(time[0]) < 20: 
             bout_time.append(time[0])
-   
+
         for i in range(0, len(time)-1):
-            if float(time[i+1]) >= float(time[i]) + 20: # no longer than 20s between troughs
+            if float(time[i+1]) - float(time[i]) >= 20: 
                 bout_time.append(time[i])
                 bout_time.append(time[i+1])
      
-        if bout_time[-1] != time[-1]: # if the last value of bout_time not the same as the time than add it...(possibly miss some?)
+        if bout_time[-1] != time[-1]:
             bout_time.append(time[-1])
-        #print("Dict:", sorted(list(set(bout_time))))
-        #***************************************************************************************************************************
-        #clean the flying bout time event list from redundant values using set().
-        #***************************************************************************************************************************
-##        print(set(bout_time))
-##        for t in range(1, len(bout_time)):
-##            bout_time = sorted(list(set(bout_time))) 
 
-        for iii in range(1, len(bout_time)):
-            if float(bout_time[iii]) == float(bout_time[iii-1]):
-                to_remove.append(bout_time[iii])
-                                 
-        for iiii in range(0, len(to_remove)):
-            while to_remove[iiii] in bout_time:
-                bout_time.remove(to_remove[iiii])
-        #print(bout_time)
-        #***************************************************************************************************************************
-        #calculates the flight descriptive statistics
-        #***************************************************************************************************************************
-        
-        if len(bout_time)%2 != 0:
+        for t in range(1, len(bout_time)):
+            bout_time = sorted(list(set(bout_time))) # set() removes redundant values
+
+        #*********************************************************************************
+        # Part 2: Calculates the flight descriptive statistics.
+        #*********************************************************************************
+
+        if len(bout_time)%2 != 0: 
             last_time = float(bout_time[-1])
             del bout_time[-1]
 
-        t_odd = bout_time[0::2]
-        t_even = bout_time[1::2]
-        for ii in range(0, len(t_odd)):
-            diff = float(t_even[ii]) - float(t_odd[ii])
-            tot_t.append(diff)
+        t_odd = bout_time[0::2] 
+        t_even = bout_time[1::2] 
+        for j in range(0, len(t_odd)):
+            diff = float(t_even[j]) - float(t_odd[j])
+            bout_durations.append(diff) 
 
-        if float(last_time) != 0:
+        if float(last_time) != 0: 
             diff = float(last_time) - float(t_even[-1])
-            tot_t.append(diff)
-        flight_time = sum(float(i) for i in tot_t)
-        for index in range(0, len(tot_t)):
-            if float(tot_t[index])>60 and float(tot_t[index])<=300:
-                flight_60_300.append(float(tot_t[index])/flight_time)
-            elif float(tot_t[index])>300 and float(tot_t[index])<=900:
-                flight_300_900.append(float(tot_t[index])/flight_time)
-            elif float(tot_t[index])>900 and float(tot_t[index])<=3600:
-                flight_900_3600.append(float(tot_t[index])/flight_time)
-            elif float(tot_t[index])>3600 and float(tot_t[index])<=14400:
-                flight_3600_14400.append(float(tot_t[index])/flight_time)
-            elif float(tot_t[index])>14400:
-                flight_14400.append(float(tot_t[index])/flight_time)
+            bout_durations.append(diff)
+
+        flight_time = sum(float(i) for i in bout_durations)
+        fly_time = flight_time/recording_duration
+        longest_bout = max(bout_durations)
+                
+        for k in range(0, len(bout_durations)): 
+            if float(bout_durations[k])>60 and float(bout_durations[k])<=300:
+                flight_60_300.append(float(bout_durations[k])/flight_time)
+            elif float(bout_durations[k])>300 and float(bout_durations[k])<=900:
+                flight_300_900.append(float(bout_durations[k])/flight_time)
+            elif float(bout_durations[k])>900 and float(bout_durations[k])<=3600:
+                flight_900_3600.append(float(bout_durations[k])/flight_time)
+            elif float(bout_durations[k])>3600 and float(bout_durations[k])<=14400:
+                flight_3600_14400.append(float(bout_durations[k])/flight_time)
+            elif float(bout_durations[k])>14400:
+                flight_14400.append(float(bout_durations[k])/flight_time)
+                
         if len(flight_60_300) > 0:
             sum_60_300=sum(float(a) for a in flight_60_300)
             shortest_bout = float(min(flight_60_300))*flight_time
@@ -289,32 +286,47 @@ def flying_bouts(time, speed, recording_duration):
         if len(flight_3600_14400) > 0:
             sum_3600_14400=sum(float(d) for d in flight_3600_14400)
         if len(flight_14400) > 0:
-            sum_14400=sum(float(e) for e in flight_14400)           
-        longest_bout = max(tot_t)
-        fly_time=flight_time/recording_duration          #total recording time defined by the user 
+            sum_14400=sum(float(e) for e in flight_14400)
+            
         events_300=len(flight_60_300)
         events_900=len(flight_300_900)
         events_3600=len(flight_900_3600)
         events_14400=len(flight_3600_14400)
         events_more_14400=len(flight_14400)
+        
     else:
         print('Channel has only one peak - cannot perform calculation')
 
-    return (flight_time, shortest_bout, longest_bout, fly_time, sum_60_300, sum_300_900, sum_900_3600, sum_3600_14400, sum_14400, events_300, events_900, events_3600, events_14400, events_more_14400)       
+    return (flight_time, shortest_bout, longest_bout, fly_time,
+            sum_60_300, sum_300_900, sum_900_3600, sum_3600_14400, sum_14400,
+            events_300, events_900, events_3600, events_14400, events_more_14400)       
 
 
 def graph(time, speed):
-    #***************************************************************************************************************************
-    # This function is used to to clean up the final time and speed variation file for each channel in order to produce
-    # clearer graphs.   
-    #***************************************************************************************************************************
+    
+    #**********************************************************************************************
+    #
+    # Cleans up the final time and speed variation file in order to produce clearer graphs.
+    #
+    # INPUT:    Lists of time and speed as floats.
+    #
+    # PROCESS:  Between bouts, new time, speed data points are added to represent that the insect 
+    #           stopped flying. These data points are a time value that is one second later than
+    #           the last time value of the bout and a speed value of 0 m/s. Finally, each list
+    #           ends with a time value of 0 and speed of 0.
+    #
+    # OUTPUT:   Lists of time and speed as floats, but with time and speed values between bouts 
+    #           that drop to speeds of zero. This makes plotting the speed vs. time flight
+    #           trajectories of the insects clearer.
+    #
+    #**********************************************************************************************
 
     time_new=[]
     speed_new=[]
     x=0
     y=0
     for i in range(0, len(time)-1):
-        if float(time[i+1]) > float(time[i]) + 20:
+        if float(time[i+1]) - float(time[i]) > 20:
             time_new.append(time[i])
             speed_new.append(speed[i])
             x=float(time[i]) + 1
@@ -332,11 +344,10 @@ def graph(time, speed):
     return time_new, speed_new
 
 #************************************************************************************************************
-# The flight data file(s) can be called by  defining the complete filepath (for example c:\desktop\recordings
-# \filename.txt).
+# Call the flight data files by defining the filepath folder.
 #************************************************************************************************************
 
-main_path = r"/Users/anasilberg/Desktop/git_repositories/undergrad-collabs/voltage_noise"
+main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts"
 path = main_path + "/standardized_files/"
 
 print(path, "\n")
@@ -345,7 +356,6 @@ big_list=[]
 
 dir_list = sorted(os.listdir(path))
 for file in dir_list:
-    print(file)
     filepath = path + str(file)
     tot_duration = recording_duration(filepath)
 
@@ -371,21 +381,21 @@ for file in dir_list:
     ID = str(file).split("_")[-1].replace(".txt", "")
     row_data["ID"] = ID
     print("ID: ", row_data["ID"])         
-    filename = str(file).split("_")[3].replace(".txt", "") + "_" + ID + '.txt'
+    filename = str(file).split("_")[2].replace(".txt", "") + "_" + ID + '.txt'
     row_data['filename'] = filename
     channel_chamber = str(file).split("-")[-1].split("_")[0]
     channel_chamber = re.findall('\d+|\D+', channel_chamber)
     channel_chamber = str(channel_chamber[0]) + "-" + str(channel_chamber[1])
     channel_letter = channel_chamber[0]
     channel_num = channel_chamber[2]
-    trial_type = str(file).split("_")[2]
+    trial_type = str(file).split("_")[1]
     row_data['trial_type'] = trial_type
     row_data["chamber"] = channel_chamber
     row_data["channel_letter"] = channel_letter
     row_data["channel_num"] = channel_num
 
 
-    # Calculations and Print Statements
+    # Function Calculations and Print Statements
     
     print('CHANNEL ' + channel_num + ' -------------------------------------------')
     time_channel = time_list(time_column, trough_column)
@@ -396,17 +406,17 @@ for file in dir_list:
         fly_to_3600, fly_to_14400, fly_more_14400, event_300, event_900, event_3600, \
         event_14400, event_more_14400 = flying_bouts(time_n, speed_n, tot_duration)
     
-    print('Average speed channel ' + channel_num + ' -> ' + '%.2f' % av_speed)
-    print('Total flight time channel ' + channel_num + ' -> ' + '%.2f' % fly_time)
-    print('Distance channel ' + channel_num + ' -> ' + '%.2f' % dist)
-    print('Shortest flying bout channel ' + channel_num + ' -> ' + '%.2f' % short_bout)
-    print('Longest flying bout channel ' + channel_num + ' -> ' + '%.2f' %long_bout)
+    print('Average speed (m/s) -> ' + '%.2f' % av_speed)
+    print('Total flight time (s) -> ' + '%.2f' % fly_time)
+    print('Distance (m) -> ' + '%.2f' % dist)
+    print('Shortest flying bout (s) -> ' + '%.2f' % short_bout)
+    print('Longest flying bout (s) -> ' + '%.2f' %long_bout)
     print('This individual spent ' + '%.3f' %flight + ' of its time flying with this composition: ')
     print('  60s-300s = ' + '%.3f' %fly_to_300 + ' with ',event_300, 'events')
     print('  300s-900s = ' + '%.3f' %fly_to_900 + ' with ',event_900, 'events')
     print('  900s-3600s = ' + '%.3f' %fly_to_3600 + ' with ',event_3600, 'events')
     print('  3600s-14400s = ' + '%.3f' %fly_to_14400 + ' with ',event_14400, 'events')
-    print('  14400s = ' + '%.3f' %fly_more_14400 + ' with ',event_more_14400, 'events')
+    print('  +14400s = ' + '%.3f' %fly_more_14400 + ' with ',event_more_14400, 'events')
     print('\n')
     
     time_graph, speed_graph = graph(time_n, speed_n)
@@ -424,9 +434,6 @@ for file in dir_list:
     row_data['portion_flying'] = round(flight, 2)
     row_data['recording_duration'] = round(tot_duration, 2)
     row_data['max_speed'] = round(max(speed_graph), 2)
-
-    if row_data['ID'] == "dead/NA":
-        continue
                 
     big_list.append(row_data)
         
@@ -439,14 +446,15 @@ with open(outpath + "flight_stats_summary.csv", "w") as csv_file:
     for row in big_list:
         writer.writerow(row)
 
-#************************************************************************************************************
+#**********************************************************************************************
 # Time it takes to execute the code.
-#************************************************************************************************************
+#**********************************************************************************************
 
 end = time.time()
 
 print("---",(end - start), "seconds ---")
 print("---",(end - start) / 60, "mintues ---")
 
-
-
+#**********************************************************************************************
+# This file has been modified from Attisano et al. 2015.
+#**********************************************************************************************
