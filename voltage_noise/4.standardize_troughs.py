@@ -10,10 +10,10 @@ def trough_standardization(column, dev_min, dev_max):
     # INPUT:    List of voltage values as floats.
     #
     # PROCESS:  Voltage values are rounded to two decimal places and appended to the volt_column. A confidence
-    #           interval is defined aroudn the mean voltage value using a low (min_value) and high (max_value)
+    #           interval is defined around the mean voltage value using a low (min_value) and high (max_value)
     #           threshold. These values can be defined by the user according to the characteristics of the
     #           voltage recording data. Voltages at or higher than the min value of the confidence interval
-    #           are set to 0 while voltages far below the min_value are set to 1 and identity the presence
+    #           are set to 0 while voltages far below the min_value are set to 1 and identify the presence
     #           of a trough. Thus, a trough can be defined as any large deviance in voltage that is due to
     #           noise or chance. Finally, a list of troughs is created after compressing sequences of 
     #           trough-like identifiers into a single identifier (e.g. compressed sequences of 1s to a single
@@ -63,7 +63,8 @@ def trough_standardization(column, dev_min, dev_max):
 # channels is different the script needs to be edited accordingly.
 #************************************************************************************************************
 
-main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/"
+#main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/"
+main_path = r"/Users/anasilberg/Desktop/Flight_scripts/"
 path = main_path + "test_files/"
 dir_list = sorted(os.listdir(path))
 

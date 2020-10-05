@@ -347,7 +347,8 @@ def graph(time, speed):
 # Call the flight data files by defining the filepath folder.
 #************************************************************************************************************
 
-main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts"
+#main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts"
+main_path = r"/Users/anasilberg/Desktop/Flight_scripts"
 path = main_path + "/standardized_files/"
 
 print(path, "\n")
