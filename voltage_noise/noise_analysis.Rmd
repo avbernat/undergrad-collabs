@@ -49,6 +49,7 @@ tapply(X=data$distance, INDEX=data$chamber, FUN=mean, na.rm=T)
 pwc <- data %>% 
   dunn_test(distance ~ chamber, p.adjust.method = "bonferroni")
 pwc <- pwc %>% add_xy_position(x = "chamber")
+pwc 
 
 res.kruskal <- data %>% kruskal_test(distance ~ chamber)
 res.kruskal
