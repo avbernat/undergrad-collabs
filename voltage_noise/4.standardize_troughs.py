@@ -130,7 +130,7 @@ for file in dir_list:
     #************************************************************************************************************
     
     outpath = main_path + "standardized_files/"
-    OutputFile = open(outpath +" standardized_" + str(file), mode="w")
+    OutputFile = open(outpath +"standardized_" + str(file), mode="w")
     for i in range(0, len(Lines)):
         OutputFile.write('%.2f' % time_column[i] + ", " +
                          '%.2f' % voltage_col[i] + "\n")
