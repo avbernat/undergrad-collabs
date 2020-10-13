@@ -63,9 +63,9 @@ def trough_standardization(column, dev_min, dev_max):
 # channels is different the script needs to be edited accordingly.
 #************************************************************************************************************
 
-#main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/"
-main_path = r"/Users/anasilberg/Desktop/Flight_scripts/"
-path = main_path + "test_files/"
+main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/"
+#main_path = r"/Users/anasilberg/Desktop/Flight_scripts/"
+path = main_path + "split_files/"
 dir_list = sorted(os.listdir(path))
 
 rows = round(len(dir_list)) * 2 
