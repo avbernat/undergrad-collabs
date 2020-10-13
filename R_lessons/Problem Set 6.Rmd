@@ -1,0 +1,33 @@
+---
+title: "Problem Set 6"
+author: "Anastasia Bernat"
+output: html_document
+---
+# Problem Set 6 | 13 May 2020 - 20 May 2020 at 10 AM
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Problem 1.**
+
+Write a while-while loop (nested while loop) that evaluates b until it's 3 and x until it's 5.
+
+```{r}
+
+```
+
+**Problem 2.**
+
+Write a while-while loop (nested while loop) to check the number of palindrome numbers present between two limits.
+
+What are palindromes? *Palindromes -  a word, number, phrase, or other sequence of characters which reads the same backward as forward, such as madam, racecar.*
+
+Use readline() as a way to input any upper or lower limit and a Boolean flag in your program to inform you that a palindrom was detected.
+
+```{r}
+
+
+
+# Q: Below, described your code in words. If you had to explain to someone what this code is doing and how each function, loop, or equation works, what would you say? 
+```

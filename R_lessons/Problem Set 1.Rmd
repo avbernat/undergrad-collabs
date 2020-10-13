@@ -1,0 +1,181 @@
+---
+title: "Problem Set 1"
+author: "Anastasia Bernat"
+date: "3/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(gridExtra)
+library(tidyverse)
+library(mosaic)
+library(broom)
+library(dplyr)
+library(knitr)
+```
+
+# Problem Set 1 | 27 March 2020
+
+Below I made a list of small practice problems that you can test out. I provide helpful information here and there, and I encourage you to use google to your advantage to get used to going on Stack Exchange or other coding Q&A websites to help you figure out these problems. 
+
+## Understanding Basic Data Types and Structures in R
+
+R provides many functions to examine features of vectors and other objects, for example
+
+class() - what kind of object is it (high-level)?
+
+typeof() - what is the object’s data type (low-level)?
+
+length() - how long is it? What about two dimensional objects?
+
+attributes() - does it have any metadata?
+
+Check out this quick read to understand the more subtle nuances of data types and structure in R: http://uc-r.github.io/integer_double/.
+
+**Problem 1.**
+
+Write a for loop that iterates over the numbers 1 to 7 and prints the cube of each number **as a string** using print().
+
+```{r}
+
+```
+
+**Problem 2.**
+
+Using a for loop, simulate the flip a coin twenty times, keeping track of the individual outcomes (1 = heads, 0 = tails) in a vector that you preallocte. Hint: you will need to use the sample() function; it takes a sample of the specified size from the elements of x using either with or without replacement.
+
+```{r}
+
+```
+
+**Problem 3.**
+
+Given 10 double-digit integers, reverse their digits. (e.g. 25 becomes 52, 34 becomes 43, etc.). Be creative with your datatypes to make manipulating the numbers more flexible! Also, keep in mind the different ways in which you can append a value to a vector:
+
+Here are several ways to do it. 
+
+**one way**
+
+for (i in 1:length(values))
+  vector[i] <- values[i]
+  
+**another way**
+for (i in 1:length(values))
+  vector <- c(vector, values[i])
+  
+**yet another way (there are many ways)**
+
+for (v in values)
+  vector <- c(vector, v)
+
+```{r}
+double_digs <- c(25, 34, 62, 89, 14, 31, 57, 93, 86, 43)
+
+```
+
+## Counts and Mathematical Manipulation in R
+
+**Problem 4**
+
+Using the following variables:
+
+```{r}
+x=1
+i=c(1:10)
+```
+
+Write a for() loop that increments x by two for each i. Look back at Lesson 3 for help!
+
+```{r}
+x=1
+i=c(1:10)
+```
+
+**Problem 5**
+
+Using the following variables:
+
+```{r}
+x=1
+y=40
+i=c(1:10)
+```
+
+Write a for() loop that increments x by three and decrease y by two, for each i.
+
+```{r}
+x=1
+y=40
+i=c(1:10)
+
+```
+
+**Problem 6**
+
+Edgar Anderson's Iris Data. This data can be loaded into R directly into the R command line. This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.
+
+Like in lessons 1 and 2, do some quick data exploration. Then, use a for loop to sum up the petal widiths for all the species using a counter. Remember you will need to iterate over the rows in a specific column! Check your answer for that column afterwards by using the sum() function.
+
+```{r}
+iris #run this line
+```
+
+**Problem 7**
+
+Southern and Northern hemispheres split. Write a for loop that sperates cities into northern and southern hemispheres. Hint: make sure you understand the structure of list vs. vector and their indicies, so make lots of print statemetns! 
+
+```{r}
+NY_coor <- c(40.7128, -74.0060)
+Paris_coor <- c(48.8566, 2.3522)
+London_coor <- c(51.5074, -0.1278)
+Tokyo_coor <- c(35.6762, 139.6503)
+RiodeJaneiro_coor <- c(-22.9068, -43.1729)
+CapeTown_coor <- c(-33.9249, 18.4241)
+
+coors <- list(NY_coor, Paris_coor, London_coor, Tokyo_coor, RiodeJaneiro_coor, CapeTown_coor)
+coors
+
+```
+
+```{r}
+
+```
+
+**Problem 8**
+
+Eastern and Western hemispheres split. Write a for loop that sperates cities into eastern and western hemispheres.
+
+```{r}
+
+```
+
+**Problem 9**
+
+Create an exponential function by using the polynomial of x between 1 and 4 and then store it in a list. Hint: look up the seq() function to create a range to iterate over. Also, look at its other arguments as well (e.g. type in seq(1,4) and then seq(1,4,2) to see what is happening).
+
+Your output should be a list with numbers that grow exponentially:
+
+1  4  9 16
+
+**Problem 10**
+
+Use a for loop to add 5 to each odd index in the list and 10 to every even index in the following list. Hint: use seq(l) to iterate/loop over indicies, not values of the list.
+
+Your output should look a list with these numbers: 10 20 30 40 40 50
+
+```{r}
+l = c(5, 10, 25, 30, 35, 40)
+
+```
+
+**Problem 11.**
+
+To get you thinking about what's to come for the next lesson. Don't worry if you don't get this right away, and you don't have to use a for loop necessarily. 
+
+Write an R program to convert temperatures to and from celsius, fahrenheit. You may need to look back to Lesson 3 to revisit if statements.
+
+```{r}
+
+```
+

@@ -1,0 +1,39 @@
+---
+title: "STAT XXX: Homework Y"
+author: "Your Name Goes Here"
+fontsize: 11pt
+fig_crop: false
+geometry: margin=0.75in
+output: 
+  pdf_document:
+    df_print: kable
+    highlight: monochrome
+    fig_height: 3.5
+    fig_width: 3.5
+    fig_caption: false
+---
+
+```{r setup, include=FALSE}
+# Load some commonly used packages.
+# If you get a "package not found" error, 
+# then follow the instructions for installing packages at 
+# http://statistics.uchicago.edu/~collins/Rinstall/
+library(MASS)
+library(gridExtra)
+library(tidyverse)
+library(mosaic)
+library(broom)
+# Set numerical output display parameters
+options(width=70, digits=4, scipen=8)
+# Set R output size a bit smaller than default
+knitr::opts_chunk$set(size='small', prompt=FALSE, comment="")
+# set plot theme to black and white
+ggplot2::theme_set(ggplot2::theme_bw())
+ggplot2::theme_update(panel.grid.major = ggplot2::element_line(colour = "grey75"))
+```
+
+```{r echo=FALSE}
+# Every HW R Markdown document should begin with all the lines of code above.
+```
+
+Start writing your homework here!

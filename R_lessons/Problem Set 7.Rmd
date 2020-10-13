@@ -1,0 +1,19 @@
+---
+title: "Problem Set 7: Solutions"
+author: "Anastasia Bernat"
+output: html_document
+---
+# Problem Set 7 | 20 May 2020 - 27 May 2020 at 10 AM
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Problem 1.**
+
+Write an R function to display and return all the prime numbers within an interval you give it (e.g. between 900 and 1000).
+
+```{r}
+
+```
+

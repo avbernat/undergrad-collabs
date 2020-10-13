@@ -1,0 +1,137 @@
+---
+title: "Problem Set 2"
+author: "Anastasia Bernat"
+date: "4/1/2020"
+output: html_document
+---
+# Problem Set 2 | 1 April 2020 - 8 April 202 at 10 AM
+
+**Problem 11. From PSET 1**
+
+We didn't get to this problem but go ahead and try it this time! Write an R program to convert temperatures to and from celsius, fahrenheit. You may need to look back to Lesson 3 to revisit if statements.
+
+```{r}
+
+```
+
+## While Loops
+
+From lesson 5, we learned that while loops take this form:
+
+while (boolean-expression) {
+  block of instructions
+}
+
+Also, if you don't know already, if you press cmd + option + i, you can create new R blocks.
+
+**Problem 1**
+
+When given variables K = 5 and I = -2, write a while loop that prints the sum of I and K after repeatedly adding 2 to I and subtracting 1 from K **until** I is greater than K. 
+
+```{r}
+K <- 5
+I <- -2
+```
+
+**Problem 2**
+
+When given the variable int = 4L, write a while loop that subtracts 1 from int and then calculates its cubed value **until** int becomes negative. Afterwards, **plot** the cubed values. 
+
+```{r}
+int = 4L
+```
+
+**Problem 3**
+
+Print the following pattern using a while loop:
+
+*
+**
+***
+****
+
+You will need to use the rep() function and the cat() function to be able to correctly print out this pattern.
+
+```{r}
+
+```
+
+
+**Problem 4**
+
+Print the multiplication table of 50 (up until it's 10th multiple of 50) using a while loop.
+
+```{r}
+
+```
+
+**Problem 5**
+
+Print a vector with the factors of 5 (till 50) using a while loop. The vector should print these values backwards as such: 
+
+[1] 50 25 10  5
+
+```{r}
+
+```
+
+## Repeat Loops 
+
+From lesson 5, we learned that repeat loops take a slightly different form than while loops. The boolean expression is at the bottom instead of the beginning of the loop:
+
+repeat {
+  block of instructions
+  (boolean-expression) {
+    break
+  }
+}
+
+Let's try some repeat loop problems
+
+**Problem 6**
+
+Using a repeat loop, print out the following:
+
+How many licks does it take to get to the center of a Tootsie Pop?
+1
+2
+CRUNCH. The world may never know.
+
+```{r}
+
+```
+
+**Problem 7**
+
+Repeat problem 3 but using a repeat loop. Problem 3 said, print this following pattern:
+
+*
+**
+***
+****
+
+```{r}
+
+```
+
+**Problem 8**
+
+Starting at 1, print every odd number from 1-19.
+
+```{r}
+i <- 1
+
+```
+
+**Problem 9**
+
+Using a repeat loop, count how many days have past since the new year. Read up on the library lubridate and the function as_date to understand what is happening. Here is one source but check out others as well: (https://www.rdocumentation.org/packages/lubridate/versions/1.7.4/topics/as_date)
+
+
+```{r}
+library(lubridate)
+
+date <- as_date("2020-01-01")
+
+```
+

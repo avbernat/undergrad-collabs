@@ -1,0 +1,63 @@
+---
+title: "Problem Set 4"
+author: "Anastasia Bernat"
+output: html_document
+---
+# Problem Set 4 | 8 April 2020 -15 April 202 at 10 AM
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below there are 2  nested for loop questions, but please be sure to answer the questions that proceed the '#' in the R code blocks. 
+
+**Problem 1.**
+
+Write a nested for loop that will print the following output:
+
+1
+2 2
+3 3 3
+4 4 4 4
+
+Hint: use the cat function to print correctly. 
+
+```{r}
+# Write nested loop here:
+
+
+
+
+
+# -----------------------------------
+# How many times was the outler loop executed?
+# How many times was the inner loop executed? 
+
+# Which numbers does the inner loop loop over on the third execution of the outler loop and why?  
+```
+
+**Problem 2.**
+
+Count the characters in all these movie titles and print the results one by one to your screen, in this format:
+
+"The title [movie_title] is [X] characters long."
+
+Hint: Look into the stringr library and its functions to help you complete the task. 
+
+```{r}
+library(stringr) 
+my_movies = list(c("Dead Poets Society", "Life is Beautiful"),
+                 c("Radium Girls", "Parasite"),
+                 c("Inception", "Interstellar"))
+
+# Write nested loop here:
+
+
+
+
+
+
+# -----------------------------------
+# How many times was the outler loop executed? 
+# How many times was the inner loop executed? 
+```
