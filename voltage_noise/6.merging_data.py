@@ -8,13 +8,22 @@ import numpy as np
 from datetime import datetime, date
 
 #************************************************************************************************************
-# Merging 4 datasets together. First, merges the demographics data with the flight trial data.
-# Then merges the combined trial-demographics_data with the egg and analyses data. Finally, merges the
-# egg-analyses-trial-demographics data wih the morphology data.
+# Merging 5 datasets together using csv.DictReader and pandas.
 #************************************************************************************************************
 
 #***************************************************************************************
-# Merge 1. Demographics data with flight trial data.
+#
+#   MERGE 1. Demographics data (e.g. long, lat, sex, host, site) with trial data
+#            (handwritten recordings).
+#   
+#   PROCESS: First, input the paths to each CSV file. Then, county_dict is written out
+#            as a dictionary where population is the key and the county the bugs were
+#            collected is the value.
+#            Next, the demographics csv file is opened and read in order to store its
+#            demographics information in two dictionaries. Finally, the trial csv file
+#            is opened and extracts the demographics data from the dictionaries and
+#            combines the information into a single csv file, 2.trial_demogrpahics.csv.
+#
 #***************************************************************************************
 
 main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/data/"
@@ -30,13 +39,8 @@ county_dict = {"Gainesville": "Alachua",
                "North Key Largo": "North Key Largo",
                "Plantation Key": "Plantation Key"}
 
-pop_dict = {} # save for later for egg data | 447 ID missed - no pop
-sex_dict = {} 
-site_dict = {}
-host_dict = {}
-lat_dict = {}
-long_dict = {}
-short_wing_dict = {}
+pop_dict = {} # this dictionary is used during egg data merging | 447 ID missed - no pop
+demo_dict = {}
 
 with open(demographics_data, "r") as demo_data:
     reader = csv.DictReader(demo_data)
@@ -48,47 +52,41 @@ with open(demographics_data, "r") as demo_data:
         host = row["host_plant"]
         lat = row["latitude"]
         long = row["longitude"]
-        field_date = row['field_date_collected']
 
         if ID not in pop_dict:
             pop_dict[ID] = pop
-        if ID not in sex_dict:
-            sex_dict[ID] = sex
-        if (ID, pop) not in site_dict:
-            site_dict[(ID, pop)] = site
-        if (ID, site) not in host_dict:
-            host_dict[(ID, site)] = host
-        if (ID, site) not in lat_dict:
-            lat_dict[(ID, site)] = lat
-        if lat not in long_dict:
-            long_dict[lat] = long
+        if (ID, pop) not in demo_dict:
+            demo_dict[(ID,pop)] = [sex, site, host, lat, long]
 
 full_data = [] 
-with open(trial_data, "r") as all_data:
-    reader = csv.DictReader(all_data)
+with open(trial_data, "r") as trials:
+    reader = csv.DictReader(trials)
     for r in reader:
+        if r["died?"] == 'Y' or r["NOTES"].startswith("BUG: short"):
+            continue
+
         row_data = {}
-        ID_num = r["\ufeffID"] #removed \ufeff
+        ID_num = r["ID"]
         population = r["population"]
+
+        # Extract Demographic Data
         try:
-            sex = sex_dict[ID_num]
-            site = site_dict[(ID_num, population)]
-            host_plant = host_dict[(ID_num, site)]
-            lat = lat_dict[(ID_num, site)]
-            long = long_dict[lat]
+            demographics = demo_dict[(ID_num, population)]
+            sex, site, host_plant, lat, long = demographics[0], demographics[1], demographics[2], \
+                                               demographics[3], demographics[4]
+            
             county = county_dict[population]
+            
         except KeyError:
-            #pprint("KeyError for ID, ", ID_num)
+            #print("KeyError for ID, ", ID_num)
             continue
 
         row_data["ID"] = ID_num
-        if r["died?"] == 'Y':
-            continue
         row_data["set_number"] = r["set_number"]
         row_data["chamber"] = r["chamber"]
         row_data["test_date"] = r["test_date"]
 
-        # Time calculations to check total duration
+        # Time Calculations to Check Total Duration
         row_data["time_start"] = r["time_start"]
         row_data["time_end"] = r["time_end"]
         
@@ -102,7 +100,7 @@ with open(trial_data, "r") as all_data:
 
         row_data["duration_check"] = duration
 
-        # Rest of Data
+        # Rest of the Trial Data
         row_data["sex"] = sex
         row_data["population"] = population
         row_data["county"] = county
@@ -110,8 +108,6 @@ with open(trial_data, "r") as all_data:
         row_data["host_plant"] = host_plant
         row_data["flew"] = r["flew"]
         row_data["flight_type"] = r["flight_type"]
-        if r["NOTES"].startswith("BUG: short"):
-            continue
         row_data["NOTES"] = r["NOTES"]
         row_data["mass"] = r["mass"]
         row_data["EWM"] = r["eggs"]
@@ -120,8 +116,6 @@ with open(trial_data, "r") as all_data:
         row_data["longitude"] = long
 
         full_data.append(row_data)
-
-#print(full_data[0:5])
 
 outpath = main_path + "2.trial-demographics.csv"
 
@@ -132,9 +126,8 @@ with open(outpath, "w") as output_file:
         writer.writerow(r)
 
 #***************************************************************************************
-# Merge 2. Trial-demographics data with flight_stats data.
+# Merge 2. Trial-demographics data with flight-stats data.
 #***************************************************************************************
-
 
 path1 = main_path + "2.trial-demographics.csv"
 path1copy = main_path + "2.trial-demographics.csv"
@@ -177,7 +170,7 @@ merged_data = pd.merge(left=df_analyses, right=df_trial_demo,
                        right_on=['ID', 'set_number', 'trial_type', 'chamber'],
                        how='inner')
 
-outpath = main_path + "3.stats-trial-demo-data.csv"
+outpath = main_path + "3.stats-trial-demo.csv"
 merged_data.to_csv(outpath, index=False, mode='w')
 
 #***************************************************************************************
@@ -185,7 +178,7 @@ merged_data.to_csv(outpath, index=False, mode='w')
 #***************************************************************************************
 
 egg_data = main_path + "3.egg_data-initial.csv"
-main_data = main_path + "3.stats-trial-demo-data.csv"
+main_data = main_path + "3.stats-trial-demo.csv"
 
 egg_df = pd.read_csv(egg_data, parse_dates = ['date_collected'])
 egg_df_sums = egg_df.groupby('ID')['eggs'].sum().reset_index()
@@ -336,4 +329,3 @@ vertical_merge[('set_number')] = np.where(vertical_merge['set_number'] > 0,
 
 flight_outpath = main_path + "all_flight_data.csv"
 vertical_merge.to_csv(flight_outpath, index=False, mode='w')
-#print("Done!")
