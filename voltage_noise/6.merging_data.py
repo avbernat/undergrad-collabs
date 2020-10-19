@@ -78,7 +78,7 @@ with open(trial_data, "r") as trials:
             county = county_dict[population]
             
         except KeyError:
-            #print("KeyError for ID, ", ID_num)
+            print("KeyError for ID, ", ID_num)
             continue
 
         row_data["ID"] = ID_num
@@ -126,7 +126,11 @@ with open(outpath, "w") as output_file:
         writer.writerow(r)
 
 #***************************************************************************************
-# Merge 2. Trial-demographics data with flight-stats data.
+#
+#   MERGE 2. Trial-demographics data with flight-stats data.
+#
+#   PROCESS: 
+#
 #***************************************************************************************
 
 path1 = main_path + "2.trial-demographics.csv"
