@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 
+from bug_match_check import KeyError_check
 from datetime import datetime, date
 
 #************************************************************************************************************
@@ -22,14 +23,14 @@ from datetime import datetime, date
 #            Next, the demographics csv file is opened and read in order to store its
 #            demographics information in two dictionaries. Finally, the trial csv file
 #            is opened and extracts the demographics data from the dictionaries and
-#            combines the information into a single csv file, 2.trial_demogrpahics.csv.
+#            combines the information into a single csv file.
 #
 #***************************************************************************************
 
 main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/data/"
 demographics_data = main_path + "1.demographic_data.csv"
 trial_data = main_path + "1.trials_time-processed-Aug6.2020.csv"
-
+                
 county_dict = {"Gainesville": "Alachua",
                "Homestead": "Miami-Dade",
                "Key Largo": "Key Largo",
@@ -129,7 +130,10 @@ with open(outpath, "w") as output_file:
 #
 #   MERGE 2. Trial-demographics data with flight-stats data.
 #
-#   PROCESS: 
+#   PROCESS: Using the KeyError_check function imported at the top of the file, check
+#            to see that the ID and set from the handwritten data matches the ID
+#            and set of the recorded data. If so, then do an inner merge the data based
+#            on ID, set number, trial_type, and chamber.
 #
 #***************************************************************************************
 
@@ -137,52 +141,21 @@ path1 = main_path + "2.trial-demographics.csv"
 path1copy = main_path + "2.trial-demographics.csv"
 path2 = main_path + "2.flight_stats_summary.csv"
 
-df_trial_demo = pd.read_csv(path1)
+df_trial_demo = pd.read_csv(path1, parse_dates = ['test_date'])
 df_analyses = pd.read_csv(path2)
 
-nrows1 = df_trial_demo.shape[0]
-nrows2 = df_analyses.shape[0]
-
-if nrows1 < nrows2:
-    path1 = path2
-    path2 = path1copy
+bug_tested_dict = KeyError_check(path1, path2)         
     
-KeyError_check = {}
-with open(path2, "r") as data2:
-    reader = csv.DictReader(data2)
-    for row in reader:
-        ID = row["ID"]
-        set_num = row["set_number"].lstrip("0")
-
-        if (ID, set_num) not in KeyError_check:
-            KeyError_check[(ID, set_num)] = ' '
-
-with open(path1, "r") as data1:
-    reader = csv.DictReader(data1)
-    for r in reader:
-        ID_num = r["ID"]
-        set_num = r["set_number"].lstrip("0")
-
-        try:
-            success = KeyError_check[(ID_num, set_num)]
-        except KeyError:
-            print("KeyError for ID, ", ID_num, " and set num, ", set_num)
-            
-    
-merged_data = pd.merge(left=df_analyses, right=df_trial_demo,
+stats_data = pd.merge(left=df_analyses, right=df_trial_demo,
                        left_on=['ID', 'set_number', 'trial_type', 'chamber'],
                        right_on=['ID', 'set_number', 'trial_type', 'chamber'],
                        how='inner')
 
-outpath = main_path + "3.stats-trial-demo.csv"
-merged_data.to_csv(outpath, index=False, mode='w')
-
 #***************************************************************************************
-# Merge 3. Analyses-trial-demographics data with egg data.
+#   MERGE 3. Stats data with egg data.
 #***************************************************************************************
 
 egg_data = main_path + "3.egg_data-initial.csv"
-main_data = main_path + "3.stats-trial-demo.csv"
 
 egg_df = pd.read_csv(egg_data, parse_dates = ['date_collected'])
 egg_df_sums = egg_df.groupby('ID')['eggs'].sum().reset_index()
@@ -198,19 +171,11 @@ egg_outpath = main_path + "3.egg_data-final.csv"
 merged_eggs.to_csv(egg_outpath, index=False, mode='w')
 
 
-main_df = pd.read_csv(main_data, parse_dates = ['test_date'])
-merged_data2 = pd.merge(left=main_df, right=egg_df_sums, left_on=['ID'],
+merged_data = pd.merge(left=stats_data, right=egg_df_sums, left_on=['ID'],
                        right_on=['ID'], how='left')
 
-outpath2 = main_path + "4.main_data.csv"
-merged_data2.to_csv(outpath2, index=False, mode='w')
-
-# make a total eggs dict by ID
-# make an eggs dict by (ID, date_collected)
-
-# could make a file where add to row if date and ID there
-# make an new row with info on egg output if date not overlapping
-# https://www.geeksforgeeks.org/python-combine-two-dictionary-adding-values-for-common-keys/
+outpath = main_path + "4.main_data.csv"
+merged_data.to_csv(outpath, index=False, mode='w')
 
 #***************************************************************************************
 # Merge 4. Egg-analyses-trial-demographics data with morphology data.
