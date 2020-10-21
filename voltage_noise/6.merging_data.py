@@ -4,8 +4,7 @@ import re
 import pandas as pd
 import numpy as np
 
-
-from bug_match_check import KeyError_check
+from KeyError_checks import trial_check
 from datetime import datetime, date
 
 #************************************************************************************************************
@@ -144,7 +143,7 @@ path2 = main_path + "2.flight_stats_summary.csv"
 df_trial_demo = pd.read_csv(path1, parse_dates = ['test_date'])
 df_analyses = pd.read_csv(path2)
 
-bug_tested_dict = KeyError_check(path1, path2)         
+bugs_tested_dict = trial_check(path1, path2)         
     
 stats_data = pd.merge(left=df_analyses, right=df_trial_demo,
                        left_on=['ID', 'set_number', 'trial_type', 'chamber'],
@@ -152,7 +151,14 @@ stats_data = pd.merge(left=df_analyses, right=df_trial_demo,
                        how='inner')
 
 #***************************************************************************************
+#
 #   MERGE 3. Stats data with egg data.
+#
+#   PROCESS: Grouped individual recordings of egg count by ID in order to get the total
+#            number of eggs laid by a female bug during the entire experiment. Total egg
+#            count is then grouped with the original egg datasheet. Finally, the egg
+#            datasheet is merged with the rest of the flight statistics data.
+#
 #***************************************************************************************
 
 egg_data = main_path + "3.egg_data-initial.csv"
@@ -161,15 +167,12 @@ egg_df = pd.read_csv(egg_data, parse_dates = ['date_collected'])
 egg_df_sums = egg_df.groupby('ID')['eggs'].sum().reset_index()
 egg_df_sums.rename(columns={'eggs':'total_eggs'}, inplace=True)
                                  
-merged_eggs = pd.merge(left=egg_df, right=egg_df_sums, left_on=['ID'],
-                       right_on=['ID'], how='left')
-
-merged_eggs['ID'] = merged_eggs['ID'].apply(str)
-merged_eggs['pop'] = merged_eggs['ID'].map(pop_dict)
+eggs = pd.merge(left=egg_df, right=egg_df_sums, left_on=['ID'], right_on=['ID'], how='left')
+eggs['ID'] = eggs['ID'].apply(str)
+eggs['pop'] = eggs['ID'].map(pop_dict)
 
 egg_outpath = main_path + "3.egg_data-final.csv"
-merged_eggs.to_csv(egg_outpath, index=False, mode='w')
-
+eggs.to_csv(egg_outpath, index=False, mode='w')
 
 merged_data = pd.merge(left=stats_data, right=egg_df_sums, left_on=['ID'],
                        right_on=['ID'], how='left')
@@ -178,7 +181,14 @@ outpath = main_path + "4.main_data.csv"
 merged_data.to_csv(outpath, index=False, mode='w')
 
 #***************************************************************************************
-# Merge 4. Egg-analyses-trial-demographics data with morphology data.
+#
+#   MERGE 4. Egg-stats-demographics data with morphology data.
+#
+#   PROCESS: Store morphology measurements and sex recordings in dictionaries. Check to
+#            see that the sexes typed on the flight trials datasheet matches the more
+#            accurate sex recording from the morphology measurements. Merge and adjust
+#            the morphology and sex data with the eggs-stats-demographics data. 
+#
 #***************************************************************************************
 
 morphology_data = main_path + "4.tested-morph.csv"
@@ -191,7 +201,7 @@ morph_measurements = {}
 with open(morphology_data, "r") as morph_data:
     reader = csv.DictReader(morph_data)
     for row in reader:
-        ID = row["\ufeffID"] #removed \ufeff
+        ID = row["ID"]
         sex = row["sex"]
         pop = row["population"]
         
@@ -227,8 +237,10 @@ with open(main_data, "r") as main_data:
         try:
             pop = check_sex_dict[(ID_num, sex)]
         except KeyError:
-            #print("KeyError for ID, ", ID_num)
+            print("KeyError for ID, ", ID_num, "   wrong sex or no sex recorded in the trials datasheet")
+            print("     Old sex: ", sex)
             sex = update_sex_dict[ID]
+            print("     New sex: ", sex)
 
         r["sex"] = sex
         
@@ -250,8 +262,6 @@ with open(main_data, "r") as main_data:
 
         full_data.append(r)
 
-#print(full_data[0:5])
-
 outpath = main_path + "5.complete_flight_data.csv"
 
 with open(outpath, "w") as output_file:
@@ -260,14 +270,18 @@ with open(outpath, "w") as output_file:
     for r in full_data:
         writer.writerow(r)
 
-
 #***************************************************************************************
-# Merge 5. Tested bugs with non-tested bugs  
+#
+#   MERGE 5. Tested bugs with non-tested bugs.
+#
+#   PROCESS: All the short-wing bugs were not flight tested, but we can still add their
+#            morpholgy data to to tested data. To do so, a vertical merge is encoded and
+#            a new column is created that marks whether the bug has been tested or not.
+#
 #***************************************************************************************
 
 tested_data = main_path + "5.complete_flight_data.csv"
 nontested_data = main_path + "5.not_tested-morph.csv"
-
 
 df_tested = pd.read_csv(tested_data)
 df_nontested = pd.read_csv(nontested_data)

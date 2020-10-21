@@ -1,10 +1,10 @@
 import csv
 
-def KeyError_check(path1, path2):
+def trial_check(path1, path2):
 
     #***************************************************************************************
-    #   Check to see that the ID and set numberfrom the handwritten data matches the ID
-    #   and set number of the recorded data.
+    #   Check to see that the ID and set number from the handwritten data matches the ID
+    #   and set number of the recorded data of the flight trials.
     #***************************************************************************************
 
     match_dict = {}
