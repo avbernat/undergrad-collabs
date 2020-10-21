@@ -179,8 +179,8 @@ for file in dir_list:
     print("\n", file)
     filepath = path + str(file)
     InputFile = open(filepath, mode="r", encoding='latin-1')
-
     Lines = InputFile.readlines()
+    
     time_column = []
     voltage_column = []
 

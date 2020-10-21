@@ -176,7 +176,7 @@ parser.add_argument('-M', '--max', type=float, metavar='', required=True,
 args = parser.parse_args()
 
 main_path = args.path
-path = main_path + "test_files/"
+path = main_path + "split_files/"
 dir_list = sorted(os.listdir(path))
 
 run_diagnostics = args.diagnose
