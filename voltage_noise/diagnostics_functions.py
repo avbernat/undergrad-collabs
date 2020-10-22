@@ -110,7 +110,7 @@ def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
     axs = axs.flatten()
     im = axs[f].imshow(a, cmap='viridis', interpolation='nearest') # cmap='hot'
 
-    axs[f].title.set_text(filename + '\nMax-Min=%i' %(np.max(matrix)-np.min(matrix)))
+    axs[f].title.set_text(filename + '\nMax-Min=%.2f' %(np.max(matrix)-np.min(matrix)))
     axs[f].set_xticks(np.arange(len(deviations)))
     axs[f].set_yticks(np.arange(len(deviations)))
     axs[f].set_xticklabels(deviations, fontsize=8)
