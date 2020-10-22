@@ -93,7 +93,7 @@ def map_diagnostics(deviations, f, heat_map, axs):
     axs = axs.flatten()
     im = axs[f].imshow(a, cmap='viridis', interpolation='nearest')
 
-    axs[f].title.set_text(file + '\nMax-Min=%i' %(max(all_troughs)[0]-min(all_troughs)[-1]))
+    axs[f].title.set_text(file + '\nMax-Min=%i' %(np.max(all_troughs)-np.min(all_troughs)))
     axs[f].set_xticks(np.arange(len(deviations)))
     axs[f].set_yticks(np.arange(len(deviations)))
     axs[f].set_xticklabels(deviations, fontsize=8)

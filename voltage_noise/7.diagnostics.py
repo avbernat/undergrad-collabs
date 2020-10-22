@@ -1,6 +1,5 @@
 import os
 import math
-import numpy as np
 import matplotlib.pyplot as plt
 
 from diagnostics_functions import trough_standardization
@@ -41,7 +40,7 @@ dir_list = sorted(os.listdir(path))
 
 rows = math.ceil(len(dir_list) / 5) * 2
 hmap, axes = plt.subplots(rows,5, figsize=(20, 4*rows), facecolor='w', edgecolor='k')
-hmap.tight_layout(pad=5.4)
+hmap.tight_layout(pad=6.0)
 
 f=0
 for file in dir_list:
@@ -63,9 +62,9 @@ for file in dir_list:
         all_speeds.append(speeds)
         all_distances.append(distances)
         
-    heat_map(devs, f, hmap, axes, all_speeds)
+    heat_map(devs, f, hmap, axes, all_speeds, file, "Average Speed (m/s)")
     f+=1
-    heat_map(devs, f, hmap, axes, all_distances)
+    heat_map(devs, f, hmap, axes, all_distances, file, "Distance (m/s)")
     f+=1
 
 hmap.savefig("stats_diagnostics.png")

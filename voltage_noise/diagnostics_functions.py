@@ -1,3 +1,5 @@
+import numpy as np
+
 def trough_standardization(column, dev_min, dev_max):
     
     volt_column = [] 
@@ -102,13 +104,13 @@ def distance(time, speed):
     return (time_final, speed_final, distance, average_speed)  
 
 
-def heat_map(deviations, f, heat_map, axs, matrix):
+def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
 
     a = np.array(matrix)
     axs = axs.flatten()
     im = axs[f].imshow(a, cmap='viridis', interpolation='nearest') # cmap='hot'
 
-    axs[f].title.set_text(file + '\nMax-Min=%i' %(max(matrix)[0]-min(matrix)[-1]))
+    axs[f].title.set_text(filename + '\nMax-Min=%i' %(np.max(matrix)-np.min(matrix)))
     axs[f].set_xticks(np.arange(len(deviations)))
     axs[f].set_yticks(np.arange(len(deviations)))
     axs[f].set_xticklabels(deviations, fontsize=8)
@@ -117,7 +119,7 @@ def heat_map(deviations, f, heat_map, axs, matrix):
     axs[f].set_ylabel("Min Dev Val", fontsize=12)
 
     cbar = heat_map.colorbar(im, ax=axs[f], fraction=0.046, pad=0.03)
-    cbar.ax.set_ylabel("Number of Troughs", rotation=-90, va="bottom")
+    cbar.ax.set_ylabel(bar_title, rotation=-90, va="bottom")
     
     rows, cols = a.shape
     for i in range(rows):
