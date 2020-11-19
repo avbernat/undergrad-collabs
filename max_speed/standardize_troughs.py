@@ -159,8 +159,9 @@ def map_diagnostics(deviations, f, heat_map, axs):
 
 if __name__=="__main__":
     
-    main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" # input the path to the Flight_scripts directory here 
-    path = main_path + "txt_files/"
+    #main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" # input the path to the Flight_scripts directory here 
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/" 
+    path = main_path + "set_files/"
     dir_list = sorted(os.listdir(path))
 
     # scatter plot
@@ -206,8 +207,9 @@ if __name__=="__main__":
         #************************************************************************************************************
         
         #trough_col = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
-        
-        outpath = main_path + "standardized_files/"
+
+        out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+        outpath = out_path + "standardized_files/"
         OutputFile = open(outpath + "standardized_" + str(file), mode="w")
         for i in range(0, len(Lines)):
             OutputFile.write('%.2f' % time_column[i] + ", " +
