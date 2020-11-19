@@ -2,9 +2,9 @@ import os
 import math
 import matplotlib.pyplot as plt
 
-from diagnostics_functions import trough_standardization
-from diagnostics_functions import time_list, speed_list, distance
+from standardize_troughs import trough_standardization
 from diagnostics_functions import heat_map
+from flight_analysis import time_list, speed_list, distance
 
 def standardize(filepath, min_dev, max_dev, trough_standardization):
 
@@ -34,8 +34,8 @@ def analyze(time_column, trough_column, time_list, speed_list, distance):
     
     return (round(av_speed,2), round(dist,2))
 
-main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/" 
-path = main_path + "test_files/"
+main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" 
+path = main_path + "txt_files/"
 dir_list = sorted(os.listdir(path))
 
 rows = math.ceil(len(dir_list) / 5) * 2

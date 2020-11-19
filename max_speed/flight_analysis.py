@@ -347,114 +347,115 @@ def graph(time, speed):
 # Call the flight data files by defining the filepath folder.
 #************************************************************************************************************
 
-#main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts"
-main_path = r"/Users/anasilberg/Desktop/Flight_scripts"
-path = main_path + "/standardized_files/"
-
-print(path, "\n")
-
-big_list=[]
-
-dir_list = sorted(os.listdir(path))
-for file in dir_list:
-    filepath = path + str(file)
-    tot_duration = recording_duration(filepath)
-
-    input_file = open(filepath, mode="r")
-    data_list = list(input_file)
+if __name__=="__main__":
     
-    time_column = []
-    trough_column = []
-    
-    for i in range(0, len(data_list)):
-        raw = data_list[i]
-        a,b = raw.split(",") 
-        time_column.append(a)
-        trough_column.append(b)
-     
-    input_file.close()
+    main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    path = main_path + "/standardized_files/"
 
-    output_data = []
-    row_data = {}
+    print(path, "\n")
 
-    # Filename String Manipulation: Channel Letters, Channel Numbers, and IDs
-    
-    ID = str(file).split("_")[-1].replace(".txt", "")
-    row_data["ID"] = ID
-    print("ID: ", row_data["ID"])         
-    filename = str(file).split("_")[2].replace(".txt", "") + "_" + ID + '.txt'
-    row_data['filename'] = filename
-    channel_chamber = str(file).split("-")[-1].split("_")[0]
-    channel_chamber = re.findall('\d+|\D+', channel_chamber)
-    channel_chamber = str(channel_chamber[0]) + "-" + str(channel_chamber[1])
-    channel_letter = channel_chamber[0]
-    channel_num = channel_chamber[2]
-    trial_type = str(file).split("_")[1]
-    row_data['trial_type'] = trial_type
-    row_data["chamber"] = channel_chamber
-    row_data["channel_letter"] = channel_letter
-    row_data["channel_num"] = channel_num
+    big_list=[]
 
+    dir_list = sorted(os.listdir(path))
+    for file in dir_list:
+        filepath = path + str(file)
+        tot_duration = recording_duration(filepath)
 
-    # Function Calculations and Print Statements
-    
-    print('CHANNEL ' + channel_num + ' -------------------------------------------')
-    time_channel = time_list(time_column, trough_column)
-    speed_channel = speed_list(time_channel)
-    time_n, speed_n, dist, av_speed = distance(time_channel, speed_channel)
-    
-    fly_time, short_bout, long_bout, flight, fly_to_300, fly_to_900,  \
-        fly_to_3600, fly_to_14400, fly_more_14400, event_300, event_900, event_3600, \
-        event_14400, event_more_14400 = flying_bouts(time_n, speed_n, tot_duration)
-    
-    print('Average speed (m/s) -> ' + '%.2f' % av_speed)
-    print('Total flight time (s) -> ' + '%.2f' % fly_time)
-    print('Distance (m) -> ' + '%.2f' % dist)
-    print('Shortest flying bout (s) -> ' + '%.2f' % short_bout)
-    print('Longest flying bout (s) -> ' + '%.2f' %long_bout)
-    print('This individual spent ' + '%.3f' %flight + ' of its time flying with this composition: ')
-    print('  60s-300s = ' + '%.3f' %fly_to_300 + ' with ',event_300, 'events')
-    print('  300s-900s = ' + '%.3f' %fly_to_900 + ' with ',event_900, 'events')
-    print('  900s-3600s = ' + '%.3f' %fly_to_3600 + ' with ',event_3600, 'events')
-    print('  3600s-14400s = ' + '%.3f' %fly_to_14400 + ' with ',event_14400, 'events')
-    print('  +14400s = ' + '%.3f' %fly_more_14400 + ' with ',event_more_14400, 'events')
-    print('\n')
-    
-    time_graph, speed_graph = graph(time_n, speed_n)
-
-    # Flight Stats:
-    
-    set_number = str(file).split("_")[3].split("-")[0].split("t0")[-1]
-
-    row_data["set_number"] = set_number
-    row_data['average_speed'] = round(av_speed, 2)
-    row_data['total_flight_time'] = round(fly_time, 2)
-    row_data['distance'] = round(dist,2)
-    row_data['shortest_flying_bout'] = round(short_bout, 2)      
-    row_data['longest_flying_bout'] = round(long_bout, 2)        
-    row_data['portion_flying'] = round(flight, 2)
-    row_data['recording_duration'] = round(tot_duration, 2)
-    row_data['max_speed'] = round(max(speed_graph), 2)
-                
-    big_list.append(row_data)
+        input_file = open(filepath, mode="r")
+        data_list = list(input_file)
         
-# All Flight Stats Summary File
+        time_column = []
+        trough_column = []
+        
+        for i in range(0, len(data_list)):
+            raw = data_list[i]
+            a,b = raw.split(",") 
+            time_column.append(a)
+            trough_column.append(b)
+         
+        input_file.close()
 
-outpath = main_path + "/data/"
-with open(outpath + "flight_stats_summary.csv", "w") as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys())
-    writer.writeheader()
-    for row in big_list:
-        writer.writerow(row)
+        output_data = []
+        row_data = {}
 
-#**********************************************************************************************
-# Time it takes to execute the code.
-#**********************************************************************************************
+        # Filename String Manipulation: Channel Letters, Channel Numbers, and IDs
+        
+        ID = str(file).split("_")[-1].replace(".txt", "")
+        row_data["ID"] = ID
+        print("ID: ", row_data["ID"])         
+        filename = str(file).split("_")[2].replace(".txt", "") + "_" + ID + '.txt'
+        row_data['filename'] = filename
+        channel_chamber = str(file).split("-")[-1].split("_")[0]
+        channel_chamber = re.findall('\d+|\D+', channel_chamber)
+        channel_chamber = str(channel_chamber[0]) + "-" + str(channel_chamber[1])
+        channel_letter = channel_chamber[0]
+        channel_num = channel_chamber[2]
+        trial_type = str(file).split("_")[1]
+        row_data['trial_type'] = trial_type
+        row_data["chamber"] = channel_chamber
+        row_data["channel_letter"] = channel_letter
+        row_data["channel_num"] = channel_num
 
-end = time.time()
 
-print("---",(end - start), "seconds ---")
-print("---",(end - start) / 60, "mintues ---")
+        # Function Calculations and Print Statements
+        
+        print('CHANNEL ' + channel_num + ' -------------------------------------------')
+        time_channel = time_list(time_column, trough_column)
+        speed_channel = speed_list(time_channel)
+        time_n, speed_n, dist, av_speed = distance(time_channel, speed_channel)
+        
+        fly_time, short_bout, long_bout, flight, fly_to_300, fly_to_900,  \
+            fly_to_3600, fly_to_14400, fly_more_14400, event_300, event_900, event_3600, \
+            event_14400, event_more_14400 = flying_bouts(time_n, speed_n, tot_duration)
+        
+        print('Average speed (m/s) -> ' + '%.2f' % av_speed)
+        print('Total flight time (s) -> ' + '%.2f' % fly_time)
+        print('Distance (m) -> ' + '%.2f' % dist)
+        print('Shortest flying bout (s) -> ' + '%.2f' % short_bout)
+        print('Longest flying bout (s) -> ' + '%.2f' %long_bout)
+        print('This individual spent ' + '%.3f' %flight + ' of its time flying with this composition: ')
+        print('  60s-300s = ' + '%.3f' %fly_to_300 + ' with ',event_300, 'events')
+        print('  300s-900s = ' + '%.3f' %fly_to_900 + ' with ',event_900, 'events')
+        print('  900s-3600s = ' + '%.3f' %fly_to_3600 + ' with ',event_3600, 'events')
+        print('  3600s-14400s = ' + '%.3f' %fly_to_14400 + ' with ',event_14400, 'events')
+        print('  +14400s = ' + '%.3f' %fly_more_14400 + ' with ',event_more_14400, 'events')
+        print('\n')
+        
+        time_graph, speed_graph = graph(time_n, speed_n)
+
+        # Flight Stats:
+        
+        set_number = str(file).split("_")[3].split("-")[0].split("t0")[-1]
+
+        row_data["set_number"] = set_number
+        row_data['average_speed'] = round(av_speed, 2)
+        row_data['total_flight_time'] = round(fly_time, 2)
+        row_data['distance'] = round(dist,2)
+        row_data['shortest_flying_bout'] = round(short_bout, 2)      
+        row_data['longest_flying_bout'] = round(long_bout, 2)        
+        row_data['portion_flying'] = round(flight, 2)
+        row_data['recording_duration'] = round(tot_duration, 2)
+        row_data['max_speed'] = round(max(speed_graph), 2)
+                    
+        big_list.append(row_data)
+            
+    # All Flight Stats Summary File
+
+    outpath = main_path
+    with open(outpath + "flight_stats_summary.csv", "w") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys())
+        writer.writeheader()
+        for row in big_list:
+            writer.writerow(row)
+
+    #**********************************************************************************************
+    # Time it takes to execute the code.
+    #**********************************************************************************************
+
+    end = time.time()
+
+    print("---",(end - start), "seconds ---")
+    print("---",(end - start) / 60, "mintues ---")
 
 #**********************************************************************************************
 # This file has been modified from Attisano et al. 2015.

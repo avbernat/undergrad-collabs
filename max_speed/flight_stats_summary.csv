@@ -1,0 +1,4 @@
+ID,filename,trial_type,chamber,channel_letter,channel_num,set_number,average_speed,total_flight_time,distance,shortest_flying_bout,longest_flying_bout,portion_flying,recording_duration,max_speed
+371,set004-2-20-2020-A4_371.txt,T1,A-4,A,4,371.txt,0.22,2285.77,500.13,0,2285.77,0.92,2492.19,0.33
+176,set004-2-20-2020-B3_176.txt,T1,B-3,B,3,176.txt,0.42,731.01,4.4,0,725.01,0.31,2347.31,1.14
+48,set007-2-25-2020-A4_48.txt,T1,A-4,A,4,48.txt,0.28,23.62,6.91,0,22.63,0.01,1920.0,0.73

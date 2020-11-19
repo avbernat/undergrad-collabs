@@ -159,8 +159,8 @@ def map_diagnostics(deviations, f, heat_map, axs):
 
 if __name__=="__main__":
     
-    main_path = r"/Users/anastasiabernat/Desktop/Flight_scripts/" # input the path to the Flight_scripts directory here 
-    path = main_path + "test_files/"
+    main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" # input the path to the Flight_scripts directory here 
+    path = main_path + "txt_files/"
     dir_list = sorted(os.listdir(path))
 
     # scatter plot
