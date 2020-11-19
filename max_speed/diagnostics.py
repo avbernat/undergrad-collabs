@@ -34,8 +34,9 @@ def analyze(time_column, trough_column, time_list, speed_list, distance):
     
     return (round(av_speed,2), round(dist,2))
 
-main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" 
-path = main_path + "txt_files/"
+#main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/"
+path = main_path + "set_files/"
 dir_list = sorted(os.listdir(path))
 
 rows = math.ceil(len(dir_list) / 5) * 2
