@@ -149,6 +149,29 @@ def map_diagnostics(deviations, f, heat_map, axs):
     
     return troughs_col
 
+def write_to_file(path, time_col, trough_col):
+    
+    #************************************************************************************************************
+    #
+    # Write txt file for the standardized troughs.
+    #
+    # INPUT:    path as a string, time column as floats, and trough column as floats. 
+    #
+    # PROCESS:  Output file is opened with its designated outpath. Then, line by line, the time and trough rows
+    #           are written.
+    #
+    # OUTPUT:   A txt file with two columns: a time column and a trough column of 0's and 1's.
+    #
+    #************************************************************************************************************
+    
+
+        outpath = path + "standardized_files/"
+        OutputFile = open(outpath + "standardized_" + str(file), mode="w")
+        for i in range(0, len(Lines)):
+            OutputFile.write('%.2f' % time_col[i] + ", " +
+                             '%.2f' % trough_col[i] + "\n")
+        OutputFile.close()
+
 #************************************************************************************************************
 #   To call the recording data file, write the complete file directory path below. An example path is
 #   r"/Users/username/Desktop/Flight_scripts/". The number of columns processed below depends on the number
@@ -196,25 +219,20 @@ if __name__=="__main__":
         InputFile.close()
 
         devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10]
-        #trough_col = plot_diagnostics(devs, file_num, fig, axes) # * Comment out this line after running diagnostics
-        trough_col = map_diagnostics(devs, file_num, hmap, haxes) # * Comment out this line after running diagnostics
+        #trough_column = plot_diagnostics(devs, file_num, fig, axes) # * Comment out this line after running diagnostics
+        trough_column = map_diagnostics(devs, file_num, hmap, haxes) # * Comment out this line after running diagnostics
         file_num += 1
 
         #************************************************************************************************************
-        #   After running diagnostics, define the trough_col with specific min and max deviation values in the
+        #   After running diagnostics, define the trough_column with specific min and max deviation values in the
         #   trough_standardization function below if desired. The default here is a min deviation and max deviation
         #   value of 0.1 V.
         #************************************************************************************************************
         
-        #trough_col = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
+        #trough_column = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
 
         out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-        outpath = out_path + "standardized_files/"
-        OutputFile = open(outpath + "standardized_" + str(file), mode="w")
-        for i in range(0, len(Lines)):
-            OutputFile.write('%.2f' % time_column[i] + ", " +
-                             '%.2f' % trough_col[i] + "\n")
-        OutputFile.close()
+        #write_to_file(out_path, time_column, trough_column)
 
     #fig.savefig("trough_diagnostic.png") 
     hmap.savefig("trough_diagnostic.png")
