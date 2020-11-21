@@ -12,7 +12,7 @@ def trough_standardization(column, dev_min, dev_max):
     # INPUT:    List of voltage values as floats.
     #
     # PROCESS:  Voltage values are rounded to two decimal places and appended to the volt_column. A confidence
-    #           interval is defined aroudn the mean voltage value using a low (min_value) and high (max_value)
+    #           interval is defined around the mean voltage value using a low (min_value) and high (max_value)
     #           threshold. These values can be defined by the user according to the characteristics of the
     #           voltage recording data. Voltages at or higher than the min value of the confidence interval
     #           are set to 0 while voltages far below the min_value are set to 1 and identity the presence
@@ -114,7 +114,7 @@ def map_diagnostics(deviations, f, heat_map, axs):
     #           troughs; however, other threshold values such as max deviation and the x value threshold.
     #
     # OUTPUT:   Returns the standardized voltage column as a list of 1s and 0s where 1 designates the presence
-    #           of a trough and 0 designates no trough. Generates heat map diagnostics of all the recoridng files
+    #           of a trough and 0 designates no trough. Generates heat map diagnostics of all the recording files
     #           in a directory.
     #
     #************************************************************************************************************
@@ -131,7 +131,9 @@ def map_diagnostics(deviations, f, heat_map, axs):
     axs = axs.flatten()
     im = axs[f].imshow(a, cmap='viridis', interpolation='nearest') # cmap='hot'
 
-    axs[f].title.set_text(file + '\nMax-Min=%i' %(np.max(all_troughs)-np.min(all_troughs)))
+    delta_troughs = np.max(all_troughs)-np.min(all_troughs)
+
+    axs[f].title.set_text(file + '\nMax-Min=%i' %(delta_troughs)) # AB: how is file still being read here?
     axs[f].set_xticks(np.arange(len(deviations)))
     axs[f].set_yticks(np.arange(len(deviations)))
     axs[f].set_xticklabels(deviations, fontsize=8)
@@ -146,16 +148,17 @@ def map_diagnostics(deviations, f, heat_map, axs):
     for i in range(rows):
         for j in range(cols):
             text = axs[f].text(j, i, a[i, j], ha="center", va="center", color="w", fontsize=6)
-    
+        
     return troughs_col
 
-def write_to_file(path, time_col, trough_col):
+def write_to_file(path, file_name, lines, time_col, trough_col):
     
     #************************************************************************************************************
     #
     # Write txt file for the standardized troughs.
     #
-    # INPUT:    path as a string, time column as floats, and trough column as floats. 
+    # INPUT:    path as a string, file name as a string, lines as an integer, time column as floats, and
+    #           trough column as floats. 
     #
     # PROCESS:  Output file is opened with its designated outpath. Then, line by line, the time and trough rows
     #           are written.
@@ -164,10 +167,9 @@ def write_to_file(path, time_col, trough_col):
     #
     #************************************************************************************************************
     
-
         outpath = path + "standardized_files/"
-        OutputFile = open(outpath + "standardized_" + str(file), mode="w")
-        for i in range(0, len(Lines)):
+        OutputFile = open(outpath + "standardized_" + str(file_name), mode="w")
+        for i in range(0, len(lines)):
             OutputFile.write('%.2f' % time_col[i] + ", " +
                              '%.2f' % trough_col[i] + "\n")
         OutputFile.close()
@@ -232,7 +234,7 @@ if __name__=="__main__":
         #trough_column = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
 
         out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-        #write_to_file(out_path, time_column, trough_column)
+        #write_to_file(out_path, file, Lines, time_column, trough_column)
 
     #fig.savefig("trough_diagnostic.png") 
     hmap.savefig("trough_diagnostic.png")
