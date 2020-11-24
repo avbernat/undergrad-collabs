@@ -101,6 +101,21 @@ def plot_diagnostics(deviations, file_number, figure, axs):
 
     return troughs_col
 
+def get_summary(file_name, dtroughs):
+
+    chamber_ID = file_name.split("-")[-1].split(".")[0]
+    threshold = 15
+
+    if dtroughs > 0 and dtroughs < threshold: # small change
+        dsmall_count = 1 
+
+    if dtroughs >= threshold: # large change
+        dlarge_count = 1
+
+    return [dsmall_count, dlarge_count, chamber_ID]
+
+
+
 def map_diagnostics(deviations, f, heat_map, axs):
 
     #************************************************************************************************************
@@ -137,6 +152,13 @@ def map_diagnostics(deviations, f, heat_map, axs):
 ##        #axs[f].set_visible(False)
 ##        heat_map.delaxes(axs[f])
 ##        f = f - 1
+
+    #  Thresholds
+    if delta_troughs > 0 and delta_troughs < 15: # small change
+        dsmall_count = 1 
+
+    if delta_troughs >= 15: # large change
+        dlarge_count = 1
 
     axs[f].set_visible(True)
     axs[f].title.set_text(file + '\nMax-Min=%i' %(delta_troughs)) # AB: how is file still being read here?
@@ -215,6 +237,10 @@ if __name__=="__main__":
     print("Files in '", path, "' :")
 
     file_num = 0
+    total_small_changes = 0
+    total_large_changes = 0
+    large_changes_chamber_ID = []
+
     for file in dir_list:
         
         print("\n", file)
@@ -238,6 +264,14 @@ if __name__=="__main__":
         trough_column = map_diagnostics(devs, file_num, hmap, haxes) # * Comment out this line after running diagnostics
         file_num += 1
 
+        total = file_num
+        chamber_ID = file.split("-")[-1].split(".")[0]
+
+        total_small_changes += list[0]
+        total_large_changes += list[1]
+
+        large_changes_chamber_ID.append(chamber_ID)
+
         #************************************************************************************************************
         #   After running diagnostics, define the trough_column with specific min and max deviation values in the
         #   trough_standardization function below if desired. The default here is a min deviation and max deviation
@@ -249,7 +283,11 @@ if __name__=="__main__":
         out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
         #write_to_file(out_path, file, Lines, time_column, trough_column)
 
-    #fig.savefig("trough_diagnostic.png") 
+
+    no_change_count = total - (total_large_changes + total_small_changes)
+    large_change_prop = total_large_changes / total
+
+    #fig.savefig("trough_diagnostic.png")
     hmap.savefig("trough_diagnostic.png")
 
 #**********************************************************************************************

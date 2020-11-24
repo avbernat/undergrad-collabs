@@ -54,8 +54,8 @@ def trough_standardization(column, dev_min, dev_max):
 
     troughs.append(0)
 
-    print("   Num of 1's:", sum(int_list), "   Num of troughs:", sum(troughs),
-          "   Min Dev: ", dev_min, "   Max Dev: ", dev_max)
+#    print("   Num of 1's:", sum(int_list), "   Num of troughs:", sum(troughs),
+#          "   Min Dev: ", dev_min, "   Max Dev: ", dev_max)
     
     return troughs 
 
