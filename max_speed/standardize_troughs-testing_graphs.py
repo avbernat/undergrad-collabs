@@ -264,7 +264,7 @@ if __name__=="__main__":
         trough_column = map_diagnostics(devs, file_num, hmap, haxes) # * Comment out this line after running diagnostics
         file_num += 1
 
-        total = file_num
+        
         chamber_ID = file.split("-")[-1].split(".")[0]
 
         total_small_changes += list[0]

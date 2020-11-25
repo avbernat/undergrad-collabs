@@ -443,7 +443,7 @@ if __name__=="__main__":
 
     outpath = main_path
     with open(outpath + "flight_stats_summary.csv", "w") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys())
+        writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys()) # supposed to be 0?
         writer.writeheader()
         for row in big_list:
             writer.writerow(row)
