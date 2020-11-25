@@ -1,11 +1,13 @@
 import os
 import csv
+import sys
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
 from standardize_troughs import trough_standardization
 from flight_analysis import time_list, speed_list, distance
+from flight_analysis import blockPrint, enablePrint
 
 def standardize(filepath, min_dev, max_dev, trough_standardization):
 
@@ -35,19 +37,29 @@ def analyze(time_column, trough_column, time_list, speed_list, distance):
     
     return (round(av_speed,2), round(dist,2))
 
-def get_summary(file_name, dtroughs):
+def get_changes(file_name, dstat, statistic):
 
     chamber_ID = None
-    threshold = 15
     dsmall_count = 0
     dlarge_count = 0
 
-    if dtroughs > 0 and dtroughs < threshold: # small change
-        dsmall_count = 1 
+    if statistic == "trough" or statistic == "distance":
+        if dstat > 0 and dstat < 15: # small change
+            dsmall_count = 1
+            stat = "trough" 
 
-    if dtroughs >= threshold: # large change
-        chamber_ID = file_name.split("-")[-1].split(".")[0]
-        dlarge_count = 1
+        if dstat >= 15: # large change
+            chamber_ID = file_name.split("-")[-1].split(".")[0]
+            dlarge_count = 1
+
+    if statistic == "speed":
+        if dstat > 0 and dstat < 0.1: # small change
+            dsmall_count = 1
+            stat = "trough" 
+
+        if dstat >= 0.1: # large change
+            chamber_ID = file_name.split("-")[-1].split(".")[0]
+            dlarge_count = 1
 
     return dsmall_count, dlarge_count, chamber_ID
 
@@ -77,9 +89,8 @@ def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
 
     return delta_stat
     
-#main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/"
-path = main_path + "set_files/"
+main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+path = main_path + "test_files/"
 dir_list = sorted(os.listdir(path))
 
 # Rearranging the directory_list into list of files by set. 
@@ -97,18 +108,26 @@ for i in range(1, max_set_num + 1):
     for file in dir_list:
         if set_name in file:
             set_list.append(file)
-    sets.append(set_list)
+    if set_list != []:
+        sets.append(set_list)
 
-set_number=15 # choose your set here
-sets = [sets[set_number-1]] 
+#set_number=15 # choose your set here
+#sets = [sets[set_number-1]] 
 
 summary_list = []
 
 for set_list in sets:
 
-    total_small_changes = 0
-    total_large_changes = 0
-    large_changes_chamber_ID = []
+    small_troughs_count = 0
+    large_troughs_count = 0
+    small_speeds_count = 0
+    large_speeds_count = 0
+    small_dist_count = 0
+    large_dist_count = 0
+
+    large_chamber_troughs = []
+    large_chamber_speeds = []
+    large_chamber_dist = []
 
     # trough heat map
     rows = math.ceil(len(set_list) / 5) 
@@ -125,13 +144,11 @@ for set_list in sets:
     
     for file in set_list:
 
-        row_data = {}
-        
         print("\n", file)
         file_path = path + str(file)
         set_n = file.split("_")[1].split("-")[0]
         
-        devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10]
+        devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09]
         all_troughs = []
         all_speeds = []
         all_distances = []
@@ -142,7 +159,9 @@ for set_list in sets:
             distances = []
             for max_dev_val in devs:
                 (time_col, trough_col) = standardize(file_path, min_dev_val, max_dev_val, trough_standardization)
+                blockPrint() # temp
                 (avg_speed, total_dist) = analyze(time_col, trough_col, time_list, speed_list, distance)
+                enablePrint() # temp
                 troughs.append(sum(trough_col))
                 speeds.append(avg_speed)
                 distances.append(total_dist)
@@ -151,37 +170,68 @@ for set_list in sets:
             all_distances.append(distances)
         
         delta_trough = heat_map(devs, f, fig, axes, all_troughs, file, "Number of Troughs")
-        #heat_map(devs, f, fig, axes, all_troughs, file, "Number of Troughs")
-        dsmall, dlarge, c_id = get_summary(file, delta_trough)
         f+=1
-        heat_map(devs, h, hmap, haxes, all_speeds, file, "Average Speed (m/s)")
+        delta_speed = heat_map(devs, h, hmap, haxes, all_speeds, file, "Average Speed (m/s)")
         h+=1
-        heat_map(devs, h, hmap, haxes, all_distances, file, "Distance (m/s)")
+        delta_dist = heat_map(devs, h, hmap, haxes, all_distances, file, "Distance (m/s)")
         h+=1
+
+        dt_small, dt_large, ct_id = get_changes(file, delta_trough, "trough")
+        ds_small, ds_large, cs_id = get_changes(file, delta_speed, "speed")
+        dd_small, dd_large, cd_id = get_changes(file, delta_dist, "distance")
 
         total = f
-        total_small_changes += dsmall
-        total_large_changes += dlarge
-        large_changes_chamber_ID.append(c_id)
 
-    no_change_count = total - (total_large_changes + total_small_changes)
-    large_change_prop = total_large_changes / total
+        small_troughs_count += dt_small
+        large_troughs_count += dt_large
+        small_speeds_count += ds_small
+        large_speeds_count += ds_large
+        small_dist_count += dd_small
+        large_dist_count += dd_large
 
-    row_data["stat"] = "troughs"
-    row_data["total"] = total
-    row_data["no_change"] = no_change_count
-    row_data["small_changes"] = total_small_changes
-    row_data["large_changes"] = total_large_changes
-    row_data["dlarge_prop"] = large_change_prop
-    row_data["dlarge_chamberID"] = large_changes_chamber_ID
+        large_chamber_troughs.append(ct_id)
+        large_chamber_speeds.append(cs_id)
+        large_chamber_dist.append(cd_id)
 
-    summary_list.append(row_data)
+    no_change_troughs = total - (small_troughs_count + large_troughs_count)
+    no_change_speeds = total - (small_speeds_count + large_speeds_count)
+    no_change_dist = total - (small_dist_count + large_dist_count)
+
+    large_prop_troughs = large_troughs_count / total
+    large_prop_speeds = large_speeds_count / total
+    large_prop_dist = large_dist_count / total
+
+    d = {"trough": [no_change_troughs, small_troughs_count, large_troughs_count, large_prop_troughs, large_chamber_troughs],
+            "speed": [no_change_speeds, small_speeds_count, large_speeds_count, large_prop_speeds, large_chamber_speeds],
+            "distance": [no_change_dist, small_dist_count, large_dist_count, large_prop_dist, large_chamber_dist]}
     
-    fig.savefig(f"trough_diagnostic-{set_n}.png")
-    hmap.savefig(f"stats_diagnostics-{set_n}.png")
+    stats = ["trough", "speed", "distance"]
+    three_rows = []
+    
+    for stat in stats:
+        
+        row_data = {}
 
-with open("diagnostics_summary.csv", "w") as out_file:
-    writer = csv.DictWriter(out_file, fieldnames = summary_list[0].keys())
+        row_data["stat"] = stat
+        row_data["set"] = set_n
+        row_data["total"] = total
+        row_data["no_change"] = d[stat][0]
+        row_data["small_changes"] = d[stat][1]
+        row_data["large_changes"] = d[stat][2]
+        row_data["large_prop"] = d[stat][3]
+        row_data["large_cIDs"] = d[stat][4]
+
+        three_rows.append(row_data)
+
+    summary_list.append(three_rows)
+
+    outpath = main_path + "diagnostics/"
+    fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
+    hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
+
+with open(outpath + "diagnostics_summary.csv", "w") as out_file:
+    writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
     writer.writeheader()
-    for row in summary_list:
-        writer.writerow(row)
+    for rows in summary_list:
+        for row in rows:
+            writer.writerow(row)
