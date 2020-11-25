@@ -1,4 +1,6 @@
-def diagnose(set_list, path, standardize, analyze, heat_map, get_changes):
+summary_list = []
+
+for set_list in sets:
 
     small_troughs_count = 0
     large_troughs_count = 0
@@ -46,9 +48,9 @@ def diagnose(set_list, path, standardize, analyze, heat_map, get_changes):
                 
                 (time_col, trough_col) = standardize(file_path, min_dev_val, max_dev_val, trough_standardization)
                 
-                #blockPrint() # temp
+                blockPrint() # temp
                 (avg_speed, total_dist) = analyze(time_col, trough_col, time_list, speed_list, distance)
-                #enablePrint() # temp
+                enablePrint() # temp
                 
                 troughs.append(sum(trough_col))
                 speeds.append(avg_speed)
@@ -113,10 +115,15 @@ def diagnose(set_list, path, standardize, analyze, heat_map, get_changes):
 
         three_rows.append(row_data)
 
-    #summary_list.append(three_rows)
+    summary_list.append(three_rows)
 
-    outpath = path + "diagnostics/"
+    outpath = main_path + "diagnostics/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
-    return three_rows
+with open(outpath + "diagnostics_summary.csv", "w") as out_file:
+    writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
+    writer.writeheader()
+    for rows in summary_list:
+        for row in rows:
+            writer.writerow(row)
