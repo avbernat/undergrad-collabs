@@ -7,3 +7,5 @@
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem-per-cpu=2000
+
+python3 /home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics.py
