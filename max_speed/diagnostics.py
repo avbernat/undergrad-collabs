@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     #set_number = 
     #set_list =[sets[set_number-1]]
-    sets =sets[0:1]
+    #sets =sets[0:1]
 
     qout = mp.Queue()
 
