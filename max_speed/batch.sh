@@ -7,7 +7,6 @@
 #SBATCH --mail-user=avbernat@uchicago.edu
 #SBATCH --mail-type=ALL
 #SBATCH --partition=broadwl
-#SBATCH --reservation=cenzer-lab
 
 echo "Running on hostname `hostname`"
 echo "Working directory is `pwd`"
