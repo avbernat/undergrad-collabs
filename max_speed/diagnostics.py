@@ -115,6 +115,7 @@ def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
 
     delta_stat = np.max(matrix)-np.min(matrix)
 
+    new_f = 0
     if delta_stat > 0: # quick way to get rid of empty plots 
         new_f = 1 # start a new count 
 
@@ -169,16 +170,17 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         
         set_n = file.split("_")[1].split("-")[0]
         file_abbrev = set_n + "-" + file.split("-")[-1]
-        print("\n", f"Job for {set_n} started!")
+        print(f"     Calculating...{file_abbrev}, {len(devs)} troughs, speeds, and distances for {len(devs)} min dev values")
+       
+        #print("\n", f"Job for {set_n} started!")
         
         devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
         all_troughs = []
         all_speeds = []
         all_distances = []
-       
+
         for min_dev_val in devs:
             
-            print(f"     Calculating...{set_n}, {len(devs)} troughs, speeds, and distances at min dev value of {min_dev_val}")
             troughs = []
             speeds = []
             distances = []
@@ -293,8 +295,8 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
 
 if __name__ == "__main__":
 
-    main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-    path = main_path + "small_test/"
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
 
     # Rearranging the directory_list into list of files by set. 
@@ -317,13 +319,15 @@ if __name__ == "__main__":
 
     #set_number = 
     #set_list =[sets[set_number-1]]
-    #set_list =[sets[0]]
+    sets =sets[0:1]
 
     qout = mp.Queue()
 
     summary_list = []
     jobs = []
     for set_list in sets:
+        set_num = set_list[0].split("_")[1].split("-")[0]
+        print("\n", f"Job for {set_num} started!")
         p = mp.Process(target=diagnose, args=(set_list, path, qout))
         jobs.append(p)
         p.start()
@@ -333,7 +337,8 @@ if __name__ == "__main__":
         three_rows = qout.get()
         summary_list.append(three_rows)
 
-    out_path = main_path + "diagnostics/"
+    outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    out_path = outpathf + "diagnostics/"
     with open(out_path + "diagnostics_summary.csv", "w") as out_file:
         writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
         writer.writeheader()

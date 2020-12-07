@@ -1,0 +1,44 @@
+---
+title: "Test"
+author: "Anastasia Bernat"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+dir = "/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+setwd(dir)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data = read.csv("diagnostics/diagnostics_summary.csv")
+matrix = data[1:3,9:length(data)]
+matrix
+```
+
+```{r}
+# set015
+d = t(matrix)
+
+plot(d[,1], main="Number Troughs", xlab="Combo", ylab="Number of Troughs")
+plot(d[,2], main="Speed", xlab="Combo", ylab="Speed")
+plot(d[,3], main="Distance", xlab="Combo", ylab="Distance")
+```
+
+```{r}
+matrix = data[3:6,9:length(data)]
+matrix
+```
+
+```{r}
+# set016
+d = t(matrix)
+
+plot(d[,1], main="Number Troughs", xlab="Combo", ylab="Number of Troughs")
+plot(d[,2], main="Speed", xlab="Combo", ylab="Speed")
+plot(d[,3], main="Distance", xlab="Combo", ylab="Distance")
+```
+
+
+

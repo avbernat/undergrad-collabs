@@ -1,7 +1,0 @@
-stat,set,total,no_change,small_changes,large_changes,large_prop,large_cIDs
-trough,set016,1,0,0,1,1.0,['B3_108']
-speed,set016,1,0,0,1,1.0,['B3_108']
-distance,set016,1,0,1,0,0.0,[None]
-trough,set015,1,0,0,1,1.0,['A1_211']
-speed,set015,1,0,0,1,1.0,['A1_211']
-distance,set015,1,0,0,1,1.0,['A1_211']
