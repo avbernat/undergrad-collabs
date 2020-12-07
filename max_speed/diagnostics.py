@@ -303,7 +303,7 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
 if __name__ == "__main__":
 
     #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/test_files/"
-    main_path = r"/home/avbernat/Desktop/split_files/"
+    main_path = r"/home/avbernat/Desktop/test_files/"
     path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
 

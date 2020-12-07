@@ -16,6 +16,5 @@ echo "Starting Python at `date`."
 
 module load python
 python3 /home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics.py
-echo "job finished"
 
 echo "Finished Python at `date`."
