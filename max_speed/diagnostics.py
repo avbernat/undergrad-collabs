@@ -170,21 +170,20 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         
         set_n = file.split("_")[1].split("-")[0]
         file_abbrev = set_n + "-" + file.split("-")[-1]
-        print(f"     Calculating...{file_abbrev}, {len(devs)} troughs, speeds, and distances for {len(devs)} min dev values")
-       
-        #print("\n", f"Job for {set_n} started!")
         
         devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
         all_troughs = []
         all_speeds = []
         all_distances = []
 
+        print(f"     Calculating...{file_abbrev}, {len(devs)} troughs, speeds, and distances for {len(devs)} min dev values")
+
         for min_dev_val in devs:
             
             troughs = []
             speeds = []
             distances = []
-            
+
             for max_dev_val in devs:
                 
                 (time_col, trough_col) = standardize(file_path, min_dev_val, max_dev_val, trough_standardization)
@@ -202,11 +201,11 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
             all_distances.append(distances)
         
         delta_trough, nf = heat_map(devs, f, fig, axes, all_troughs, file, "Number of Troughs")
-        f+=nf
+        f+=1
         delta_speed, nh = heat_map(devs, h, hmap, haxes, all_speeds, file, "Average Speed (m/s)")
-        h+=nh
+        h+=1
         delta_dist, nh = heat_map(devs, h, hmap, haxes, all_distances, file, "Distance (m/s)")
-        h+=nh
+        h+=1
 
         troughs_flat = sum(all_troughs, [])
         speeds_flat = sum(all_speeds, [])
@@ -243,7 +242,7 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
     
     stats = ["trough", "speed", "distance"]
     trows = []
-    
+
     for stat in stats:
         
         row_data = {}
@@ -278,7 +277,7 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
     # come back to the above ^
     # believe it needs to be [row, column] to delete properly
 
-    outpath = "diagnostics/"
+    outpath = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
@@ -295,7 +294,8 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
 
 if __name__ == "__main__":
 
-    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
 
@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     #set_number = 
     #set_list =[sets[set_number-1]]
-    #sets =sets[0:1]
+    sets =sets[0:1]
 
     qout = mp.Queue()
 
@@ -337,7 +337,8 @@ if __name__ == "__main__":
         three_rows = qout.get()
         summary_list.append(three_rows)
 
-    outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    #outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    outpathf = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/"
     out_path = outpathf + "diagnostics/"
     with open(out_path + "diagnostics_summary.csv", "w") as out_file:
         writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
