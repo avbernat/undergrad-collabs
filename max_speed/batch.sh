@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --account=avbernat
 #SBATCH --job-name=py_diagnostics
-#SBATCH --ntasks=8
-#SBATCH --nodes=2
+#SBATCH --ntasks=5
+#SBATCH --nodes=4
 #SBATCH --mem-per-cpu=9000M
-#SBATCH --time=08:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mail-user=avbernat@uchicago.edu
 #SBATCH --mail-type=ALL
 #SBATCH --partition=broadwl
