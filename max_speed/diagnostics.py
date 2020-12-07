@@ -137,7 +137,7 @@ def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
 
     return delta_stat, new_f
 
-def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_map=heat_map, 
+def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, heat_map=heat_map, 
                     get_change=get_changes, blockPrint=blockPrint, enablePrint=enablePrint):
 
     small_troughs_count = 0
@@ -163,11 +163,11 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
 
     f=0
     h=0
-    
+    big_list =[]
+
     for file in set_list:
 
         file_path = path + str(file)
-        
         set_n = file.split("_")[1].split("-")[0]
         file_abbrev = set_n + "-" + file.split("-")[-1]
         
@@ -211,6 +211,26 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         speeds_flat = sum(all_speeds, [])
         distances_flat = sum(all_distances, [])
 
+        stat_dict = {"trough": troughs_flat, "speed": speeds_flat, "distance": distances_flat}
+        stats = ["trough", "speed", "distance"]
+
+        combo_list = []
+
+        for stat in stats:
+            row_combo = {}
+            row_combo["stat"] = stat
+            row_combo["filename"] = file_abbrev
+            row_combo["set"] = set_n.split("t0")[-1]
+
+            i = 0
+            for val in stat_dict[stat]:
+                i += 1
+                row_combo[f"combo_{i}"] = val
+
+            combo_list.append(row_combo)
+
+        big_list.append(combo_list)
+
         dt_small, dt_large, ct_id = get_changes(file, delta_trough, "trough")
         ds_small, ds_large, cs_id = get_changes(file, delta_speed, "speed")
         dd_small, dd_large, cd_id = get_changes(file, delta_dist, "distance")
@@ -240,7 +260,6 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
             "speed": [no_change_speeds, small_speeds_count, large_speeds_count, large_prop_speeds, large_chamber_speeds, speeds_flat],
             "distance": [no_change_dist, small_dist_count, large_dist_count, large_prop_dist, large_chamber_dist, distances_flat]}
     
-    stats = ["trough", "speed", "distance"]
     trows = []
 
     for stat in stats:
@@ -256,33 +275,22 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         row_data["large_prop"] = d[stat][3]
         row_data["large_cIDs"] = d[stat][4]
 
-        i = 0
-        for val in d[stat][5]:
-            i += 1
-            row_data[f"combo_{i}"] = val
+        # i = 0
+        # for val in d[stat][5]:
+        #     i += 1
+        #     row_data[f"combo_{i}"] = val
         
 
         trows.append(row_data)
 
-    # empty_plots = 5*rows - f
-    # hempty_plots = 5*r - h
-    # print(h)
-    # print(hempty_plots)
-    # for i in range(f, empty_plots + 1):
-    #     fig.delaxes(axes[i])
-    # for p in range(h, hempty_plots):
-    #     print(p)
-        #hmap.delaxes(haxes[p])
-
-    # come back to the above ^
-    # believe it needs to be [row, column] to delete properly
-
     outpath = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics/"
+    #outpath = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/diagnostics/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
     #return rows
-    q.put(trows)
+    q1.put(trows)
+    q2.put(big_list)
 
 #************************************************************************************************************
 #   To call the recording data file, write the complete file directory path below. An example path is
@@ -294,7 +302,7 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
 
 if __name__ == "__main__":
 
-    #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/test_files/"
     main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
@@ -322,20 +330,23 @@ if __name__ == "__main__":
     #sets =sets[0:1]
 
     qout = mp.Queue()
-
-    summary_list = []
+    qbig = mp.Queue()
     jobs = []
     for set_list in sets:
         set_num = set_list[0].split("_")[1].split("-")[0]
         print("\n", f"Job for {set_num} started!")
-        p = mp.Process(target=diagnose, args=(set_list, path, qout))
+        p = mp.Process(target=diagnose, args=(set_list, path, qout, qbig))
         jobs.append(p)
         p.start()
 
+    summary_list = []
+    set_combos = []
     for process in jobs:
         process.join()
         three_rows = qout.get()
+        file_combos = qbig.get()
         summary_list.append(three_rows)
+        set_combos.append(file_combos)
 
     #outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
     outpathf = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/"
@@ -346,3 +357,12 @@ if __name__ == "__main__":
         for rows in summary_list:
             for row in rows:
                 writer.writerow(row)
+
+    out_path = outpathf + "diagnostics/"
+    with open(out_path + "diagnostics_combos.csv", "w") as out_file:
+        writer = csv.DictWriter(out_file, fieldnames = set_combos[0][0][0].keys())
+        writer.writeheader()
+        for setn in set_combos:
+            for filen in setn:
+                for row in filen:
+                    writer.writerow(row)
