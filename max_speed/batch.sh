@@ -1,5 +1,4 @@
 #!/bin/bash
-#SBATCH --account=avbernat
 #SBATCH --job-name=py_diagnostics
 #SBATCH --ntasks=5
 #SBATCH --nodes=4
