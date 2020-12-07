@@ -328,7 +328,6 @@ if __name__ == "__main__":
     for set_list in sets:
         set_num = set_list[0].split("_")[1].split("-")[0]
         print("\n", f"Job for {set_num} started!")
-        print(f"{len(set_list)} file to process")
         p = mp.Process(target=diagnose, args=(set_list, path, qout))
         jobs.append(p)
         p.start()
