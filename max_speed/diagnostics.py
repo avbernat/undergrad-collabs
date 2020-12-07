@@ -2,8 +2,8 @@ import os
 import csv
 import sys
 import math
-import numpy as np
 
+import numpy as np
 import multiprocessing as mp
 import matplotlib.pyplot as plt
 
@@ -12,6 +12,30 @@ from flight_analysis import time_list, speed_list, distance
 from flight_analysis import blockPrint, enablePrint
 
 def standardize(filepath, min_dev, max_dev, trough_standardization):
+
+    #************************************************************************************************************
+    #
+    # Standardizes the voltage data for each channel by identifying large deviances in voltages as troughs.
+    #
+    # INPUT:    List of voltage values as floats.
+    #
+    # PROCESS:  Voltage values are rounded to two decimal places and appended to the volt_column. A confidence
+    #           interval is defined around the mean voltage value using a low (min_dev) and high (max_dev)
+    #           threshold. These values can be defined by the user according to the characteristics of the
+    #           voltage recording data. Voltages at or higher than the min value of the confidence interval
+    #           are set to 0 while voltages far below the min_value are set to 1 and identity the presence
+    #           of a trough. Thus, a trough can be defined as any large deviance in voltage that is due to
+    #           noise or chance. Finally, a list of troughs is created after compressing sequences of 
+    #           trough-like identifiers into a single identifier (e.g. compressed sequences of 1s to a single
+    #           1 to denote a trough).
+    #
+    #           Threshold values can be modified accordingly. They are labeled with a '*'. The default values
+    #           are set to deliver a fine tune signal standardization.
+    #
+    # OUTPUT:   A list of time values as floats and a list of 1s and 0s where 1 designates the presence of a 
+    #           trough and 0 designates no trough.
+    #
+    #************************************************************************************************************
 
     InputFile = open(filepath, mode="r", encoding='latin-1')
     Lines = InputFile.readlines()
@@ -67,14 +91,33 @@ def get_changes(file_name, dstat, statistic):
 
 def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
 
+    #************************************************************************************************************
+    #
+    # Generate heat maps to diagnose files with noise or overly-sensitive troughs, distances, and speeds.
+    #
+    # INPUT:    deviations as a list of floats, file number (f) as an int, the figure, and axs as a subplot, 
+    #           matrix as a matrix of troughs, speeds, or distances that correspond to each deviation value
+    #           combination, filename as a string, and bar_title as a string of the heat map title. 
+    #
+    # PROCESS:  Files with little noise and large troughs will be durable to small changes in deviations. Default
+    #           here is to test and plot how changes in the min and max deviation values change the number of
+    #           troughs; however, there is another threshold value - the x value threshold.
+    #
+    # OUTPUT:   Returns the difference between the highest and lowest trough, speed, or distance values, and 
+    #           returns a single count if the file exhibited a difference. This count can be used to calculate 
+    #           the number of files that exhibited a difference.
+    #
+    #************************************************************************************************************
+    
     a = np.array(matrix)
     axs = axs.flatten()
     im = axs[f].imshow(a, cmap='viridis', interpolation='nearest') # cmap='hot'
 
     delta_stat = np.max(matrix)-np.min(matrix)
 
-    # if delta_stat > 0: # quick way to get rid of empty plots 
-    #   plot_count = 1 # start a new count 
+    if delta_stat > 0: # quick way to get rid of empty plots 
+        new_f = 1 # start a new count 
+
     axs[f].title.set_text(filename + '\nMax-Min=%.2f' %delta_stat)
     axs[f].set_xticks(np.arange(len(deviations)))
     axs[f].set_yticks(np.arange(len(deviations)))
@@ -91,7 +134,7 @@ def heat_map(deviations, f, heat_map, axs, matrix, filename, bar_title):
         for j in range(cols):
             text = axs[f].text(j, i, a[i, j], ha="center", va="center", color="w", fontsize=6)
 
-    return delta_stat
+    return delta_stat, new_f
 
 def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_map=heat_map, 
                     get_change=get_changes, blockPrint=blockPrint, enablePrint=enablePrint):
@@ -109,12 +152,12 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
 
     # trough heat map
     rows = math.ceil(len(set_list) / 5) 
-    fig, axes = plt.subplots(rows,5, figsize=(20, 4*rows), facecolor='w', edgecolor='k')
+    fig, axes = plt.subplots(rows, 5, figsize=(20, 4*rows), facecolor='w', edgecolor='k')
     fig.tight_layout(pad=6.0)
 
     # speed and distance heat map
     r = rows * 2
-    hmap, haxes = plt.subplots(r,5, figsize=(20, 4*r), facecolor='w', edgecolor='k')
+    hmap, haxes = plt.subplots(r, 5, figsize=(20, 4*r), facecolor='w', edgecolor='k')
     hmap.tight_layout(pad=6.0)
 
     f=0
@@ -126,7 +169,7 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         
         set_n = file.split("_")[1].split("-")[0]
         file_abbrev = set_n + "-" + file.split("-")[-1]
-        print("\n", f"Job for {file_abbrev} started!")
+        print("\n", f"Job for {set_n} started!")
         
         devs = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
         all_troughs = []
@@ -156,13 +199,16 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
             all_speeds.append(speeds)
             all_distances.append(distances)
         
-        delta_trough = heat_map(devs, f, fig, axes, all_troughs, file, "Number of Troughs")
-        f+=1 # spits out the plot_count here which gets updated only if you count
-        # then at the end you do file_num - plot count to get the number to delete by with fig.delaxes(axes[1][2])!!!!
-        delta_speed = heat_map(devs, h, hmap, haxes, all_speeds, file, "Average Speed (m/s)")
-        h+=1
-        delta_dist = heat_map(devs, h, hmap, haxes, all_distances, file, "Distance (m/s)")
-        h+=1
+        delta_trough, nf = heat_map(devs, f, fig, axes, all_troughs, file, "Number of Troughs")
+        f+=nf
+        delta_speed, nh = heat_map(devs, h, hmap, haxes, all_speeds, file, "Average Speed (m/s)")
+        h+=nh
+        delta_dist, nh = heat_map(devs, h, hmap, haxes, all_distances, file, "Distance (m/s)")
+        h+=nh
+
+        troughs_flat = sum(all_troughs, [])
+        speeds_flat = sum(all_speeds, [])
+        distances_flat = sum(all_distances, [])
 
         dt_small, dt_large, ct_id = get_changes(file, delta_trough, "trough")
         ds_small, ds_large, cs_id = get_changes(file, delta_speed, "speed")
@@ -189,12 +235,12 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
     large_prop_speeds = large_speeds_count / total
     large_prop_dist = large_dist_count / total
 
-    d = {"trough": [no_change_troughs, small_troughs_count, large_troughs_count, large_prop_troughs, large_chamber_troughs],
-            "speed": [no_change_speeds, small_speeds_count, large_speeds_count, large_prop_speeds, large_chamber_speeds],
-            "distance": [no_change_dist, small_dist_count, large_dist_count, large_prop_dist, large_chamber_dist]}
+    d = {"trough": [no_change_troughs, small_troughs_count, large_troughs_count, large_prop_troughs, large_chamber_troughs, troughs_flat],
+            "speed": [no_change_speeds, small_speeds_count, large_speeds_count, large_prop_speeds, large_chamber_speeds, speeds_flat],
+            "distance": [no_change_dist, small_dist_count, large_dist_count, large_prop_dist, large_chamber_dist, distances_flat]}
     
     stats = ["trough", "speed", "distance"]
-    rows = []
+    trows = []
     
     for stat in stats:
         
@@ -209,23 +255,46 @@ def diagnose(set_list, path, q, standardize=standardize, analyze=analyze, heat_m
         row_data["large_prop"] = d[stat][3]
         row_data["large_cIDs"] = d[stat][4]
 
-        rows.append(row_data)
+        i = 0
+        for val in d[stat][5]:
+            i += 1
+            row_data[f"combo_{i}"] = val
+        
 
-    #summary_list.append(three_rows)
+        trows.append(row_data)
+
+    # empty_plots = 5*rows - f
+    # hempty_plots = 5*r - h
+    # print(h)
+    # print(hempty_plots)
+    # for i in range(f, empty_plots + 1):
+    #     fig.delaxes(axes[i])
+    # for p in range(h, hempty_plots):
+    #     print(p)
+        #hmap.delaxes(haxes[p])
+
+    # come back to the above ^
+    # believe it needs to be [row, column] to delete properly
 
     outpath = "diagnostics/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
     #return rows
-    q.put(rows)
+    q.put(trows)
 
-################################################################################################################
+#************************************************************************************************************
+#   To call the recording data file, write the complete file directory path below. An example path is
+#   r"/Users/username/Desktop/Flight_scripts/". The number of columns processed below depends on the number
+#   of channels used to record the flight data. For individual insects with only two columns per file,
+#   only the TBF and voltage reading columns are processed. However, if the number of channels is different
+#   the script needs to be edited accordingly.
+#************************************************************************************************************
 
 if __name__ == "__main__":
 
     main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-    path = main_path + "test_files/"
+    path = main_path + "small_test/"
     dir_list = sorted(os.listdir(path))
 
     # Rearranging the directory_list into list of files by set. 
@@ -245,6 +314,10 @@ if __name__ == "__main__":
                 set_list.append(file)
         if set_list != []:
             sets.append(set_list)
+
+    #set_number = 
+    #set_list =[sets[set_number-1]]
+    #set_list =[sets[0]]
 
     qout = mp.Queue()
 

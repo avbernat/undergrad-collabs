@@ -120,7 +120,8 @@ def distance(time, speed):
     if len(time) > 2:
         
         for i in range(1, len(speed)):
-            if float(speed[i]) > 0 and float(speed[i]) < 1.4: # Modify the threshold value accordingly
+            # better way to determine speeds that are too high?
+            if float(speed[i]) > 0: # and float(speed[i]) < 1.4: # Modify the threshold value accordingly
                 time_new.append(float(time[i]))
                 speed_new.append(float(speed[i]))
                 distance += 0.6283
