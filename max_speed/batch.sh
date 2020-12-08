@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=py_diagnostics
-#SBATCH --ntasks-per-node=16
-#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=14
+#SBATCH --nodes=4
 #SBATCH --mem-per-cpu=9000M
 #SBATCH --time=01-9:00
 #SBATCH --mail-user=avbernat@uchicago.edu
