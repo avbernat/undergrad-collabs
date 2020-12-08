@@ -36,8 +36,8 @@ matrix
 d = t(matrix)
 
 plot(d[,1], main="Number Troughs", xlab="Combo", ylab="Number of Troughs")
-plot(d[,2], main="Speed", xlab="Combo", ylab="Speed")
-plot(d[,3], main="Distance", xlab="Combo", ylab="Distance")
+plot(d[,3], main="Speed", xlab="Combo", ylab="Speed")
+plot(d[,2], main="Distance", xlab="Combo", ylab="Distance")
 ```
 
 
