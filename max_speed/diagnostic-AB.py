@@ -310,7 +310,7 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
 
 if __name__ == "__main__":
 
-    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/fiveset_files/"
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
     #main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
@@ -357,30 +357,21 @@ if __name__ == "__main__":
         jobs.append(p)
         p.start()
 
-    summary_list = []
-    set_combos = []
     out_path = r"/Users/anastasiabernat/Desktop/"
     with open(os.path.join(out_path, "diagnostics_summary.csv"), 'w') as file_out: 
         pass
     with open(os.path.join(out_path, "diagnostics_combos.csv"), 'w') as file_out: 
         pass
 
-    print(jobs)
-    print(qout)
-    print(qbig)
-
+    summary_list = []
+    set_combos = []
     for process in jobs:
-        print('Hello!')
-        process.join() # set 12 and 15 gets stuck in an infinite loop - probably here
-        print(process)
-        print(qout)
-        print(qbig)
-        #print(qout.qsize())
-        #print(qbig.qsize())
         three_rows = qout.get()
         file_combos = qbig.get()
         summary_list.append(three_rows)
         set_combos.append(file_combos)
+        #process.join() # set 12 and 15 gets stuck in an infinite loop - probably here
+        # sys.stdout.flush() # https://stackoverflow.com/questions/10019456/usage-of-sys-stdout-flush-method
 
         with open(out_path + "diagnostics_summary.csv", "a+") as out_file: # replace with "a" to append 
             writer = csv.DictWriter(out_file, fieldnames = three_rows[0].keys())
