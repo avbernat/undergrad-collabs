@@ -179,8 +179,8 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
         all_speeds = []
         all_distances = []
 
-        combos = len(devs)**2
-        print(f"     Calculating...{file_abbrev}, {combos} troughs, speeds, and distances")
+        n_combos = len(devs)**2
+        print(f"     Calculating...{file_abbrev}, {n_combos} troughs, speeds, and distances")
 
         for min_dev_val in devs:
             
@@ -283,12 +283,6 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
         row_data["large_prop"] = d[stat][3]
         row_data["large_cIDs"] = d[stat][4]
 
-        # i = 0
-        # for val in d[stat][5]:
-        #     i += 1
-        #     row_data[f"combo_{i}"] = val
-        
-
         trows.append(row_data)
 
     #outpath = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics/"
@@ -300,23 +294,10 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
     q1.put(trows)
     q2.put(big_list)
 
-#************************************************************************************************************
-#   To call the recording data file, write the complete file directory path below. An example path is
-#   r"/Users/username/Desktop/Flight_scripts/". The number of columns processed below depends on the number
-#   of channels used to record the flight data. For individual insects with only two columns per file,
-#   only the TBF and voltage reading columns are processed. However, if the number of channels is different
-#   the script needs to be edited accordingly.
-#************************************************************************************************************
-
-if __name__ == "__main__":
-
-    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
-    #main_path = r"/home/avbernat/Desktop/split_files/"
-    path = main_path # + "small_test/"
-    dir_list = sorted(os.listdir(path))
-
+def generate_set_lists(dir_list):
+    
     # Rearranging the directory_list into list of files by set. 
-
+    
     max_set_num = int(dir_list[-1].split("_")[1].split("-")[0].split("t0")[-1])
 
     sets = []
@@ -333,19 +314,58 @@ if __name__ == "__main__":
         if set_list != []:
             sets.append(set_list)
 
-    #set_number = 
-    #set_list =[sets[set_number-1]]
+    return sets
+
+def write_summary_file(out_path, three_rows):
+
+    with open(out_path + "diagnostics_summary.csv", "a+") as out_file: 
+        writer = csv.DictWriter(out_file, fieldnames = three_rows[0].keys())
+        if out_file.tell() == 0:
+            writer.writeheader()
+        for row in three_rows:
+            writer.writerow(row)
+
+def write_combos_files(out_path, combos):
+
+    with open(out_path + "diagnostics_combos.csv", "a+") as out_file:
+        writer = csv.DictWriter(out_file, fieldnames = combos[0][0].keys())
+        if out_file.tell() == 0:
+            writer.writeheader()
+        for file in combos:
+            for row in file:
+                writer.writerow(row)
+
+#************************************************************************************************************
+#   To call the recording data file, write the complete file directory path below. An example path is
+#   r"/Users/username/Desktop/Flight_scripts/". The number of columns processed below depends on the number
+#   of channels used to record the flight data. For individual insects with only two columns per file,
+#   only the TBF and voltage reading columns are processed. However, if the number of channels is different
+#   the script needs to be edited accordingly.
+#
+#   Max number of items to population a Queue: 32767 items. (Stack Overflow: Multiprocessing Queue maxsize limit is 32767)
+#************************************************************************************************************
+
+if __name__ == "__main__":
+
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/test_file/"
+    #main_path = r"/home/avbernat/Desktop/split_files/"
+    path = main_path # + "small_test/"
+    directory_list = sorted(os.listdir(path))
+    sets = generate_set_lists(directory_list)
+
     #sets =sets[0:1]
-    set_number = 12
-    sets =[sets[set_number-1]]
+    #set_number = 12
+    #sets =[sets[set_number-1]] # or set_list?
 
     print("\nSet files: ", sets)
-
-    count = 0
-    for set_list in sets:
-        count += len(set_list)
-
+    count = sum([len(set_list) for set_list in sets])
     print("\nNumber of files: ", count)
+
+    outpath = r"/Users/anastasiabernat/Desktop/"
+    with open(os.path.join(outpath, "diagnostics_summary.csv"), 'w') as file_out: 
+        pass
+    with open(os.path.join(outpath, "diagnostics_combos.csv"), 'w') as file_out: 
+        pass
 
     qout = mp.Queue()
     qbig = mp.Queue()
@@ -357,55 +377,10 @@ if __name__ == "__main__":
         jobs.append(p)
         p.start()
 
-    out_path = r"/Users/anastasiabernat/Desktop/"
-    with open(os.path.join(out_path, "diagnostics_summary.csv"), 'w') as file_out: 
-        pass
-    with open(os.path.join(out_path, "diagnostics_combos.csv"), 'w') as file_out: 
-        pass
-
-    summary_list = []
-    set_combos = []
     for process in jobs:
-        three_rows = qout.get()
-        file_combos = qbig.get()
-        summary_list.append(three_rows)
-        set_combos.append(file_combos)
-        #process.join() # set 12 and 15 gets stuck in an infinite loop - probably here
+        set_rows = qout.get()
+        set_combos = qbig.get()
+        write_summary_file(outpath, set_rows)
+        write_combos_files(outpath, set_combos)
+        # process.join() # set 12 and 15 gets stuck in an infinite loop if uncomment
         # sys.stdout.flush() # https://stackoverflow.com/questions/10019456/usage-of-sys-stdout-flush-method
-
-        with open(out_path + "diagnostics_summary.csv", "a+") as out_file: # replace with "a" to append 
-            writer = csv.DictWriter(out_file, fieldnames = three_rows[0].keys())
-            if out_file.tell() == 0:
-                writer.writeheader()
-            for row in three_rows:
-                writer.writerow(row)
-
-        with open(out_path + "diagnostics_combos.csv", "a+") as out_file: # replace with "a" to append 
-            writer = csv.DictWriter(out_file, fieldnames = file_combos[0][0].keys())
-            if out_file.tell() == 0:
-                writer.writeheader()
-            for file in file_combos:
-                for row in file:
-                    writer.writerow(row)
-
-    #outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-    #outpathf = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/"
-    #out_path = outpathf + "diagnostics/"
-    #out_path = r"/Users/anastasiabernat/Desktop"
-
-    # with open(out_path + "diagnostics_summary.csv", "w") as out_file: # replace with "a" to append 
-    #     writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
-    #     writer.writeheader()
-    #     for rows in summary_list:
-    #         for row in rows:
-    #             writer.writerow(row)
-
-    # #out_path = r"/Users/anastasiabernat/Desktop"
-    # #out_path = outpathf + "diagnostics/"
-    # with open(out_path + "diagnostics_combos.csv", "w") as out_file: # replace with "a" to append 
-    #     writer = csv.DictWriter(out_file, fieldnames = set_combos[0][0][0].keys())
-    #     writer.writeheader()
-    #     for setn in set_combos:
-    #         for filen in setn:
-    #             for row in filen:
-    #                 writer.writerow(row)
