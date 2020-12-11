@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATch --account=edu
 #SBATCH --job-name=diagnostics
-#SBATCH --ntasks-per-node=1
-#SBATCH --nodes=5
+#SBATCH --ntasks-per-node=5
+#SBATCH --nodes=1
 #SBATCH --mem-per-cpu=9000M
 #SBATCH --time=11:00:00
 #SBATCH --mail-user=avbernat@uchicago.edu
