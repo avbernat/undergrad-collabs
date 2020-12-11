@@ -14,6 +14,6 @@ echo "Working directory is `pwd`"
 echo "Starting Python at `date`."
 
 module load python
-python3 /home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics-AB.py
+python3 /home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostic-AB.py
 
 echo "Finished Python at `date`."
