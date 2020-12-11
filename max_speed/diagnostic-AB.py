@@ -310,7 +310,7 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
 
 if __name__ == "__main__":
 
-    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/fiveset_files/"
     #main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     dir_list = sorted(os.listdir(path))
@@ -336,7 +336,7 @@ if __name__ == "__main__":
     #set_number = 
     #set_list =[sets[set_number-1]]
     #sets =sets[0:1]
-    set_number = 16
+    set_number = 12
     sets =[sets[set_number-1]]
 
     print("\nSet files: ", sets)
@@ -357,31 +357,64 @@ if __name__ == "__main__":
         jobs.append(p)
         p.start()
 
-    #sys.exit()
     summary_list = []
     set_combos = []
+    out_path = r"/Users/anastasiabernat/Desktop/"
+    with open(os.path.join(out_path, "diagnostics_summary.csv"), 'w') as file_out: 
+        pass
+    with open(os.path.join(out_path, "diagnostics_combos.csv"), 'w') as file_out: 
+        pass
+
+    print(jobs)
+    print(qout)
+    print(qbig)
+
     for process in jobs:
+        print('Hello!')
         process.join() # set 12 and 15 gets stuck in an infinite loop - probably here
+        print(process)
+        print(qout)
+        print(qbig)
+        #print(qout.qsize())
+        #print(qbig.qsize())
         three_rows = qout.get()
         file_combos = qbig.get()
         summary_list.append(three_rows)
         set_combos.append(file_combos)
 
-    outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-    #outpathf = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/"
-    out_path = outpathf + "diagnostics/"
-    with open(out_path + "diagnostics_summary.csv", "w") as out_file:
-        writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
-        writer.writeheader()
-        for rows in summary_list:
-            for row in rows:
+        with open(out_path + "diagnostics_summary.csv", "a+") as out_file: # replace with "a" to append 
+            writer = csv.DictWriter(out_file, fieldnames = three_rows[0].keys())
+            if out_file.tell() == 0:
+                writer.writeheader()
+            for row in three_rows:
                 writer.writerow(row)
 
-    out_path = outpathf + "diagnostics/"
-    with open(out_path + "diagnostics_combos.csv", "w") as out_file:
-        writer = csv.DictWriter(out_file, fieldnames = set_combos[0][0][0].keys())
-        writer.writeheader()
-        for setn in set_combos:
-            for filen in setn:
-                for row in filen:
+        with open(out_path + "diagnostics_combos.csv", "a+") as out_file: # replace with "a" to append 
+            writer = csv.DictWriter(out_file, fieldnames = file_combos[0][0].keys())
+            if out_file.tell() == 0:
+                writer.writeheader()
+            for file in file_combos:
+                for row in file:
                     writer.writerow(row)
+
+    #outpathf = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    #outpathf = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/"
+    #out_path = outpathf + "diagnostics/"
+    #out_path = r"/Users/anastasiabernat/Desktop"
+
+    # with open(out_path + "diagnostics_summary.csv", "w") as out_file: # replace with "a" to append 
+    #     writer = csv.DictWriter(out_file, fieldnames = summary_list[0][0].keys())
+    #     writer.writeheader()
+    #     for rows in summary_list:
+    #         for row in rows:
+    #             writer.writerow(row)
+
+    # #out_path = r"/Users/anastasiabernat/Desktop"
+    # #out_path = outpathf + "diagnostics/"
+    # with open(out_path + "diagnostics_combos.csv", "w") as out_file: # replace with "a" to append 
+    #     writer = csv.DictWriter(out_file, fieldnames = set_combos[0][0][0].keys())
+    #     writer.writeheader()
+    #     for setn in set_combos:
+    #         for filen in setn:
+    #             for row in filen:
+    #                 writer.writerow(row)

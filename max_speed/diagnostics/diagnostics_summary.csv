@@ -1,0 +1,4 @@
+stat,set,total,no_change,small_changes,large_changes,large_prop,large_cIDs
+trough,set012,5,1,1,3,0.6,"[None, 'A1_282', None, 'A1_47', 'A1_66']"
+speed,set012,5,1,1,3,0.6,"['A1_142', 'A1_282', None, 'A1_47', None]"
+distance,set012,5,1,1,3,0.6,"[None, 'A1_282', None, 'A1_47', 'A1_66']"

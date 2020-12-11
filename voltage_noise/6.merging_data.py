@@ -28,7 +28,7 @@ from datetime import datetime, date
 
 main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/voltage_noise/data/"
 demographics_data = main_path + "1.demographic_data.csv"
-trial_data = main_path + "1.trials_time-processed-Aug6.2020.csv"
+trial_data = main_path + "1.trials-time-processed-Dec10.2020.csv"
                 
 county_dict = {"Gainesville": "Alachua",
                "Homestead": "Miami-Dade",
