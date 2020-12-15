@@ -48,11 +48,28 @@ def trough_standardization(column, dev_min, dev_max):
 
     for j in range(0, len(int_list)-1): 
         if int_list[j] > int_list[j-1] and int_list[j] >= int_list[j+1]: 
-            troughs.append(1)
+            if int_list[j-3] >= int_list[j] or int_list[j-5] >= int_list[j] or int_list[j-7] >= int_list[j]: # double peak
+                troughs.append(0)
+                for i in range(j, j + 100): # 100 = sample rate - 100 time points/s # peaks can be anywhere from 4-30 points
+                    int_list[i] = 0
+                #print("hello")
+                #print(int_list[j-10:j+1])
+            # if int_list[j-29] >= int_list[j] or int_list[j-33] >= int_list[j]: # swing back and forth
+            #     troughs.append(0)
+            #     for i in range(j, j + 100): # sample rate
+            #         int_list[i] = 0
+            #     print("hello 2.0")
+            #     print(int_list[j-40:j+3])
+            else:
+                troughs.append(1)
+                #print("hi")
+                #print(int_list[j-200:j+200])
+                #print(int_list[j-10:j+1])
         else:
             troughs.append(0)
 
     troughs.append(0)
+    #print(sum(troughs))
 
 #    print("   Num of 1's:", sum(int_list), "   Num of troughs:", sum(troughs),
 #          "   Min Dev: ", dev_min, "   Max Dev: ", dev_max)
@@ -75,8 +92,8 @@ def write_to_file(path, file_name, lines, time_col, trough_col):
     #
     #************************************************************************************************************
     
-        outpath = path + "standardized_files/"
-        OutputFile = open(outpath + "standardized_" + str(file_name), mode="w")
+        #outpath = path + "standardized_files/"
+        OutputFile = open(path + "standardized_" + str(file_name), mode="w")
         for i in range(0, len(lines)):
             OutputFile.write('%.2f' % time_col[i] + ", " +
                              '%.2f' % trough_col[i] + "\n")
@@ -94,7 +111,7 @@ if __name__=="__main__":
     
     #main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" # input the path to the Flight_scripts directory here 
     main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/" 
-    path = main_path + "set_files/"
+    path = main_path + "test_file/"
     dir_list = sorted(os.listdir(path))
 
     print("Files in '", path, "' :")
@@ -123,9 +140,10 @@ if __name__=="__main__":
         #   0.01 V.
         #************************************************************************************************************
         
-        trough_column = trough_standardization(voltage_column, 0.01, 0.01) # * Uncomment this line after running diagnostics
+        trough_column = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
 
-        out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+        #out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+        out_path = r"/Users/anastasiabernat/Desktop/"
         write_to_file(out_path, file, Lines, time_column, trough_column) # * Uncomment this line when running diagnostics
 
 #**********************************************************************************************
