@@ -175,6 +175,7 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
         file_abbrev = set_n + "-" + file.split("-")[-1]
         
         devs = [0.02, 0.04, 0.06, 0.08, 0.1]
+        max_devs = [0.01, 0.02, 0.03, 0.04, 0.0]
         all_troughs = []
         all_speeds = []
         all_distances = []
@@ -275,7 +276,7 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
         row_data = {}
 
         row_data["stat"] = stat
-        row_data["set"] = set_n
+        row_data["set"] = set_n.split("t0")[-1]
         row_data["total"] = total
         row_data["no_change"] = d[stat][0]
         row_data["small_changes"] = d[stat][1]
@@ -285,8 +286,9 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
 
         trows.append(row_data)
 
-    outpath = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics/"
+    #outpath = r"/home/avbernat/Desktop/diag-yes-pos/"
     #outpath = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/diagnostics/"
+    outpath = r"/Users/anastasiabernat/Desktop/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
@@ -325,7 +327,7 @@ def write_summary_file(out_path, three_rows):
         for row in three_rows:
             writer.writerow(row)
 
-def write_combos_files(out_path, combos):
+def write_combos_file(out_path, combos):
 
     with open(out_path + "diagnostics_combos.csv", "a+") as out_file:
         writer = csv.DictWriter(out_file, fieldnames = combos[0][0].keys())
@@ -347,8 +349,8 @@ def write_combos_files(out_path, combos):
 
 if __name__ == "__main__":
 
-    #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/test_file/"
-    main_path = r"/home/avbernat/Desktop/split_files/"
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/test/"
+    #main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     directory_list = sorted(os.listdir(path))
     sets = generate_set_lists(directory_list)
@@ -362,7 +364,8 @@ if __name__ == "__main__":
     print("\nNumber of files: ", count)
 
     #outpath = r"/Users/anastasiabernat/Desktop/"
-    outpath = r"/home/avbernat/Desktop/undergrad-collabs/max_speed/diagnostics/"
+    #outpath = r"/home/avbernat/Desktop/diag-yes-pos/"
+    outpath = r"/Users/anastasiabernat/Desktop/"
     with open(os.path.join(outpath, "diagnostics_summary.csv"), 'w') as file_out: 
         pass
     with open(os.path.join(outpath, "diagnostics_combos.csv"), 'w') as file_out: 
@@ -382,6 +385,6 @@ if __name__ == "__main__":
         set_rows = qout.get()
         set_combos = qbig.get()
         write_summary_file(outpath, set_rows)
-        write_combos_files(outpath, set_combos)
+        write_combos_file(outpath, set_combos)
         # process.join() # set 12 and 15 gets stuck in an infinite loop if uncomment
         # sys.stdout.flush() # https://stackoverflow.com/questions/10019456/usage-of-sys-stdout-flush-method
