@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=5
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=9000M
-#SBATCH --time=11:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mail-user=avbernat@uchicago.edu
 #SBATCH --mail-type=ALL
 #SBATCH --partition=broadwl

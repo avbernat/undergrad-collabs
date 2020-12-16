@@ -355,8 +355,8 @@ if __name__ == "__main__":
     sets = generate_set_lists(directory_list)
 
     #sets =sets[0:1]
-    set_number = 2
-    sets =[sets[set_number-1]] # or set_list?
+    #set_number = 2
+    #sets =[sets[set_number-1]] # or set_list?
 
     print("\nSet files: ", sets)
     count = sum([len(set_list) for set_list in sets])
