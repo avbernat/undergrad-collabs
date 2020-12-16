@@ -10,7 +10,7 @@ library(stringr)
 
 dir = "/Users/anastasiabernat/Desktop/Docs/slurm/"
 dir_new = "/Users/anastasiabernat/Desktop/diagnostics/"
-setwd(dir)
+#setwd(dir)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
