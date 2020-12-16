@@ -285,9 +285,9 @@ def diagnose(set_list, path, q1, q2, standardize=standardize, analyze=analyze, h
 
         trows.append(row_data)
 
-    #outpath = r"/home/avbernat/Desktop/diagnostics/"
+    outpath = r"/home/avbernat/Desktop/diagnostics/"
     #outpath = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/diagnostics/"
-    outpath = r"/Users/anastasiabernat/Desktop/"
+    #outpath = r"/Users/anastasiabernat/Desktop/"
     fig.savefig(outpath + f"trough_diagnostic-{set_n}.png")
     hmap.savefig(outpath + f"stats_diagnostics-{set_n}.png")
 
@@ -348,8 +348,8 @@ def write_combos_file(out_path, combos):
 
 if __name__ == "__main__":
 
-    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
-    #main_path = r"/home/avbernat/Desktop/split_files/"
+    #main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/split_files/"
+    main_path = r"/home/avbernat/Desktop/split_files/"
     path = main_path # + "small_test/"
     directory_list = sorted(os.listdir(path))
     sets = generate_set_lists(directory_list)
@@ -362,8 +362,8 @@ if __name__ == "__main__":
     count = sum([len(set_list) for set_list in sets])
     print("\nNumber of files: ", count)
 
-    #outpath = r"/home/avbernat/Desktop/diagnostics/"
-    outpath = r"/Users/anastasiabernat/Desktop/"
+    outpath = r"/home/avbernat/Desktop/diagnostics/"
+    #outpath = r"/Users/anastasiabernat/Desktop/"
     with open(os.path.join(outpath, "diagnostics_summary.csv"), 'w') as file_out: 
         pass
     with open(os.path.join(outpath, "diagnostics_combos.csv"), 'w') as file_out: 
