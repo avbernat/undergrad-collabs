@@ -71,11 +71,11 @@ def get_changes(file_name, dstat, statistic):
     dlarge_count = 0
 
     if statistic == "trough" or statistic == "distance":
-        if dstat > 0 and dstat < 15: # small change
+        if dstat > 0 and dstat < 25: # small change
             dsmall_count = 1
             stat = "trough" 
 
-        if dstat >= 15: # large change
+        if dstat >= 25: # large change
             chamber_ID = file_name.split("-")[-1].split(".")[0]
             dlarge_count = 1
 

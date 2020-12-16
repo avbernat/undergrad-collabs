@@ -95,95 +95,13 @@ for (i in seq(0,nrow(data) - 3, 3)) {
 
 ```
 
+## Clusters of Three
+
 ```{r}
 data1 = read.csv("diagnostics/by_set/diagnostics_combos-set001.csv")
 data2 = read.csv("diagnostics/by_set/diagnostics_combos-set002.csv")
 data3 = read.csv("diagnostics/by_set/diagnostics_combos-set003.csv")
 data = rbind(data1, data2, data3)
-data
-```
-
-```{r}
-par(mfrow=c(2,3))
-for (i in seq(0,nrow(data) - 3, 3)) {
-  matrix = data[(i+1):(i+3),c(2, 4:length(data))]
-  d = t(matrix)
-  filename = d[1,][1]
-  plot(d[-1,1], main="Number Troughs", sub=filename, 
-       xlab="Combo", ylab="Number of Troughs", col="black")
-  plot(d[-1,2], main="Speed", xlab="Combo", ylab="Speed", col="blue")
-  plot(d[-1,3], main="Distance", xlab="Combo", ylab="Distance", col="red")
-}
-```
-
-```{r}
-data4 = read.csv("diagnostics/by_set/diagnostics_combos-set004.csv")
-data5 = read.csv("diagnostics/by_set/diagnostics_combos-set005.csv")
-data6 = read.csv("diagnostics/by_set/diagnostics_combos-set006.csv")
-data = rbind(data4, data5, data6)
-data
-```
-```{r}
-par(mfrow=c(2,3))
-for (i in seq(0,nrow(data) - 3, 3)) {
-  matrix = data[(i+1):(i+3),c(2, 4:length(data))]
-  d = t(matrix)
-  filename = d[1,][1]
-  plot(d[-1,1], main="Number Troughs", sub=filename, 
-       xlab="Combo", ylab="Number of Troughs", col="black")
-  plot(d[-1,2], main="Speed", xlab="Combo", ylab="Speed", col="blue")
-  plot(d[-1,3], main="Distance", xlab="Combo", ylab="Distance", col="red")
-}
-```
-
-```{r}
-data7 = read.csv("diagnostics/by_set/diagnostics_combos-set007.csv")
-data8 = read.csv("diagnostics/by_set/diagnostics_combos-set008.csv")
-data9 = read.csv("diagnostics/by_set/diagnostics_combos-set009.csv")
-data = rbind(data7, data8, data9)
-data
-```
-
-```{r}
-par(mfrow=c(2,3))
-for (i in seq(0,nrow(data) - 3, 3)) {
-  matrix = data[(i+1):(i+3),c(2, 4:length(data))]
-  d = t(matrix)
-  filename = d[1,][1]
-  plot(d[-1,1], main="Number Troughs", sub=filename, 
-       xlab="Combo", ylab="Number of Troughs", col="black")
-  plot(d[-1,2], main="Speed", xlab="Combo", ylab="Speed", col="blue")
-  plot(d[-1,3], main="Distance", xlab="Combo", ylab="Distance", col="red")
-}
-```
-
-```{r}
-data10 = read.csv("diagnostics/by_set/diagnostics_combos-set010.csv")
-data11 = read.csv("diagnostics/by_set/diagnostics_combos-set011.csv")
-#data12 = read.csv("diagnostics/by_set/diagnostics_combos-set012.csv")
-data = rbind(data10, data11)
-data
-```
-
-```{r}
-par(mfrow=c(2,3))
-for (i in seq(0,nrow(data) - 3, 3)) {
-  matrix = data[(i+1):(i+3),c(2, 4:length(data))]
-  d = t(matrix)
-  filename = d[1,][1]
-  plot(d[-1,1], main="Number Troughs", sub=filename, 
-       xlab="Combo", ylab="Number of Troughs", col="black")
-  plot(d[-1,2], main="Speed", xlab="Combo", ylab="Speed", col="blue")
-  plot(d[-1,3], main="Distance", xlab="Combo", ylab="Distance", col="red")
-}
-```
-
-```{r}
-data13 = read.csv("diagnostics/by_set/diagnostics_combos-set013.csv")
-data14 = read.csv("diagnostics/by_set/diagnostics_combos-set014.csv")
-#data15 = read.csv("diagnostics/by_set/diagnostics_combos-set015.csv")
-data16 = read.csv("diagnostics/by_set/diagnostics_combos-set016.csv")
-data = rbind(data13, data14, data16)
 data
 ```
 

@@ -54,26 +54,13 @@ def trough_standardization(column, dev_min, dev_max):
                     try:
                         int_list[i] = 0
                     except IndexError:
-                        #print(int_list[i:len(int_list)])
                         continue 
-                #print("hello")
-                #print(int_list[j-10:j+1])
-            # if int_list[j-29] >= int_list[j] or int_list[j-33] >= int_list[j]: # swing back and forth
-            #     troughs.append(0)
-            #     for i in range(j, j + 100): # sample rate
-            #         int_list[i] = 0
-            #     print("hello 2.0")
-            #     print(int_list[j-40:j+3])
             else:
                 troughs.append(1)
-                #print("hi")
-                #print(int_list[j-200:j+200])
-                #print(int_list[j-10:j+1])
         else:
             troughs.append(0)
 
     troughs.append(0)
-    #print(sum(troughs))
 
 #    print("   Num of 1's:", sum(int_list), "   Num of troughs:", sum(troughs),
 #          "   Min Dev: ", dev_min, "   Max Dev: ", dev_max)
@@ -115,7 +102,7 @@ if __name__=="__main__":
     
     #main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/" # input the path to the Flight_scripts directory here 
     main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/" 
-    path = main_path + "test_file/"
+    path = main_path + "split_files/"
     dir_list = sorted(os.listdir(path))
 
     print("Files in '", path, "' :")
@@ -144,11 +131,11 @@ if __name__=="__main__":
         #   0.01 V.
         #************************************************************************************************************
         
-        trough_column = trough_standardization(voltage_column, 0.1, 0.1) # * Uncomment this line after running diagnostics
+        trough_column = trough_standardization(voltage_column, 0.1, 0.1) 
 
-        #out_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-        out_path = r"/Users/anastasiabernat/Desktop/"
-        write_to_file(out_path, file, Lines, time_column, trough_column) # * Uncomment this line when running diagnostics
+        out_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/standardize_files/"
+        #out_path = r"/Users/anastasiabernat/Desktop/"
+        write_to_file(out_path, file, Lines, time_column, trough_column) 
 
 #**********************************************************************************************
 # This file has been modified from Attisano et al. 2015.

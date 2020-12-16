@@ -349,8 +349,9 @@ def graph(time, speed):
 
 if __name__=="__main__":
     
-    main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
-    path = main_path + "/standardized_files/"
+    #main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
+    main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/"
+    path = main_path + "standardize_files/"
 
     print(path, "\n")
 
@@ -425,7 +426,7 @@ if __name__=="__main__":
 
         # Flight Stats:
         
-        set_number = str(file).split("_")[3].split("-")[0].split("t0")[-1]
+        set_number = filename.split("-")[0].split("t0")[-1]
 
         row_data["set_number"] = set_number
         row_data['average_speed'] = round(av_speed, 2)
