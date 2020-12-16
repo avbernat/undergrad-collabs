@@ -51,7 +51,11 @@ def trough_standardization(column, dev_min, dev_max):
             if int_list[j-3] >= int_list[j] or int_list[j-5] >= int_list[j] or int_list[j-7] >= int_list[j]: # double troughs
                 troughs.append(0)
                 for i in range(j, j + 100): # 100 = sample rate - 100 time points/s # peaks can be anywhere from 4-30 points
-                    int_list[i] = 0
+                    try:
+                        int_list[i] = 0
+                    except IndexError:
+                        #print(int_list[i:len(int_list)])
+                        continue 
                 #print("hello")
                 #print(int_list[j-10:j+1])
             # if int_list[j-29] >= int_list[j] or int_list[j-33] >= int_list[j]: # swing back and forth
