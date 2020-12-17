@@ -432,7 +432,7 @@ if __name__=="__main__":
         time_graph, speed_graph = graph(time_n, speed_n)
         plot_trajectories(time_graph, speed_graph, plt, filename, ID, set_number, channel_letter + channel_num, 
                                 flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict, main_path, 
-                                plot_spline=True, plot_speed=True, plot_acceleration=False, individual=False)
+                                plot_spline=True, plot_speed=True, plot_acc=False, individual=False)
 
         # Flight Stats:
 
