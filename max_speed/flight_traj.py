@@ -4,7 +4,6 @@ import shutil
 import matplotlib
 
 import numpy as np
-#from os import path
 from matplotlib import style
 from matplotlib import pyplot as plt
 
@@ -128,15 +127,6 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
    # mass_color = mass_dictionary[(ID, set_n)]
    # host_color = host_dictionary[(ID, set_n)]  
 
-   # Filtering:
-   # flight_type = flight_type_dictionary[(ID, chamber, set_n)]
-   # if flight_type == "B" or flight_type == "":
-   #     continue
-    
-   # time_duration = seconds_dict[(ID_num, set_num)]
-   # if time_duration < 4000:
-   #     continue
-
    initial_time = x[0]
    for i in range(len(x)):
       x[i] = x[i] - initial_time
@@ -166,7 +156,7 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
          #plt.legend(['data', 'linear', 'quadratic', 'cubic'], loc='best')
          plt.legend(['data', 'linear'], loc='best')
       
-      plt.plot(xnew, f(xnew), 'k-', markersize=0.5)
+      plt.plot(xnew, f(xnew), 'k-', markersize=1, linewidth=0.35)
       plt.legend(['linear'], loc='best')
     
    plt.title('Flight Trajectories')
@@ -191,40 +181,32 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
 ########################################################################################################################
 
 if __name__=="__main__":
+   root_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/"
 
-    summary_file_path = "/Users/anastasiabernat/Desktop/1.trials-time-processed-Dec10.2020.csv"
-    flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict = color_palette(summary_file_path)
+   summary_file_path = root_path + "1.trials-time-processed-Dec10.2020.csv"
+   flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict = color_palette(summary_file_path)
 
-    plt.figure()
-    path = r"/Users/anastasiabernat/Desktop/Flight_Analyses/"
-    dir_list = sorted(os.listdir(path))
+   plt.figure()
+   path = root_path = "flight_analyses/"
+   dir_list = sorted(os.listdir(path))
 
-    for filename in dir_list:
-        if filename.startswith("."):
-            continue
+   for filename in dir_list:
+      ID_num = str(filename).split("_")[-1].replace(".txt", "")
+      set_num = str(filename).split("-")[0].split("t")[-1].lstrip('0')
+      chamber = str(filename).split("_")[0].split("-")[-1]
 
-        ID_num = str(filename).split("_")[-1].replace(".txt", "")
-        set_num = str(filename).split("-")[0].split("t")[-1].lstrip('0')
-        chamber = str(filename).split("_")[0].split("-")[-1]
-        
-        filepath = path + str(filename)
-        input_file = open(filepath, mode="r", encoding='latin-1')
-        
-        x = []
-        y = []
-        is_initial_start_time = True
-        
-        for row in input_file:
-            split = row.split(',')
-            if is_initial_start_time:
-                initial_time = float(split[0])
-                is_initial_start_time = False
-            time = float(split[0]) - initial_time
-            speed = float(split[1]) 
+      filepath = path + filename
+      input_file = open(filepath, mode="r", encoding='latin-1')
+      
+      times = []
+      speeds = []
+      for row in input_file:
+         split = row.split(',')
+         time = float(split[0])
+         speed = float(split[1]) 
+         times.append(time)
+         speeds.append(speed)
 
-    outpath = r'/Users/anastasiabernat/Desktop/Flight_Trajectories/'
-    output_filename = "flight_trajectories-20.png"
-    concatenated_path = os.path.join(outpath, output_filename)
-    plt.savefig(concatenated_path, dpi=300, bbox_inches='tight')
-    plt.clf()
-    ##plt.show()
+   outfile = root_path + "flight_trajectories-2.png"
+   plt.savefig(outpath + outfile, dpi=300, bbox_inches='tight')
+   plt.clf()
