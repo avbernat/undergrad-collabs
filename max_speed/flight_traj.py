@@ -7,9 +7,8 @@ import numpy as np
 from matplotlib import style
 from matplotlib import pyplot as plt
 
-from scipy.interpolate import make_interp_spline, BSpline
-from scipy.interpolate import interp1d
 from scipy import interpolate
+from scipy.interpolate import interp1d
 
 plt.style.use('ggplot')
 
@@ -97,27 +96,43 @@ def color_palette(data_path):
 
 def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dictionary, sex_dictionary, pop_dictionary, 
                                 mass_dictionary, host_dictionary, outpath, plot_spline=False, plot_speed=False, 
-                                plot_acceleration=False, individual=False):
+                                plot_acc=False, individual=False):
 
    #**********************************************************************************************
    # 
    # Plots either individual flight trajectories or a single graph of all flight trajectories.
    #
-   # INPUT:    x, which represents time (s) and y, which represents speed (m/s). plt is the plot
-   #           object, filename as a string, ID, set_n, chamber, and dictionaries for palette 
-   #           retrieval, outpath for storing graphs, and booleans of plot_spline, plot_speed,
-   #           plot_acceleration, and individual.
+   # INPUT:    x, which represents time (s) as a list of floats; y, which represents speed (m/s) 
+   #           as a list of floats; plt as the plot object(s); and filename for the labels of each
+   #           plot object as a string. Several keys are also included for palette color retrieval, 
+   #           which includes ID, set_n, and chamber as strings. Dictionaries that require 
+   #           aforementioned keys for palette retrieval are also included. Addititionally, an 
+   #           outpathfor the generation of a plot or plots as .png files needs to be specified. 
+   #           Finally, several boolean arguments that help the user decide which features to plot
+   #           and how many: plot_spline, plot_speed, plot_acc, and individual.
    #
-   # PROCESS:  Booleans determine what graph(s) are generated. 
-   #              1. Write 'True' for plot_spline for spline creation - linear or polynomial.
-   #              2. Write 'True' to plot either speed or acceleration. 
-   #              3. Write 'True' if want individual file plots.
-   #           Plots features (titles, labels, etc.)
+   # PROCESS:  Booleans determine what graph(s) are generated. The user can select the follwowing:
+   #              1. Write 'True' for plot_spline for a first-order spline creation (linear). 
+   #                 The last argument of np.linespace() determines the number of points to make 
+   #                 per spline. It is currently set at 20, and it can be changed. Additionally,
+   #                 to plot a second- or third-order spline the following can be added beneath
+   #                 the 'if plot_spline:' conditional, respectively:
+   #                       f2 = interp1d(x, y, kind = 'quadratic')
+   #                       f3 = interp1d(x, y, kind = 'cubic')
+   #              2. Write 'True' for plot_spline or plot_acc to plot either speed or acceleration
+   #                 on the y-axis. 
+   #              3. Write 'True' for individual to plot individual file plots. Write 'False' to 
+   #                 only generate a plot with all flight trajectory data.
+   #           Regardless of boolean inputs, time and speed lists are filtered to remove the last
+   #           values of [0.0], [0.0] and transform the time values to have its start time at 0. 
+   #           Time and speed lists are also screened to not plot any files that fail to have 2 or 
+   #           more time and speed value pairs.
    #
-   # OUTPUT:   Individual flight trajectory plots (.png) are generated.
+   # OUTPUT:   Individual flight trajectory plot(s) (.png) of either speed or acceleration through 
+   #           time.
    #
-   # SOURCE:   Smoothing the data: https://stackoverflow.com/questions/5283649/plot-smooth-line-with-pyplot.
-   #           Plot derivative: https://stackoverflow.com/questions/52957623/how-to-plot-the-derivative-of-a-plot-python
+   # SOURCES:  Smoothing the data: https://stackoverflow.com/questions/5283649/plot-smooth-line-with-pyplot.
+   #           Plot derivatives: https://stackoverflow.com/questions/52957623/how-to-plot-the-derivative-of-a-plot-python
    #
    #**********************************************************************************************
    
@@ -134,27 +149,22 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
    x = x[0:len(x)-1]
    y = y[0:len(y)-1]
 
-   if len(x) == 1 or len(x) == 0:  #if x == [0.0] and y == [0.0]: # Skips any files whose only measurements are these.
+   if len(x) <= 1: 
       plot_spline=False
       plot_speed=False
-      plot_acceleration=False
+      plot_acc=False
       individual=False
             
-   if plot_spline: # Linear Spline: (Generates no negatives)
-      xnew = np.linspace(min(x), max(x), 20) # last num argument represents number of points to make between x.min and x.max
+   if plot_spline: 
+      xnew = np.linspace(min(x), max(x), 20)
       x = np.array(x)
       y = np.array(y)
-      f = interp1d(x, y) # first order = linear
-      #f2 = interp1d(x, y, kind = 'quadratic') # second order = quadratic
-      #f3 = interp1d(x, y, kind = 'cubic') # third order = cubic
+      f = interp1d(x, y) 
       if individual:
          plt.plot(x, y, 'c-',
-                  xnew, f(xnew), 'k-',
-                  #xnew, f2(xnew), 'k--',
-                  #xnew, f3(xnew), 'r--',
+                  xnew, f(xnew), 'k-', # xnew, f2(xnew), 'k--', # xnew, f3(xnew), 'r--',
                   markersize=1)
-         #plt.legend(['data', 'linear', 'quadratic', 'cubic'], loc='best')
-         plt.legend(['data', 'linear'], loc='best')
+         plt.legend(['data', 'linear'], loc='best') # add 'quadratic' and 'cubic' if plotting those too
       
       plt.plot(xnew, f(xnew), 'k-', markersize=1, linewidth=0.35)
       plt.legend(['linear'], loc='best')
@@ -166,13 +176,13 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
       plt.title('Flight Data' + str(' ') + str(filename))
    if plot_speed:
       plt.ylabel('Speed (m/s)')
-   if plot_acceleration:
+   if plot_acc:
       plt.ylabel('Acceleration (m/s/s)')
 
    if individual:
       if plot_speed:
          output_filename = 'speed_' + str(filename).replace(".txt", ".png")
-      if plot_acceleration:
+      if plot_acc:
          output_filename = 'acc_' + str(filename).replace(".txt", ".png")
       concatenated_path = os.path.join(outpath, output_filename)
       plt.savefig(concatenated_path, dpi=300, bbox_inches='tight')
@@ -191,9 +201,9 @@ if __name__=="__main__":
    dir_list = sorted(os.listdir(path))
 
    for filename in dir_list:
-      ID_num = str(filename).split("_")[-1].replace(".txt", "")
-      set_num = str(filename).split("-")[0].split("t")[-1].lstrip('0')
-      chamber = str(filename).split("_")[0].split("-")[-1]
+      ID_num = filename.split("_")[-1].replace(".txt", "")
+      set_num = filename.split("-")[0].split("t")[-1].lstrip('0')
+      chamber = filename.split("_")[0].split("-")[-1]
 
       filepath = path + filename
       input_file = open(filepath, mode="r", encoding='latin-1')
@@ -206,6 +216,10 @@ if __name__=="__main__":
          speed = float(split[1]) 
          times.append(time)
          speeds.append(speed)
+
+      plot_trajectories(times, speeds, plt, filename, ID_num, set_num, chamber, 
+                                flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict, root_path, 
+                                plot_spline=True, plot_speed=True, plot_acc=False, individual=False)
 
    outfile = root_path + "flight_trajectories-2.png"
    plt.savefig(outpath + outfile, dpi=300, bbox_inches='tight')
