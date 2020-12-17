@@ -2,8 +2,11 @@ import os
 import sys
 import csv
 import re
-
 import time
+
+from matplotlib import pyplot as plt
+from flight_traj import color_palette, plot_trajectories
+
 start = time.time()
 
 #**********************************************************************************************
@@ -349,15 +352,18 @@ def graph(time, speed):
 
 if __name__=="__main__":
     
+    filepath = "/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/all_flight_data.csv"
+    flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict = color_palette(filepath)
+
     #main_path = r"/Users/anastasiabernat/Desktop/git_repositories/undergrad-collabs/max_speed/"
     main_path = r"/Users/anastasiabernat/Desktop/Dispersal/Trials-Winter2020/"
     path = main_path + "standardize_files/"
-
+    dir_list = sorted(os.listdir(path))
     print(path, "\n")
+    
+    plt.figure()
 
     big_list=[]
-
-    dir_list = sorted(os.listdir(path))
     for file in dir_list:
         filepath = path + str(file)
         tot_duration = recording_duration(filepath)
@@ -386,6 +392,7 @@ if __name__=="__main__":
         print("ID: ", row_data["ID"])         
         filename = str(file).split("_")[2].replace(".txt", "") + "_" + ID + '.txt'
         row_data['filename'] = filename
+        set_number = filename.split("-")[0].split("t0")[-1]
         channel_chamber = str(file).split("-")[-1].split("_")[0]
         channel_chamber = re.findall('\d+|\D+', channel_chamber)
         channel_chamber = str(channel_chamber[0]) + "-" + str(channel_chamber[1])
@@ -423,10 +430,12 @@ if __name__=="__main__":
         print('\n')
         
         time_graph, speed_graph = graph(time_n, speed_n)
+        plot_trajectories(time_graph, speed_graph, plt, filename, ID, set_number, channel_letter + channel_num, 
+                                flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict, main_path, 
+                                plot_spline1=False, plot_spline2=True, plot_spline3=False, 
+                                plot_speed=True, plot_acceleration=False, individual=True)
 
         # Flight Stats:
-        
-        set_number = filename.split("-")[0].split("t0")[-1]
 
         row_data["set_number"] = set_number
         row_data['average_speed'] = round(av_speed, 2)
@@ -443,7 +452,7 @@ if __name__=="__main__":
     # All Flight Stats Summary File
 
     outpath = main_path
-    with open(outpath + "flight_stats_summary.csv", "w") as csv_file:
+    with open(outpath + "flight_stats_summary2.csv", "w") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys()) # supposed to be 0?
         writer.writeheader()
         for row in big_list:
@@ -457,6 +466,9 @@ if __name__=="__main__":
 
     print("---",(end - start), "seconds ---")
     print("---",(end - start) / 60, "mintues ---")
+
+plt.savefig(outpath + "test.png", dpi=300, bbox_inches='tight')
+plt.clf()
 
 #**********************************************************************************************
 # This file has been modified from Attisano et al. 2015.
