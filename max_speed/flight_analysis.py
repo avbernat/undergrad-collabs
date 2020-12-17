@@ -432,8 +432,7 @@ if __name__=="__main__":
         time_graph, speed_graph = graph(time_n, speed_n)
         plot_trajectories(time_graph, speed_graph, plt, filename, ID, set_number, channel_letter + channel_num, 
                                 flight_type_dict, sex_dict, pop_dict, mass_dict, host_dict, main_path, 
-                                plot_spline1=False, plot_spline2=True, plot_spline3=False, 
-                                plot_speed=True, plot_acceleration=False, individual=True)
+                                plot_spline=True, plot_speed=True, plot_acceleration=False, individual=False)
 
         # Flight Stats:
 
@@ -467,7 +466,7 @@ if __name__=="__main__":
     print("---",(end - start), "seconds ---")
     print("---",(end - start) / 60, "mintues ---")
 
-plt.savefig(outpath + "test.png", dpi=300, bbox_inches='tight')
+plt.savefig(outpath + "flight_trajectories.png", dpi=300, bbox_inches='tight')
 plt.clf()
 
 #**********************************************************************************************
