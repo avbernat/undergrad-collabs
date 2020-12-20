@@ -2,12 +2,10 @@ import os
 import csv
 import shutil
 import matplotlib
-
 import numpy as np
+
 from matplotlib import style
 from matplotlib import pyplot as plt
-
-from scipy import interpolate
 from scipy.interpolate import interp1d
 
 plt.style.use('ggplot')
@@ -105,7 +103,7 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
    # INPUT:    x, which represents time (s) as a list of floats; y, which represents speed (m/s) 
    #           as a list of floats; plt as the plot object(s); and filename for the labels of each
    #           plot object as a string. Several keys are also included for palette color retrieval, 
-   #           which includes ID, set_n, and chamber as strings. Dictionaries that require 
+   #           which include ID, set_n, and chamber as strings. Dictionaries that require 
    #           aforementioned keys for palette retrieval are also included. Addititionally, an 
    #           outpathfor the generation of a plot or plots as .png files needs to be specified. 
    #           Finally, several boolean arguments that help the user decide which features to plot

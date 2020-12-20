@@ -120,9 +120,19 @@ def distance(time, speed):
     time_final=[]
     speed_final=[]
 
+    maxtimes = []
+    maxspeeds = []
+
     if len(time) > 2:
         
         for i in range(1, len(speed)):
+            # if i == 2:
+            #     maxtimes.append(time[i])
+            #     maxspeeds.append(speed[i])
+            if float(speed[i]) > 1:
+                maxtimes.append(time[i])
+                maxspeeds.append(speed[i])
+                #print(float(time[i]), float(speed[i]))
             if float(speed[i]) > 0 and float(speed[i]) < 1: # Modify the threshold value accordingly
                 time_new.append(float(time[i]))
                 speed_new.append(float(speed[i]))
@@ -142,7 +152,7 @@ def distance(time, speed):
     else:
         print('Cannot calculate distance and average speed')
         
-    return (time_final, speed_final, distance, average_speed)  
+    return (time_final, speed_final, distance, average_speed, maxtimes, maxspeeds)  
 
   
 def recording_duration(file_path):
@@ -364,6 +374,7 @@ if __name__=="__main__":
     plt.figure()
 
     big_list=[]
+    max_list=[]
     for file in dir_list:
         filepath = path + str(file)
         tot_duration = recording_duration(filepath)
@@ -410,7 +421,7 @@ if __name__=="__main__":
         print('CHANNEL ' + channel_num + ' -------------------------------------------')
         time_channel = time_list(time_column, trough_column)
         speed_channel = speed_list(time_channel)
-        time_n, speed_n, dist, av_speed = distance(time_channel, speed_channel)
+        time_n, speed_n, dist, av_speed, mtimes, mspeeds = distance(time_channel, speed_channel)
         
         fly_time, short_bout, long_bout, flight, fly_to_300, fly_to_900,  \
             fly_to_3600, fly_to_14400, fly_more_14400, event_300, event_900, event_3600, \
@@ -447,7 +458,18 @@ if __name__=="__main__":
         row_data['max_speed'] = round(max(speed_graph), 2)
                     
         big_list.append(row_data)
-            
+
+        rows = zip(mtimes, mspeeds, [ID] * len(mtimes))
+        if len(mtimes) > 0:
+            max_list.append(rows)
+
+    print(max_list)
+    with open(main_path + "max_speeds.csv", "w") as maxfile:
+        writer = csv.writer(maxfile)
+        for zip_object in max_list:
+            for row in zip_object:
+                writer.writerow(row)
+   
     # All Flight Stats Summary File
 
     outpath = main_path
