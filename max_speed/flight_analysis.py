@@ -115,6 +115,7 @@ def distance(time, speed):
 
     distance=0
     average_speed=0
+
     time_new=[]
     speed_new=[]
     time_final=[]
@@ -129,11 +130,11 @@ def distance(time, speed):
             # if i == 2:
             #     maxtimes.append(time[i])
             #     maxspeeds.append(speed[i])
-            if float(speed[i]) > 1:
+            if float(speed[i]) > 0.75:
                 maxtimes.append(time[i])
                 maxspeeds.append(speed[i])
                 #print(float(time[i]), float(speed[i]))
-            if float(speed[i]) > 0 and float(speed[i]) < 1: # Modify the threshold value accordingly
+            if float(speed[i]) > 0 and float(speed[i]) < 0.75: # Modify the threshold value accordingly
                 time_new.append(float(time[i]))
                 speed_new.append(float(speed[i]))
                 distance += 0.6283
@@ -455,16 +456,30 @@ if __name__=="__main__":
         row_data['longest_flying_bout'] = round(long_bout, 2)        
         row_data['portion_flying'] = round(flight, 2)
         row_data['recording_duration'] = round(tot_duration, 2)
-        row_data['max_speed'] = round(max(speed_graph), 2)
-                    
+        #row_data['max_speed'] = round(max(speed_graph), 2)
+
+        speed_graph.sort()
+
+        max_speed1 = speed_graph[-1]
+        row_data['max_speed1'] = round(max_speed1,2)
+
+        if len(speed_graph) >= 10:
+            max_speed2 = speed_graph[-2]
+            max_speed3 = speed_graph[-3]
+            max_speed4 = speed_graph[-4]
+            max_speed10 = speed_graph[-10]
+            row_data['max_speed2'] = round(max_speed2,2)
+            row_data['max_speed3'] = round(max_speed3,2)
+            row_data['max_speed4'] = round(max_speed4,2)
+            row_data['max_speed10'] = round(max_speed10,2)
+
         big_list.append(row_data)
 
         rows = zip(mtimes, mspeeds, [ID] * len(mtimes))
         if len(mtimes) > 0:
             max_list.append(rows)
 
-    print(max_list)
-    with open(main_path + "max_speeds.csv", "w") as maxfile:
+    with open(main_path + "max_speeds2.csv", "w") as maxfile:
         writer = csv.writer(maxfile)
         for zip_object in max_list:
             for row in zip_object:
@@ -473,7 +488,7 @@ if __name__=="__main__":
     # All Flight Stats Summary File
 
     outpath = main_path
-    with open(outpath + "flight_stats_summary2.csv", "w") as csv_file:
+    with open(outpath + "flight_stats_summary5.csv", "w") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames = big_list[1].keys()) # supposed to be 0?
         writer.writeheader()
         for row in big_list:

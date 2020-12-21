@@ -152,7 +152,11 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
       plot_speed=False
       plot_acc=False
       individual=False
-            
+
+   plt.title('Flight Trajectories')
+   plt.xlabel('Seconds from start') 
+   plt.legend(['linear'], loc='best')     
+
    if plot_spline: 
       xnew = np.linspace(min(x), max(x), 20)
       x = np.array(x)
@@ -165,10 +169,6 @@ def plot_trajectories(x, y, plt, filename, ID, set_n, chamber, flight_type_dicti
          plt.legend(['data', 'linear'], loc='best') # add 'quadratic' and 'cubic' if plotting those too
       
       plt.plot(xnew, f(xnew), 'k-', markersize=1, linewidth=0.35)
-      plt.legend(['linear'], loc='best')
-    
-   plt.title('Flight Trajectories')
-   plt.xlabel('Seconds from start') 
 
    if individual:
       plt.title('Flight Data' + str(' ') + str(filename))
