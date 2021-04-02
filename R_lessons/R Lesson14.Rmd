@@ -1,0 +1,70 @@
+---
+title: "Data Science Basics Continued"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+
+# The easiest way to get tibble is to install the whole tidyverse:
+#install.packages("tidyverse")
+
+# Alternatively, install just tibble:
+#install.packages("tibble")
+
+library(tibble) #https://tibble.tidyverse.org
+```
+
+# Lesson 14 | 24 June 2020 
+
+## Data Science Basics Continued: Revisiting Functions and Statistical Applications
+
+I've shown you some basic data statistics and a couple lessons on functions, but let's revisit the two in a more interactive way.
+
+```{r}
+data_frame <- tibble(  
+  c1 = rnorm(50, 5, 1.5), 
+  c2 = rnorm(50, 5, 1.5),    
+  c3 = rnorm(50, 5, 1.5),    
+)
+data_frame
+```
+
+**Centering**, standardizing or normalizing your data cna help tune the varying scales of your data. We've already gone through centering data in the last lesson, so let's go through standardizing and normalizing data while building functions for them.
+
+**Standardization** transforms data to have a mean of zero and a standard deviation of 1. Standardization assumes that your data has a Gaussian (bell curve) distribution. Standardizaitons, also known as Z-scores, are very common in statistics. They allow you to compare different sets of data and to find probabilities for sets of data using standardized tables (called z-tables). 
+
+**Normalization** usually means to scale a variable to have a values between 0 and 1. Normalization is good to use when you know that the distribution of your data does not follow a Gaussian distribution. When you normalize data you eliminate the units of measurement for data, enabling you to more easily compare data from different places. Normalization also makes variables, measured in different scales, have comparable values. For example, sometimes you may come across some scaling issues in your regressions and normalizing or transforming the data using a z-score or t-score can help. Normalization is useful when your data has varying scales and the regression or algorithm you are using does not make assumptions about the distribution of your data, such as k-nearest neighbors and artificial neural networks. 
+
+```{r}
+# Centering data
+center <- function(x) {
+  center <- x - mean(x)
+  return(center)
+}
+
+# Standardizing data
+standardize <- function(x) { # the z-score
+  standardize <- (x - mean(x)) / sd(x)
+  return(standardize)
+}
+
+# Normalizing data | Min-Max Normalization 
+normalize <- function(x){
+  normalize <- (x - min(x)) / (max(x) - min (x))
+  return(normalize)
+}
+
+data_frame$c1_c <- center(data_frame$c1)
+data_frame$c1_s <- standardize(data_frame$c1)
+data_frame$c1_n<- normalize(data_frame$c1)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(data_frame$c2, data_frame$c1, ylab="c1") 
+plot(data_frame$c2, data_frame$c1_c, ylab="c1 centered") 
+plot(data_frame$c2, data_frame$c1_s, ylab="c1 standardized") 
+plot(data_frame$c2, data_frame$c1_n, ylab="c1 normalized") 
+```

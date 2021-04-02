@@ -1,0 +1,147 @@
+---
+title: "Nesting Functions and Nesting Scripts"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 11 | 27 May 2020
+
+## Functions within functions, scripts within scripts
+
+In the last lesson, I showed you how to build a user-based function in R. They're great because you can create them to perform any repeated calculation or formula you need. However, functions can get pretty long at times and even a function's block of statements can also become repetitive. That's where the benefit of nested functions and nested scripts come in. By nesting funcitons and scripts, you can create a more readable and organized code. 
+
+To start, let's look at some quick examples of nested functions and how to source a script in R.
+
+## Nested Functions.
+
+There are a few ways to structure them. Here are a couple ways:
+
+(i) Call a function within another function.
+
+(ii) Write a function within another function.
+
+```{r}
+# EXAMPLE 1: Call a function within another function
+
+sq.root <- function(x) {
+  root <- x**(1/2)
+  return(root)
+}
+
+sq.root(sq.root(25))
+
+# EXAMPLE 2: Call a function within another function
+
+plot_roots <- function(nums) {
+  plot(1, type="n", xlab="numbers", ylab="roots", xlim=c(0, max(nums)), ylim=c(0, sq.root(max(nums))))
+  for (n in nums) {
+    r <- sq.root(n)
+    lines(n, r, type="p")
+  }
+}
+plot_roots(c(1,2,3,4,5))
+```
+
+```{r}
+# EXAMPLE 3: Write a function within another function.
+
+num1 <- function(x) { # outer function
+  num2 <- function(y) { # inner function
+    return(x*y)
+  }
+  return(num2)
+}
+
+result <- num1(10)
+print(result)
+print(result(5))
+```
+
+**What happened here?** 
+
+(i) The inner function, num2, has been defined inside the outer funciton called num1. 
+
+(ii) To call num2 we need to first call num1. To call num1 do num1(10) and store it in a variable called result. If we print result, we'll see that it'll print the inner function because what is returned in the outer function was num2. 
+
+(iii) To then call num2, we use the num2 function that we stored in the result variable and input a y value, which was 5 in the above example. So what gets calculated is 10*5, which equals 50. 
+
+This may be hard to visualize or picture at first. For example, you might be wondering, where did the x=10 go then if it doesn't show up when we print(result)? This gets into what is known as the call stack. Here's a helpful site that breaks down the call stack through diagrams if you want to understand what's happening under the hood: https://swcarpentry.github.io/r-novice-inflammation/14-supp-call-stack/
+
+### How to Source a Script in R.
+
+**Terms:**
+
+*Working directory (wd): a file path on your computer that sets the default location of any files you read into R, or save out of R.
+
+*Forward slash: The separator in the path names is the backslash, which in R is the escape character in characters strings. So, use forward slashes instead of the backslashes.
+
+**Functions:** 
+
+getwd() - when you run this funciton in the console with no arguments it will print the path of the working directory you are in
+
+setwd() - when you input the path of the working direction you want to work in as a character, it will change the working directory to the folder you want to work in.
+
+source() - when you input the filename or path of a file, URL, connection, or expressions directly you want to run in another script as a character, this function will accept and read your input directly.
+
+**EXAMPLE 4 **
+
+So, now let's pull up an old example - converting temperatures - and turn it into a function. Then, we will move it to another script and source the script in this file.
+
+```{r}
+############################################################################
+# FUNCTION: convert_temp | converts any temperature into C, F, or K
+# INPUT:  First, a temperature you want to convert as a string consisting of 
+#         a value followed by its units. Then, the unit you want to convert
+#         temp to as a string.
+# OUTPUT: returns the converted temperature as a string consisting of a 
+#         value and its units.
+############################################################################
+
+convert_temp <- function(temp, convert_to) {
+
+  measure <- as.numeric(substr(temp,1, nchar(temp)-1))
+  input_unit = substr(temp, nchar(temp), nchar(temp))
+  
+  if (input_unit == "C") {
+    if (convert_to == "F") {
+      converted_temp = (9 * measure) / 5 + 32
+      output_unit = "Fahrenheit" }
+    else if (convert_to == "K") {
+      converted_temp = as.numeric(measure) + 273.15
+      output_unit = "Kelvin"}
+  }
+  
+  if (input_unit  == "F") {
+    if (convert_to == "C") {
+      converted_temp = (measure - 32) * 5 / 9
+      output_unit = "Celsius" }
+    else if (convert_to == "K") {
+      converted_temp <- ((measure - 32) * 5/9) + 273.15
+      output_unit = "Kelvin"}
+    }
+  
+  if (input_unit  == "K") {
+    if (convert_to == "C") {
+      converted_temp = as.numeric(measure) - 273.15
+      output_unit = "Celsius" }
+    else if (convert_to == "F") {
+      converted_temp <- ((measure - 273.15) * 9/5) + 32
+      output_unit = "Kelvin"}
+    }
+  paste("The temperature in", output_unit, "is", converted_temp, "degrees.")
+  
+  converted_temp <- paste0(converted_temp, convert_to)
+  return(converted_temp)
+}
+```
+
+```{r}
+source("converting-temps.R")                  # Sourcing a script 
+convert_temp("25K", "C")                      # Calling the function
+convert_temp(convert_temp("25K", "C"), "F")   # Calling a function within a function
+```
+

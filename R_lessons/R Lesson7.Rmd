@@ -1,0 +1,182 @@
+---
+title: "Nested Loops: Part 2"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 7 | 15 April 2020
+
+## Nested Loops
+
+As a reminder, here is the **general** format of a nested loop:
+
+```{r}
+# loop (condition) {
+#   block of instructions
+#   loop (condition) {
+#     block of instructions
+#   }
+# }
+```
+
+**Example 1**
+
+Let's go through last time's example again:
+
+Picture the passing of a year...
+
+(i) The outer loop can be considered as the start of a month.
+(ii) The inner loop can be considered as the days of that month.
+(iii) When a month starts i.e. the outer loop is read by the system, the control enters the inner loop. It executes it completely( i.e. for all 31 days). It then goes back to the outer loop.
+
+
+```{r}
+months <- c("Janurary", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "Decemeber")
+
+# Months w/ 31 days: 1,3,5,7,8,10,12
+# Months w/ 29 days: 2
+# Months w/ 30 days: 4,6,9,11
+
+# **Update** Mistake was caught - need 'else if' statement instead of 'if' statement
+
+for (m in seq(1:length(months))) {
+  #print(m)
+  print(months[m])
+  
+  # Conditional Initializers
+  if (m==4|m ==6|m== 9|m==11) { 
+    #  & (element-wise) && and | (element-wise) ||, for logical AND and OR
+    days <- -1 }
+  
+  else if (m==2) {
+    days <- -2
+  }
+  else {
+    days <- 0
+  }
+  for (day in seq(1:31)) {
+    days <- days + 1
+  }
+  print(days) # print days of each month
+} # end of the year  
+
+```
+
+**Example 2**
+
+Curving grades with ease! 
+
+Let's say you have 6 students and they have taken 4 tests total in your class. However, some tests went worse than others overall, so you want to curve those tests but don't want to do it all by hand. Let's instead make a nested for loop that will do those calculations for you!
+
+Before we jump in, **let's quickly revisit the differneces between lists and vectors in R.**
+
+A vector stores elements of the same type or converts obliquely, whereas a list holds different data types like numerical, character, logical, etc. Lists are recursive but vectors are non-recursive. The vector is one-dimensional, whereas the list is a multidimensional object. 
+
+Why do I bring this up again? Because, under the hood, there is a lot happening that we don't necessarily see because R is a high-level langauge. Revisiting why these differences occur can help one understand why certain functions do not work on lists but do work on vectors. 
+
+For example, let's look at this list of lists of grades. Then, try creating a vector of vectors and compare the difference when you print it.
+
+```{r}
+# List of lists:
+
+grades_ll <- list( list(79,85,70,96), # Each list is a student's test grades in a class
+                list(60,71,82,92),
+                list(77,78,76,79),
+                list(82,91,88,97),
+                list(63,92,95,82))
+grades_ll
+```
+
+
+```{r}
+# Vector of vectors:
+
+grades_vv <- c( c(79,85,70,96), # Each vector is a student's test grades in a class
+                c(60,71,82,92),
+                c(77,78,76,79),
+                c(82,91,88,97),
+                c(63,92,95,82))
+grades_vv
+```
+
+Finally, try creating and printing a list of vectors. See what happens.
+
+```{r}
+# List of vectors:
+
+grades_lv <- list( c(79,85,70,96), # Each vector is a student's test grades in a class
+                c(60,71,82,92),
+                c(77,78,76,79),
+                c(82,91,88,97),
+                c(63,92,95,82))
+grades_lv
+```
+
+So which do we want to use? We're going to go with a list of vectors because vectors don't have any 'dimensional strings' attached like the lists do. Therefore, it makes mathematical functions much easier to computer when you have a vector than a list. I'll show you why but for now let's go back to the main problem.
+
+So, as teacher, you need curve your students' grades, but figure you might as well make a code for it so that you don't have to do this by hand every time in the future. This is one way you decide to go about it:
+
+
+```{r}
+grades_lv <- list( c(79,85,70,96), # Each vector is a student's test grades in a class
+                c(60,71,82,92),
+                c(77,78,76,79),
+                c(82,91,88,97),
+                c(63,92,95,82))
+
+# Make an empty matrix:
+
+# Want to create a matrix that will:
+# (1) "curve" the first test and the third by +4 points
+# (2) create a new column that calculates the mean of the test grades per student
+
+iterations = length(grades_lv)
+variables = length(grades_lv[[1]]) + 1 # + 1 is for the new column
+matrix <- matrix(ncol=variables, nrow=iterations)
+
+# Populating an empty matrix with a nested for loop:
+
+# Initalizers/counts
+
+stud_n <- 0
+
+for (student in grades_lv) { # loop over rows
+  mean <- mean(student)
+  stud_n <- stud_n + 1
+  test_n <- 0
+  for (test_grade in student) { # loop over columns within a row
+    test_n <- test_n + 1
+    if (test_n%%2 != 0) { # What is common between the first and third column?
+      test_grade <- test_grade + 4
+      cat("Curved grade is ", test_grade)
+    }
+    # populating the matrix 
+    matrix[stud_n,5] <- mean # matrix[row_n, col_n]
+    matrix[stud_n, test_n] <- test_grade
+    
+  }
+}
+
+matrix
+grades_lv
+
+```
+
+## Recap 
+
+When looping over rows and columns, here is a **general** skeleton template.
+
+```{r}
+# row_n <- row_n + 1
+# for (row in list_of_vectors) {
+#   col_n <- col_n + 1
+#   block of instructions
+#   for (col in row) {
+#     block of instructions
+#   }
+# }
+```

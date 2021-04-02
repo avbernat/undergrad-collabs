@@ -1,0 +1,493 @@
+---
+title: "Introduction to Vectorization in R"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 12 | 3 June 2020
+
+## Vectorization in R {.tabset}
+
+Vectorization is a process unique to R and its functions. A vectorized function works not just on a single value, but on a whole vector of values at the same time. So instead of looping over all values of the vector and applying a function within the loop, vectorization makes that unnecessary and can drastically simplify your code to a single line of code.
+
+### Common Vectorized Functions in R
+
+**Common Vectorized Functions in R**
+
+lapply( ) - loop over a list and evaluate a function on each element
+
+sapply( ) - same as lapply( ) but try to simplify the result
+
+apply( ) - apply a function over the margins of an array
+
+tapply( ) - apply a function over subsets of a vector
+
+mapply( ) - multivariate version of lapply
+
+split( ) - auxiliary function used with lapply( ) and sapply( ) because it splits objects into subpieces
+
+### lapply( )
+
+**lapply( )**
+
+lapply( ) loops over a list and evaluate a function on each element. lapply( ) always returns a list, regardless of the class of the input.
+
+```{r}
+str(lapply)
+```
+
+* X - the list we would like to apply some function to
+
+* FUN - the function we would like to apply to each element in the list 
+
+* ... - specify any other arguments to send to the function
+
+
+```{r}
+head(lapply) # R's source code written in C
+```
+
+If you don't input a list, lapply will convert your object into a list according to its source code. To learn more about R's C interface check out this site: http://adv-r.had.co.nz/C-interface.html. 
+
+**Let's go through some examples.** Throughout these examples, we'll be using rnorm( ) to generate random numbers from a defined normal distribution and runif( ) to generate uniform random variables. So what arguments does rnorm( ) and runif( ) take?
+
+```{r}
+str(rnorm) # sample size, mean of sample to be simulated, etc.
+str(runif) # sample size, and the lower and upper limits of the distribution
+```
+
+**Example 1. Take the mean of each element in a list.**
+```{r}
+x <- list(a = 1:5, b = rnorm(10)) # list w/ 2 elements.
+l <- lapply(x, mean)
+l # new values assembled in a new list
+```
+
+**Example 2. Take the mean of each element in a list.**
+```{r}
+x <- list(a=1:4, b=rnorm(10), c=rnorm(20,1), d= rnorm(100, 5))
+lapply(x, mean)
+```
+
+**Example 3. Apply a function to a vector in lapply( ).**
+
+You can use lapply( ) to evaluate a function multiple times each with a different argument. Below, is an example where I call the runif( ) function (to generate uniformly distributed random variables) four times, each time generating a different number of random numbers.
+
+```{r}
+x <- 1:4 
+#mean(x)
+lapply(x, runif) 
+```
+
+**Example 4. Add additional FUN arguments.**
+
+```{r}
+x <- 1:4
+lapply(x, runif, min=0, max=10)
+```
+
+So now, instead of the random numbers being between 0 and 1 (the default), the are all between 0 and 10.
+
+**Example 5. Anonymous functions.**
+
+Anonymous functions - don't have a name, but can be created within the lapply (but they will not exist outside of lapply( )).
+
+For example, let's make an anonymous function for extracting the first column of each matrix.
+
+```{r}
+x <- list(a = matrix(1:4, 2, 2), b = matrix( 1:6, 3, 2))
+
+lapply(x, function(elt) elt[,1])
+```
+
+### sapply( )
+
+**sapply( )**
+
+sapply( ) will try to simplify the result of lapply if possible. 
+
+* If the result is a list where every element is length 1, then a vector is returned
+
+* If the result is a list where every element is a vector of the same length (>1), a matrix is returned.
+
+* If it can't figure things out, a list is returned.
+
+**Example 1. Take the mean of each element in a list.**
+
+```{r}
+x <- list(a=1:4, b=rnorm(10), c=rnorm(20,1), d=rnorm(100,5))
+lapply(x,mean)
+sapply(x,mean)
+```
+
+### split( )
+
+**split( )**
+
+The benefit of combining split( ) with lapply( ) or sapply( ) is to take a data structure, split it into subsets defined by another variable, and apply a function over those subsets. 
+
+```{r}
+str(split)
+```
+
+* x is a vector (or list) or data frame
+
+* f is a factor (or coerced to one) or a list of factors
+
+* drop indicates whether empty factors levels should be dropped
+
+**Example 1**
+
+Let's use gl( ) function to "generate levels" in a factor variable. An R factor is used to store categorical data as levels. It can store both character and integer types of data. 
+
+```{r}
+str(gl)
+?gl
+```
+
+* n an integer giving the number of levels
+* k an integer giving the number of replications.
+
+```{r}
+x <- c(rnorm(10), runif(10), rnorm(10,1))
+f <- gl(3,10)
+split(x,f)
+```
+
+```{r}
+lapply(split(x,f), mean)
+```
+
+### apply( )
+
+**apply ( )**
+
+apply( ) applies a function over the margins of an array.
+
+
+```{r}
+str(apply) 
+```
+
+* X - the object we would like to apply some function to
+
+* MARGIN - specifies if the function is applied to rows or columns, 1 = row and 2 = column.
+
+* FUN - the function we would like to apply
+
+* ... - specify any other arguments to send to the function
+
+**Example 1. Calculating the mean price of each of the stocks over the 10 days.**
+
+```{r}
+d <- as.data.frame(matrix(
+  c(185.74, 184.26, 162.21, 159.04, 164.87, 
+         162.72, 157.89, 159.49, 150.22, 151.02, 
+         1.47, 1.56, 1.39, 1.43, 1.42, 
+         1.36, NA, 1.43, 1.57, 1.54,
+         1605, 1580, 1490, 1520, 1550, 
+         1525, 1495, 1485, 1470, 1510, 
+         95.05, 97.49, 88.57, 85.55, 92.04, 
+         91.70, 89.88, 93.17, 90.12, 92.14), ncol=4, nrow=10,
+  dimnames = list(c("Day1","Day2","Day3","Day4","Day5",
+                    "Day6","Day7","Day8","Day9","Day10"),
+                  c("Stock1", "Stock2", "Stock3", "Stock4"))))
+d
+```
+
+```{r}
+AVG <- apply(X=d, MARGIN=2, FUN=mean)
+AVG <- apply(X=d, MARGIN=2, FUN=mean, na.rm=TRUE)
+AVG
+```
+
+```{r}
+colMeans(d, na.rm=TRUE)
+```
+
+**Example 2. Find max of each stock.**
+
+```{r}
+apply(X=d, MARGIN=2, FUN=max, na.rm=TRUE) # find max
+```
+
+**Example 3. Calculate the 20th and 80th percentile of each stock.**
+
+Let R know which percentiles to calculate
+```{r}
+apply(X=d, MARGIN=2, FUN=quantile, probs=c(0.2, 0.8), na.rm=TRUE)
+```
+
+**Example 4. Plot the data.**
+
+```{r}
+par(mfrow=c(2,2))
+apply(X=d, MARGIN=2, FUN=plot, type="l", main="stock", ylab= "Price", xlab="Day")
+```
+
+**Example 5. Sum each row.**
+
+```{r}
+apply(X=d, MARGIN=1, FUN=sum, na.rm=TRUE)
+```
+
+**Example 6. Plot market trends.**
+
+```{r}
+plot(apply(X=d, MARGIN=1, FUN=sum, na.rm=TRUE), type="l", ylab= "Total Market Value", xlab="Day", main="Market Trend")
+points(apply(d, 1, FUN=sum, na.rm=TRUE), pch=16, col="blue")
+```
+
+
+### tapply( )
+
+**tapply ( )**
+
+tapply( ) can be used to apply a function to subsets of a variable or vector. The tapply( ) function is a specialized loop/subsetting function, although it is more efficient than the simple use of square brackets or a "subset" function. The tapply function allows the user to divide a variable into multiple groups based on another variable(s) used to define the groups/subsets, and then apply a function to each of the groups/subsets.
+
+```{r}
+LungCapData <- read.table("LungCapData.txt", header=TRUE)
+str(LungCapData)
+```
+
+```{r}
+attach(LungCapData)
+```
+
+attach( ) attaches  a data frame (or list) to the search path, so it becomes possible to refer to the variables in the data frame by their names alone, rather than as components of the data frame (e.g., in the example above, you would use Age rather than d$Age).
+
+```{r}
+str(tapply)
+```
+* X = an atomic object, typically a vector
+
+* INDEX = grouping variable same length as X and used to create subsets of the data
+
+* FUN = function
+
+* ... = additional arguments need to apply to the function
+
+* simplify= TRUE means to simplify results in TRUE
+
+**Example 1. Calculate mean age of smokers and non-smokers seperately.**
+
+```{r}
+tapply(X=Age, INDEX=Smoke, FUN=mean, na.rm=T)
+```
+
+```{r}
+tapply(X=Age, INDEX=Smoke, FUN=mean, na.rm=T, simplify=FALSE) # returns a list format
+```
+
+What does this look like with square brackets?
+
+```{r}
+mean(Age[Smoke=="no"])
+mean(Age[Smoke=="yes"])
+```
+
+**Example 2. Apply the summary function to groups.**
+
+```{r}
+tapply(Age, Smoke, summary)
+```
+
+**Example 3. Apply the summary quantile to groups.**
+
+```{r}
+tapply(Age, Smoke, quantile, probs=c(0.2,0.8))
+```
+
+**Example 4. 'subset' based on multiple variables/vectors. Calculate the mean Age for Smoker/NonSmoker and male/female.**
+
+```{r}
+tapply(X=Age, INDEX=list(Smoke,Gender), FUN=mean, na.rm=T)
+```
+
+What does this look like with square brackets?
+
+```{r}
+mean(Age[Smoke=="no" & Gender=="female"])
+mean(Age[Smoke=="no" & Gender=="male"])
+mean(Age[Smoke=="yes" & Gender=="female"])
+mean(Age[Smoke=="yes" & Gender=="male"])
+```
+
+**'by' function in R does the same as 'tapply' in R except that it returns results in vector format.**
+
+```{r}
+by(Age, list(Smoke, Gender), mean, na.rm=T)
+```
+
+```{r}
+temp <- by(Age, list(Smoke, Gender), mean, na.rm=T)
+temp[4]
+class(temp)
+temp2 <- c(temp) # convert to a vector
+temp2
+class(temp2)
+```
+
+### mapply( )
+
+**mapply( )**
+
+mapply( ) is a multivariate version of sapply( ) and lapply( ) functions. It is a multivariate apply of sorts which applies a function in parallel over a set of arguments.
+
+For sapply( ), lapply( ), tapply( ), they only apply a function over the elements of a single object. So what happens if you have two lists you want to apply a function over? sapply( ) and lapply( ) can't be used for that purpose. What you could do then is write a for loop where the for loop will index each of the elements of each list and pass a function through each elemetn in each list.
+
+But mapply( ) can take multiple list arguments and apply a function to the elements in the lists in parallel. 
+
+```{r}
+str(mapply)
+```
+
+* FUN is a function to apply
+
+* ... contains arguments to apply over
+
+* MoreArgs is a list of other arguments to FUN
+
+* SIMPLIFY indicates whether the result should be simplified
+
+**Example 1**
+
+```{r}
+list(rep(1,4), rep(2,3), rep(3,2), rep(4,1)) # tedius to type
+mapply(rep, 1:4, 4:1)
+```
+
+**Example 2**
+
+```{r}
+noise <- function(n, mean, sd) {
+  set.seed(100)
+  rnorm(n, mean, sd)
+}
+noise(5,1,2)
+noise(1:5, 1:5, 2) # if pass a vector of arguments, this doesn't work correctly
+
+mapply(noise, 1:5, 1:5, 2) # this is how it should be:
+
+# which is the same as:
+list(noise(1,1,2), noise(2,2,2), 
+     noise(3,3,2), noise(4,4,2),
+     noise(5,5,2))
+
+```
+
+### Commmon purrr vectorized functions 
+
+**Commmon purrr vectorized functions**
+
+Vectorization Continued: Purrr
+
+Map functions are vectorized functions available through the purr library. They are extremely similar to the vectorized functions already available in R, so this will give you more exposure vectorization. In general, map functions transform their input by applying a function to each element of a list or atomic vector and returning an object of the same length as the input.
+
+Here is also a great site that explores in more detail the functional tools of map functions: https://adv-r.hadley.nz/functionals.html#map. Also here is the purrr cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf.
+
+```{r}
+library(purrr)
+library(dplyr)
+```
+
+map( ) - just like lapply( ) in that it will loop over an object and evaluate a function on each element of that object. Then, it will return a list. But it is inconvenient to return a list when a simpler data structure would do, so there are four more specific variants:
+
+map_lgl( ), map_int( ), map_dbl( ), and map_chr( ) - returns an atomic vector of the indicated type
+
+map_dfr( ) and map_dfc( ) return a data frame created by row-binding and column-binding respectively. They require dplyr to be installed. 
+
+### map( )
+
+**map( )**
+
+Now let's do the example we saw using lapply( ) but for map( ).
+
+**Example 1.**
+
+```{r}
+x <- list(a = 1:5, b = rnorm(10)) # list w/ 2 elements.
+l <- map(x, mean)
+l
+```
+
+**Example 2.**
+
+```{r}
+values <- 1:10
+map(values, function(x) {rnorm(10, x)})
+
+1:10 %>%
+  map(~ rnorm(10, .x))
+```
+
+**Example 3.**
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+mtcars %>%
+  split(.$cyl) %>%
+  map(~ lm(mpg ~ wt, data = .)) %>%
+  map(summary)
+```
+
+### map_lgl( ), map_int( ), map_dbl( ), and map_chr( )
+
+**map_lgl( ), map_int( ), map_dbl( ), and map_chr( )**
+
+purrr uses the convention that suffixes, like dbl( ), refer to the output. All map_*( ) functions can take any type of vector as input. 
+
+**Example 1.**
+
+```{r}
+map_chr(mtcars, typeof) # always returns a character vector
+map_lgl(mtcars, is.double) # always returns a logical vector
+
+n_unique <- function(x) { length(unique(x)) }
+map_int(mtcars, n_unique) # always returns an integer vector
+
+map_dbl(mtcars, mean) # always returns a double vector (also known as floats)
+```
+
+**Example 2.**
+
+```{r}
+1:10 %>%
+  map(rnorm, n = 10) %>%  # output a list
+  map_dbl(mean)           # output an atomic vector
+```
+
+### map_dfr( ) and map_dfc( ) 
+
+**map_dfr( ) and map_dfc( )**
+
+All the purr functions you've seen above return lists or vectors, but you may want to retrun a dataframe.
+
+**Example 1.**
+
+```{r}
+myFunction <- function(arg1){
+  col <- arg1 * 2
+  x <- as.data.frame(col)
+}
+values <- c(1, 3, 5, 7, 9)
+df <- map_dfr(values, myFunction) # binds the results row-wise
+df <- map_dfc(values, myFunction) # binds the results column-wise
+```
+
+**Example 2.**
+
+```{r}
+mtcars %>%
+  split(.$cyl) %>%
+  map(~ lm(mpg ~ wt, data = .x)) %>%
+  map_dfr(~ as.data.frame(t(as.matrix(coef(.)))))
+```
+

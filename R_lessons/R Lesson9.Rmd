@@ -1,0 +1,263 @@
+---
+title: "Nested Loops: Part 3"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 9 | 13 May 2020
+
+## Nested Loops Continued
+
+Now that's you've gotten a hang of nested-for-loops and the nuances of R data structures, let's look into nested loops using control-flow constructs such as **while** or **repeat**.
+
+### While-While Loop
+
+A nested while loops sounds just as you think, a while loop embbeded in another while loop.
+
+**Example 1:**
+
+```{r}
+# While-While Loop Example 1
+i <- 1
+j <- 5
+while (i < 4){
+  print("here at outer loop!")
+  while (j < 8) {
+    print("here at inner loop!")
+    cat(i,",",j, end="\n")
+    j <- j + 1 # if you make this a number greater than 1, it goes on for forever
+    i <- i + 1 # if you comment this out or make this less than 1, it goes on for forever
+
+  }
+}
+
+# How many times did the outer loop run? 1 time
+# How many times did the inner loop run? 3 times
+# Trick here is that they both terminate at the same time
+```
+
+Other way to change the logic of the loop:
+
+```{r}
+# While-While Loop Example 1
+
+i <- 1
+j <- 5
+while (i < 4) { # your outer condition gets terminated in the outer loop
+  print("here you are at the outer loop")
+  while (j < 8) { # your inner condition gets terminated in the inner loop
+    print("here at the inner loop")
+    cat(i, ",", j, end="\n")
+    j <- j + 1
+  }
+  i <- i + 1
+}
+
+# How many times did the outer loop run this time? 3 times
+# How many times did the inner loop run this time? 3 times
+```
+
+**Example 2:**
+
+Let's do a more intuitive example of a while-while loop. This example will also give us a chance to try out ***data subscripting*** in R. 
+
+Last time, we learned about data structures and how to extract data by row, column or element. Data subscripting is just a continuation of what we just learned but puts a name to it.
+
+The syntax for data subscripting can take several forms depending on data structure and data object type. For example, let's use the letters vector build in to R to show some basic data subscripting:
+
+```{r class.source="bg-success"}
+letters 
+```
+
+```{r class.source="bg-success"}
+# Positive index
+letters[3] # pulled "c" at position 3
+letters[length(letters)] # pulls the last element
+```
+Positive index values correspond to data element positions in a data object. 
+
+```{r class.source="bg-success"}
+# Negative index
+letters[-3] # c gone because at position 3
+letters[-length(letters)] # z gone because at position 26
+```
+Negative index orresponds to the positions in the data object to be excluded.
+
+**There are also other ways to drop/pull values:** You can use negative offsets in head() or tail(), so head(x, -1) removes the last element. Other ways to do it: y <- x[1:(length(x)-1)].
+
+```{r class.source="bg-success"}
+letters[1:(length(letters)-1)] # another way to remove the last element through splicing
+head(letters, -1) # even another way to remove the last element through head()
+
+tail(letters, 1) # get the last number of elements ('going backwards')
+```
+
+**Ok, so now let's make use of this in this while-while loop example:**
+
+```{r}
+# While-While Loop Example 2
+
+a <- c("fizz", "buzz", "baz", "BOOM")
+
+while (identical(a, character(0))==FALSE) {
+  a <- a[-length(a)] # Data Subscripting: Want to pop off the last element of this vector, how would you do that?
+  print(a)
+  b <- c("---", "===", "...") 
+  while (identical(b, character(0))==FALSE) {
+    b <- b[-length(b)]
+    print(b)
+    }
+}
+# How many times did the outer loop run? 4 times
+# How many times did the inner loop run? 12 times
+```
+
+### While-For/ For-While Loops
+
+Similar idea - and it sounds like what you think. These nested loops are for loops inside while loops and vice versa. 
+
+**Example 3:**
+
+So, let's say you want to find all the prime numbers for an number you input into an R program. 
+
+What will you need to know in order to make this code?
+
+(1) readline() 
+(2) Boolean Flags
+
+**readline()**.
+
+Readline reads a line from the terminal (in interactive use). It's only argument is prompt = "", a string that should usually end with a space.
+
+```{r class.source="bg-success"}
+# Quick readline() example 
+?readline
+
+my.name <- readline(prompt="Enter name: ")
+my.age <- readline(prompt="Enter age: ")
+my.age <- as.integer(my.age) # convert character into integer
+
+paste("Hi,", my.name, "next year you will be", my.age+1, "years old.")
+```
+
+
+**Boolean Flags**. While loops go on forever, so the while condition would be the boolean and then somewhere inside the loop you switch the boolean. Let's do a quick example, but for a thorough breakdown of what is a good or bad flag check out this explanation: http://cs.uky.edu/~keen/115/reading/flags-py.html. 
+
+(Pulled from the site above) The problem is to allow 5 numbers to be input and determine if any of them were larger than 2000.
+
+```{r eval=FALSE}
+# Quick Boolean Flag example
+
+big_number_flag <- FALSE
+for (i in seq(5)){
+	n = as.integer(readline("Enter a number: "))
+	if (n > 2000) {
+		big_number_flag <- TRUE
+	}
+}
+
+if (big_number_flag){
+      print("saw at least one big number")
+  } else{print("didn't see any big numbers")}
+```
+
+**Now, let's make use of readline() and Boolean flags in this while-for loop example.** We want to find all the prime numbers for any number you input.
+
+```{r eval=FALSE}
+num = as.integer(readline(prompt="Enter num: ")) # number up to which you want primes
+```
+
+```{r}
+num <- 45 # OR can set a number in code chunk
+
+# when you don't input a prime number, you'll get an extra prime number in your primes vector 
+
+primes = c(2)
+i <- 2 #
+
+while (max(primes) < num){
+  prime_found = TRUE
+  for (p in primes){
+    if (i %% p == 0) {
+      prime_found = FALSE
+    }}
+  if (prime_found) {
+    primes <- c(primes, i)
+    }
+  i <- i + 1
+  # cat("primes", primes, end="\n")
+  # print(i)
+}
+
+primes
+```
+
+```{r}
+num <- 45
+
+primes = c(2)
+i <- 2 
+
+while (max(primes) < num) {
+  prime_found = TRUE
+  for (p in primes) {
+    if (i %% p == 0) {
+      prime_found = FALSE
+    }
+   }
+  if(prime_found) {
+    primes <- c(primes,i)
+  }
+  i <- i + 1
+}
+
+if(max(primes) > num) {
+  primes <- head(primes, -1)
+}
+
+primes
+```
+
+**What is happening in the while-for loop above?**
+
+(1) A number, whose prime numbers we want to find, is stored in the variable num. This can be done manually or via readlines().
+
+(2) A vector named primes, will store all the prime numbers of the number, num. To initialize this vector, you put the lowest possible prime number, 2. 
+
+(3) By definition, a prime number is a number in which it can only be divided by itself. It cannot be divided by any other number, including other prime numbers. Using that definition, let's identify prime numbers by looping through each integer of the num variable *until* we reach the num variable. We will do this using a counter. Since we already know 1 is not a prime number, let's initialize our counter at 2, i <- 2. However, we need to divide this counter, by a number equivalent to itself and see that its remainder is 0 in order to be identified it as a prime number. To do so, let's use our primes vector that has the first prime number already stored. On the while-for loops first run, our boolean flag, prime_found, will be set to TRUE because we already know that i %% p == 0. So we go in with the assumption that all numbers are prime and filter out those that are NOT prime by switching the flag to FALSE. By turning, prime_found to FALSE, then this makes it possible for 2 to not get stored again, and i increments by 1. Then, prime_found will be set to TRUE again at the top. 3 %% 2 != 0 so prime_found will remain TRUE and be stored. 
+
+(4) How does this look like played out as you keep iterating? It helps writing everything out in paper making a small table or using very clear and annotated print statements in the code. For example, what happens is that i = 3 will then become i = 4 and the Boolean Flag will remain TRUE, then we you iterate again through each prime number in the primes vector you'll test 4 %% 2 which == 0, so your flag will turn FALSE immediatley because it was divisible by any number already stored in your primes vector. Because of that, the if-statement in the while loop will not run and you will increment i again, i will become 5. In other words, simply by finding ONE number in which i is divisible by is enough to change your prime_found Boolean Flag and make it so it will not be stored in your primes vector.
+
+(5) But why does this while-for loop overcount then? Sure, it's fine in the end because we 'pop' the last value off by using head(primes, -1), but wouldn't a better code not do this to begin with? Let's consider the difference between i and max(primes). while (max(primes) < num) creates the condition that will break the while loop, but that says nothing about i. In fact, in this nested loop, i can get as high as 30. Why? First, i was initialized to start at 2. Also, the last prime number that gets pulled is 23, which is still less than num. So, the loop will keep going until it hits 29, five iterations later. What is the math for that? 23 (last prime number) + 5 (remaining loops) + 2 (start) = 30. Does this mean that you HAVE to use head(primes, -1)? Not really. Try num = 113. See if that leads to any extra prime numbers. It doesn't because 113 is a prime number. So this only happens for numbers you input that are NOT prime numbers. **Let's fix that:**
+
+```{r}
+num <- 113 
+
+primes = c(2)
+i <- 2 # 
+while (max(primes) < num){
+  prime_found = TRUE
+  for (p in primes){
+    if (i %% p == 0) {
+      prime_found = FALSE
+    }}
+  if (prime_found) {
+    primes <- c(primes, i)
+    }
+  i <- i + 1
+}
+
+if (max(primes) > num) {
+  primes <- head(primes,-1) 
+}
+
+print(primes)
+```
+
+
+
+

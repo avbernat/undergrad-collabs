@@ -1,0 +1,184 @@
+---
+title: "Introduction to Some Data Science Skills"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 13 | 12 June 2020
+
+## Some Categories of Data Science  
+
+[1.) Data Cleaning ](#data_cleaning)
+
+[2.) Linear Regressions (Single-Variate Modeling)  ](#linear_regressions)
+
+[3.) Data Visualization (e.g. Spatial Mapping, Graphing, and Plotting)](#data_visualization)
+
+<a id="data_cleaning"></a>
+
+### 1.) Data Cleaning 
+
+Let's recreate the clean_flight_data.R script. What will be steps in order to do this?
+
+i) Read the data.
+ii) Remove unnecessary columns.
+iii) Recode column values such as all binary variables to 0's and 1's and center continuous variables around their respective means. Why center variables (especially when conducting multiple regression)? In regression, it is often recommended to center the variables so that the predictors have mean 0. This makes it so the intercept term is interpreted as the expected value of Yi when the predictor values are set to their means. Or in other words, when you center X so that a value (which is the mean of X) within the dataset becomes 0, the intercept becomes the mean of Y at the value(s) you centered on.
+
+```{r}
+source("clean_flight_data.R")
+data_all <- read_flight_data("complete_flight_data-Winter2020.csv")
+```
+
+<a id="linear_regressions"></a>
+
+### 2.) Linear Regressions (Single-Variate Modeling) 
+
+**What are linear regressions?**
+
+*"Linear regression is the geocentric model of applied statistics. By “linear regression,” we will mean a family of simple statistical models that attempt to learn about the mean and variance of some measurement, using an additive combination of other measurements. Like the geocentric model, linear regression can usefully describe a very large variety of natural phenomena. Like the geocentric model, linear regression is a descriptive model that corresponds to many different process models. If we read its structure too literally, we’re likely to make mistakes. But used wisely, these little linear models continue to be useful." - Richard McElreath, Statistical Rethinking, Chapter 4*
+
+**Why do we use linear regressions?**
+
+Because these models have predictive and inferential power. They can be used to test the association of an outcome with a predictor, to quantify the degree of association, or to estimate the mean value of the outcome for given values of the predictors.
+
+**What do linear regressions look like?**
+
+For single-variate modeling (as opposed to multivariate or mixed-effect modeling), linear regressions are just like **y = mx + b**, where **y** is the response or dependent variable and **x** is the explanatory, independent, or predictive variable (yes there are many names for the same thing). **m** is the slope of the regression line which is estimated by $\beta$, which is the effect or coefficient of your explanatory variable, in this case x. Finally, **b** is the intercept which is estimated by $\alpha$, which equals y when x=0 (assuming you didn't center the data). In statistics, these are the equations:
+
+<center>
+
+$y_i \sim Normal(\mu_i, \sigma)$ 
+
+</center>
+
+This probalistic equation is known as the 'likelihood'. A special notation is employed to indicate that y is normally distributed with these parameters. The parameters of the normal distribution are the mean $\mu$ and the standard deviation $\sigma$ (or the variance $\sigma^2$). Normal distributions are symmetric and unimodal bell-shaped curves, which you can plot as such: 
+
+```{r}
+x <- seq(-4, 4, length=100)
+hx <- dnorm(x) # Density, distribution function for normal distribution.
+plot(x,hx)
+```
+
+<center>
+
+$\mu_i = \alpha + \beta_1 x_i$ 
+
+</center>
+
+But when conducting a linear regression, $\mu$ is no longer a parameter to be estimated. Instead, it is constructed form other parameters $\alpha$, $\beta$, and the predictor variable, x. The line is not a stochastic relationship - there is no $\sim$ in it because $\mu$ is deterministic not probabilistic. 
+
+Finally, $x_i, y_i$ and $\mu_i$ all refer to some row i in the data.
+
+**What do single-variate linear regressions look like in R?**
+
+In R, for simple linear regressions you can use **lm( ) or glm( )**. In short the lm( ) function is used because it is simple and used quite often but the same results are found using glm( ) with the Gaussian family and identity link. You'll get the same answer, but the technical difference is glm uses likelihood (if you want AIC values) whereas lm uses least squares.
+
+We will be just using lm() today and interpreting the resulting p-value, where a significant p-value is one that is less then 0.05, which rejects the null hypothesis (the null being that the explanatory variable is a poor predictor or the response variable).
+
+```{r}
+# Coding difference:
+
+# lm(response_var ~ explanatory_var, data=data)
+# glm(response_var ~ explanatory_var, data=data, family=(binomial, gaussian, Gamma, poisson))
+```
+
+**How can linear regressions be applied to experimental data?**
+
+First, you'll need to differentiate between independent variables and covariates: 
+
+*"Similar to an independent variable, a covariate is complementary to the dependent, or response, variable. A variable is a covariate if it is related to the dependent variable. According to this definition, any variable that is measurable and considered to have a statistical relationship with the dependent variable would qualify as a potential covariate. A covariate is thus a possible predictive or explanatory variable of the dependent variable. This may be the reason that in regression analyses, independent variables (i.e., the regressors) are sometimes called covariates. Used in this context, covariates are of primary interest. In most other circumstances, however, covariates are of no primary interest compared with the independent variables. They arise because the experimental or observational units are heterogeneous." - Encyclopedia of Research Design*
+
+**Now we can jump in and run some regressions!**
+
+Let's say we want to predict how certain variables affected whether a bug flew or not.
+
+[Experimental Set-Up Covariates](#experimental)
+
+[Biological Covariates](#biological)
+
+[Morphology Covariates](#morphology)
+
+<a id="experimental"></a>
+
+### Experimental Set-Up Covariates:
+
+There are three: 1. ) chamber, 2. ) test_date, 3. ) test_time.
+
+```{r}
+####### No effect of chamber
+summary(glm(flew_b~chamber, data=data_all, family=binomial))$coefficients
+
+####### Effect of test date (but no effect of test date when you split between T1 and T2)
+summary(glm(flew_b~days_from_start_c, data=data_all, family=binomial))$coefficients
+
+####### No effect of test time
+summary(glm(flew_b~min_from_IncStart_c, data=data_all, family=binomial))$coefficients
+```
+
+<a id="biological"></a>
+
+### Biological Covariates:
+
+There are three: 1. ) mass, 2. ) number of eggs laid, 3. ) whether eggs were laid or not.
+
+```{r}
+####### (Strong) Effect of mass
+summary(glm(flew_b~mass_c, data=data_all, family=binomial))$coefficients
+
+####### Effect of number of eggs laid
+summary(glm(flew_b~total_eggs, data=data_all, family=binomial))$coefficients
+
+####### Effect of whether eggs were laid or not
+summary(glm(flew_b~eggs_b, data=data_all, family=binomial))$coefficients
+```
+
+<a id="morphology"></a>
+
+### Morphology Covariates:
+
+There are five: 1. ) beak length, 2. ) thorax length, 3. ) body size, 4. ) wing length, and 5. ) wing morph.
+
+```{r}
+####### Effect of beak length
+summary(glm(flew_b~beak_c, data=data_all, family=binomial))$coefficients
+
+####### Effect of thorax length
+summary(glm(flew_b~thorax_c, data=data_all, family=binomial))$coefficients
+
+####### Effect of body length
+summary(glm(flew_b~body_c, data=data_all, family=binomial))$coefficients
+
+####### No effect of wing length
+summary(glm(flew_b~wing_c, data=data_all, family=binomial))$coefficients
+
+####### No effect of wing morph (check how annotated the wing morph) - don't include it
+summary(glm(flew_b~w_morph_c, data=data_all, family=binomial)) # but close p val = 0.0512
+```
+
+<a id="data_visualization"></a>
+
+## 3.) Data Visualizations (Plotting lms and glms)
+
+```{r}
+m1 <- glm(flew_b~beak_c, data=data_all, family=binomial)
+summary(m1)
+
+plot(data_all$beak_c, data_all$flew_b, xlab="Beak Length (mm)", ylab="Yes-no flew")
+abline(m1, col="blue") # abline only works for single-variate models
+```
+
+*Figure 1. As beak length increases, the bug is less likely to fly. But is this due to beak length? Females have longer beaks than males...so it the real cause because of general differences in sex?*
+
+```{r}
+m2 <- lm(mass ~ sym_dist, data=data_all)
+summary(m2)
+
+plot(data_all$sym_dist, data_all$mass, xlab="Distance from Sympatric Zone", ylab="Mass (g)")
+abline(m2, col="blue")
+```
+
+*Figure 2. As a bug grows up farther away from the sympatric zone, its mass decreases.*

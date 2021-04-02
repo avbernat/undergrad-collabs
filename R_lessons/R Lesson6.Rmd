@@ -1,0 +1,117 @@
+---
+title: "Nested Loops"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 6 | 8 April 2020
+
+# Next and Break Statements in R
+
+Before we go into the concept of nested for loops, let's go over two control-flow constructs - the **break** and **next** statements. You have already seen the **break** statement, but let's revisit it the sake of practice.
+
+(i) **A break statement** is used inside a loop (repeat,for,while) to stop the iterations and control flow within a loop. In other words, the break statement will stop executing the block of instructions within a loop and exit the loop.
+
+(ii) **A next statement** discontinues a particular iteration and jumps to the next cycle **without** terminating the loop. In fact, it jumps to the evaluation of the condition holding the current loop.
+
+Let's look at some examples,
+
+```{r}
+x <- 1:5
+for (i in x) {
+    if (i == 3){
+        break
+    }
+    print(i)
+}
+```
+
+What would happen if you replace the above **break** statement with **next**?
+
+```{r}
+x <- 1:5
+for (i in x) {
+    if (i == 3){
+        next
+    }
+    print(i)
+}
+
+```
+
+## Nested Loops
+
+A nested loop is a loop within a loop. Sounds simple, but there are a variety of ways you can create nested loops. Let's check some out and remember - **proper indentation is key**.
+
+Here is the **general** format of a nested loop:
+
+```{r}
+# loop (condition) {
+#   block of instructions
+#   loop (condition) {
+#     block of instructions
+#   }
+# }
+
+```
+
+Let's go through a couple examples,
+```{r}
+num_vector <- c(1,2,3)
+alpha_vector <- c('a', 'b', 'c')
+
+for (num in num_vector) { # outer loop 
+    print(num)
+    for (letter in alpha_vector) # inner loop
+        print(letter)
+}
+
+# How many times was the outer loop executed? 3 times 
+# How many times was the inner loop executed? 9 times 
+
+
+```
+
+
+Picture the passing of a year...(hopefully not 2020 again!)
+
+(i) The outer loop can be considered as the start of a month.
+(ii) The inner loop can be considered as the days of that month.
+(iii) When a month starts i.e. the outer loop is read by the system, the control enters the inner loop. It executes it completely( i.e. for all 31 days). It then goes back to the outer loop.
+
+```{r}
+
+months <- c("January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+
+# Months with 31 days:   1,3,5,7,8,10,12
+# Months with 29 days:   2
+# Months with 30 days:   4, 6, 9, 11
+
+for (m in seq(1:length(months))){ # outer loop
+    print(months[m])
+    
+    # Initializers
+    if (m == 4 || m == 6 || m == 9 || m == 11) {
+        days <- -1
+    }
+    if (m == 2) {
+        days <- -2
+    }
+    else {
+        days <- 0
+    }
+    
+    for (day in seq(1:31)) { # inner loop
+        days <- days + 1
+    }
+    print(days) # end of the month
+} # end of the year
+
+# how many times was the outer loop executed? 12 
+# how many times was the inner loop executed? 12 * 31
+```
+

@@ -1,0 +1,91 @@
+---
+title: "Loops"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(gridExtra)
+library(tidyverse)
+library(mosaic)
+library(broom)
+library(dplyr)
+library(knitr)
+library(readr)
+library(ggplot2)
+
+# Set numerical output display parameters
+options(width=70, digits=4, scipen=8)
+# Set R output size a bit smaller than default
+knitr::opts_chunk$set(size='small', prompt=FALSE, comment="")
+# set plot theme to black and white
+ggplot2::theme_set(ggplot2::theme_bw())
+ggplot2::theme_update(panel.grid.major = ggplot2::element_line(colour = "grey75"))
+
+setwd("/Users/anastasiabernat/Desktop")
+```
+
+# Lesson 4 | 27 March 2020
+
+# A Re-Introduction to Loops in R
+
+According to the R base manual, among the control flow commands, the loop constructs are **for, while and repeat,** with the additional clauses ***break and next**. Control flow commands are the commands that enable a program to branch between alternatives, or to “take decisions”, so to speak.
+
+You can always see these control flow commands by typing ?Control at the RStudio command line.
+
+```{r}
+?Control
+```
+
+## For Loops 
+
+**What are the components of a for loop? (There are many; this is the simplest)**
+
+(i) An initialization, which is what will be evaluated according to a condition within a specified sequence. 
+(ii) A (test) condition/expression which decides/translates whether the initialization or a variable belongs to the sequence being looped over. These decisions are answered by questions which only have two possible logical answers, namely, True (T) or False (F).
+(iii) A block of instructions, which enacts the decisions and logic of the loop. Sometimes this block of instructions is another loop; in that case, that would have a nested loop.
+
+Let's follow an exmaple of a simple for loop that only squares the first 10 elements of a vector. 
+
+```{r}
+# Input --------------------------------
+# rnorm(n_elements) is a function that creates random normal values; the argument is the number of elements
+vector <- rnorm(30) # [-3,3]
+
+# ---------------------------------------
+# Ways of looping
+# 1.) loop through variables in the vector itself
+# 2.) indicies of the vector 
+
+# Initializing ---------------------
+
+# Ways of initializing
+# vector2 <- c(1,2,3,4)
+# list2 <- list(1,2,3,4) # create an empty list: l <- list()
+
+vector_sq <- 0 # var_sq <- c()
+#-----------------------------------
+for(i in 1:10) { # test expresion/condition
+  print(i)
+  print(vector[i])
+  vector_sq = vector[i]*vector[i] # Block of instruction (have to store calc made)
+  cat("Squared value is ", as.character(vector_sq))
+}
+
+```
+
+![Fig 1. For loop logics.](loop_logics_image.jpeg)
+
+
+**How to format a for loop:**
+
+- **Arrow**. To store information into a variable, type an arrow that points towards the variable. An equal sign, = , does the same effect. 
+
+- **Parenthesis**. What you are looping over is contained in parenthesis. This comes after the for loop andbefore hte curly braces. 
+
+- **Curly braces**. The for block is contained within curly braces. These can be placed either immediately after the test condition or beneath it, preferably followed by an indentation. The curly braces  enhance the readability of your code and allow to spot the loop block and potential errors within it easily.
+
+- **Print(), cat(), or paste() functions** Using these functions will help you see/check your end result. Place them throughout the block of instructions to see how the code progresses or after the loop. Print() can only print one variable/value of one class type (e.g. integer, character, numeric). Cat() stands for concatenate and you can put multiple values/variables (e.g. cat(var1, var2)) BUT they all have to be one class type. Paste() basically can do it all - you can have multiple values/variables and they can be of any class type (e.g. paste("The squared value is ", squared_value))
+
+

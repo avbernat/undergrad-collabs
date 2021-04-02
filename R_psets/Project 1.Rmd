@@ -1,0 +1,24 @@
+---
+title: "Project 1"
+author: "Anastasia Bernat"
+output: html_document
+---
+# Exploratory Project | 20 May 2020 - 30 June 2020 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I want this "pset" to be more creative and explorative this time for you. In other words, there will be no set answer, just a chance to build something that is your own. In other other words, a project.
+
+But of course context helps, and the context I want you to dive into is the merging world between lanaguage and machine. This project is going to center around language modeling, text classification, and other fancy words that describe people's fascination with how the computer interacts with human languages. For example, check out this video by Vox titled *The era of fake writing is upon us* (https://www.youtube.com/watch?v=gcHkxP9adiM). Also, check out this TedTalk titled *Humanizing the Machine with Language: How the future gets written | Kristian Hammond | TEDxUChicago* https://www.youtube.com/watch?v=GjD908kfheo&t=563s. Check out even local recent research in the humanities surrounding language and AI: https://sifk.uchicago.edu/research/research-themes/2020-2022-artificial-intelligence/.
+
+This is your chance now to conduct research on this topic, read up on coding examples, and try to write your own "machine-story" (1-2 pages long). Is it related to the research we do in lab? Context-wise not at all. Is it still good practice to go explore a reserach topic and try to build/code something? Of course.
+
+It can contain any elements of a story like a plot, narrator, character, scene, etc. Grammatical perfection is not the goal, but instead playful word combinations are encouraged. There is also no concrete structure you have to follow (e.g. paragraph, poetic, etc.) - it can be a mix. 
+
+To get you started here is a helpful link that guides you through working with 'language data' to analyze it and build a word cloud in the end: https://data-flair.training/blogs/data-science-r-sentiment-analysis-project/.
+
+The rest is up to you - to explore new sources online, to find interesting datasets, learn from their analyses, and to build a story-making program (using everything I taught you e.g. functions, loops, and R-built-in-functions). This may seem daunting at first, but I really encourage you to try and not worry about creating anything perfect. The idea is to build a project that will read datasets, write up some random sentence or phrase-generating functions and then try to make a paragraph or two out of it.
+
+Let me know if you have questions and we can work on creating new ideas or I could help show you new coding tools. Overall, this is something I haven't done myself either, so we're in the same boat, but the hope is that you get to overcome any anxiety you might have when you open a blank script and have to figure out to make something through code. 

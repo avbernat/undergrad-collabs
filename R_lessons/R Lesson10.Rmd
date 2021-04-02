@@ -1,0 +1,159 @@
+---
+title: "Introduction to Functions"
+author: "Anastasia Bernat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 10 | 20 May 2020
+
+### What are Functions?
+
+Another key and one of my personal favorites is the ability for the user, like you and I, to make functions in R. They help clean up repeatitive calculations/code/specific tasks into an easy and accessible block of statements that can be called whenever you need it again. You've seen a lot of R's numerous in-built functions, but the beauty of building your own is how creative and customizable user-made-functions can be.
+
+So we are going to learn today how to create a function in R and how to practice some clean coding documentation that comes with it.
+
+<span style="color:darkblue">To begin, how do you make a function in R? A function is comprised on three things:</span>
+
+* <span style="color:darkblue"> ( 1. ) the call to **function()** with your defined **arguments** inside the ( ). These arguments can be whatever you think is needed based on the block of statements that follow within the function. For example, you could be making a Pythagorean Theorem function and your arguments could be two sides of a right-hand triangle.</span>
+
+* <span style="color:darkblue">( 2. ) the **function name** which will store the function and will be used to call the function in your code.</span>
+
+* <span style="color:darkblue">( 3. ) the **block of statements** that are imbedded within the function (as denoted by its indentation). These block of statements are encapsulated in { } and at the end you **return** the calculation/result/etc. at the end of these block of statements.</span>
+
+To give a better outline of what I just described, here's a quick formula for *writing/creating* a function:</span>
+
+```{r}
+# function_name <- function(argument1, argument2, ...) {
+#   .
+#   .
+#   .
+#   block of statements manipulating the arguments
+#   .
+#   .
+#   .
+#   return(calculation/output you want as a single value or multiple values,)
+# }
+
+```
+
+And this is a quick formula for *calling* a function:
+
+```{r}
+# list.vector.matrix.df.etc. <- ....
+# calc <- function_name(list.vector.matrix.df.etc.,......)
+```
+
+Looks strange looking at the formula? Of course it does because functions are so unique and variant. So, let's go through a quick specific example to see how this all works.
+
+### Function Examples: Returning a Single Value
+
+To do so, let's keep rolling with the Pythagorean Theorem idea. Let's create a function for that:
+
+```{r}
+# Pythagorean Theorem Function 1
+calc_hypotenuse <- function(a, b){
+  hypotenuse <- sqrt(a**2 + b**2)
+  return(hypotenuse)
+}
+
+side1 <- 8
+side2 <- 5
+
+hypot <- calc_hypotenuse(8,5)
+hypot
+```
+
+This was a clean and straightforward example of the Pythagorean Theorem, but it's also limiting. What if we had the hypotenuse but not one of the sides? Ideally, we would want to calculate that side as well because the Pythagorean Theorem allows for all sides of a right triangle to be calculated. 
+
+So let's build on this function to make it more flexible and specific to what we want. 
+
+<span style="color:darkblue">And one good habit to pick up when creating functions is to write out legible "coding documentation". This is a commented out description that explains what goes into the function, how the funciton processes the input, and what it spits out. This is helpful to remind your future self what exactly a complicated function does without having to read your entire code again. In other words, it's like summarizing a chapter of a book. It's helpful for when you just need a summary to be able to keep writing code/an essay without having to go back and reread each paragraph/line of code. (Also, isn't it neat how similar the process of writing and coding is?)</span>
+
+Ok, so let's update the Pythagorean Theorem function:
+
+```{r}
+tri1 <- list(5,3,"unknown")
+tri2 <- list("unknown", 3, 4)
+tri3 <- list(7, "unknown", 15)
+```
+
+```{r}
+# Pythagorean Theorem Function 2
+
+##################################################################################
+# FUNCTION: pythagorean | calculates the remaining side of a right triangle.
+#
+# INPUT:    A list containing two numerical values for the known two sides, and a 
+#           character demarcing the side whose value you want to calculate.
+#
+# PROCESS:  Logically evaluates the list for the unknown side and performs 
+#           its unique calculations based on which side is missing.
+#
+# OUTPUT:   The side whose value you want to calculate as a numeric.
+##################################################################################
+
+pythagorean <- function(triangle) {
+  a <- triangle[[1]]
+  b <- triangle[[2]]
+  c <- triangle[[3]]
+
+  if (is.character(a)) {
+    side <- sqrt(c**2 - b**2)
+  }
+  else if (is.character(b)) {
+    side <- sqrt(c**2 - a**2)
+  }
+  else if (is.character(c)) {
+    side <- sqrt(a**2 + b**2)
+  }
+  return(side)
+}
+```
+
+```{r}
+pythagorean(tri1)
+pythagorean(tri2)
+pythagorean(tri3)
+```
+
+
+### Function Examples: Returning Multiple Values
+
+The examples above return single values, but there are many benefits in returning multiple values, especally if your calculations in the function can return a series of useful information. 
+
+Let's go through an example:
+
+```{r}
+#########################################################################################################
+# FUNCTION: sample_prop_stats | For which explanatory variable you want to group into categories, the 
+#           number of cases and sample proportion of flight for each category is calculated
+#
+# INPUT:    Binned/group data as a Data Frame and the response_var as a string.
+#
+# PROCESS:  Calculates the successes in a binomial group by summing up all the 1's in the response variable 
+#           column. Then, calculates the number of cases based on the number of observations, which would 
+#           be rows, in the Data Frame. Finally, computes the sample proportion of a group's binomial 
+#           response by dividing the group's successes by its number of cases.
+#
+# OUTPUT:   Returns a vector with the number of cases (integer) and sample proportion of binomial 
+#           sucesses (numeric).
+#########################################################################################################
+
+sample_prop_stats <- function(df, response_var) {
+  successes <- sum(df[response_var], na.rm = TRUE)
+  n_cases <- nrow(df)
+  sample_prop <- successes / n_cases
+  return(c(n_cases, sample_prop))
+}
+
+iris$large.petalW <- 0
+iris$large.petalW[iris$Petal.Width > 1.0 ] <- 1 
+
+stats <- sample_prop_stats(iris, "large.petalW")
+stats
+```
+

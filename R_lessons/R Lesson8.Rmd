@@ -1,0 +1,267 @@
+---
+title: 'R: Data Structures'
+author: "Anastasia Bernat"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 8 | 6 May 2020
+
+## Addressing issues we bumped into last time
+
+Let's take a pause from the nested-loop work we've been doing to address some of the nuances of the R programming language and its data structures.
+
+## (1) else if statemetns in R.
+
+(else if = elif in Python). The first form if-if-if tests all conditions, whereas the second if-elif-else tests only as many as needed: if it finds one condition that is True , it stops and doesn't evaluate the rest. The else if statement allows you to check multiple expressions for TRUE and execute a block of code as soon as one of the conditions evaluates to TRUE. 
+
+```{r}
+
+############## If-If ################
+
+x <- c(3,4,6,8)
+for (i in seq(1:length(x))){
+  if (x[i] %% 3 ==  0) {
+    print(x[i])
+  }
+  if (x[i] %% 2 == 0) {
+    print(x[i])
+  }
+}
+
+############## If-Else if ############
+
+x <- c(3,4,6,8)
+for (i in seq(1:length(x))){
+  if (x[i] %% 3 ==  0) {
+    print(x[i])
+  }
+  else if (x[i] %% 2 == 0) {
+    print(x[i])
+  }
+}
+```
+
+## (2) Data frames vs. lists.
+
+More technically, a data frame is a special kind of list in R. So you access the individual variables with the usual list **“double bracket” notation**, like d[[1]] for the first variable or d[['x']] for the variable named x. Unlike regular lists, however, data frames force all variables to have the same length. This isn’t always a good thing. And that’s why some statistical packages, like the powerful Stan Markov chain sampler (mc-stan.org), accept plain lists of data, rather than proper data frames.
+
+```{r}
+# Data frame - grabbing the a variable in a column
+#iris
+iris[["Petal.Width"]][1] # dataframe[[col_name]][row]
+# iris["Petal.Width"][1] # this does NOT pull the individual value, but will pull the column
+# List - grabbing a variable from a list of vectors 
+grades_lv <- list( c(79,85,70,96), # Each vector is a student's test grades in a class
+                c(60,71,82,92),
+                c(77,78,76,79),
+                c(82,91,88,97),
+                c(63,92,95,82))
+grades_lv[[2]][1] # list[[row]][col]
+
+# List - grabbing a variable from a list of lists (double, double brackets!) 
+
+grades_ll <- list( list(79,85,70,96), # Each list is a student's test grades in a class
+                list(60,71,82,92),
+                list(77,78,76,79),
+                list(82,91,88,97),
+                list(63,92,95,82))
+
+grades_ll[[1]][[2]]  # list[[row]][[col]]
+```
+
+## (3) Bracket Operators.
+
+When do you use them?
+
+R provides three basic indexing operators for accessing the elements of a list, data.frame, vectors, or matrices - the [], [[]], and $ operators. 
+
+We have already seen $ be used to call to a columns in dataframes, but what about [] and [[]]?
+
+For vectors and matrices the [[ forms are rarely used, although they have some slight semantic differences from the [ form (e.g. *it drops any names or dimnames attribute, and that partial matching is used for character indices*). When indexing multi-dimensional structures with a single index, x[[i]] or x[i] will return the ith sequential element of x.
+
+```{r}
+vector <- c(6,2,3,4,5,6)
+matrix <- matrix(c(5,2,3,
+                 4,5,6), 
+                 ncol=3, nrow=2, dimnames=list(c("Y", "N"), c("A","B","C")))
+matrix
+
+i = 1
+matrix[[i]]
+matrix[i]
+vector[[i]]
+vector[i]
+```
+
+For lists, one generally uses [[ to select any single element, whereas [ returns a list of the selected elements. The [[ form allows only a single element to be selected using integer or character indices, whereas [ allows indexing by vectors.
+
+```{r}
+l <- list(1,2,3,4,5,6)
+l[1] # returns a list
+l[[1]] # returns a vector or "numeric"
+```
+
+```{r}
+# Summary of R indexing operators:
+# x[i]
+# x[i, j]
+# x[[i]]
+# x[[i, j]]
+# x$a
+# x$"a"
+```
+
+## (4) lists vs. vectors.
+
+R’s base data structures can be organised by their dimensionality (1d, 2d, or nd) and whether they’re homogeneous (all contents must be of the same type) or heterogeneous (the contents can be of different types). This gives rise to the five data types most often used in data analysis:
+
+```{r, echo=FALSE}
+library(broom)
+table <- matrix(c("Atomic vector", "Matrix", "Array",
+                  "List", "Data frame", " "),
+                 nrow=3, ncol=2, dimnames=list(c("1d","2d", "nd"), c("Homogeneous","Heterogeneous")))
+#tidy(table)
+table
+```
+
+Note that R has no 0-dimensional, or scalar types. Individual numbers or strings, which you might think would be scalars, are actually vectors of length one. 
+
+So what's the main difference between lists and vectors? The elements of a list can be any type (even a list); the elements of an atomic vector are all of the same type. Similarly, every element of a matrix must be the same type; in a data frame, the different columns can have different types.
+ 
+But aside from differences between homogeneity and heterogeneity, what is there to know about lists and vectors? We have noticed that there are more nuances. 
+
+To start, let's learn about the properties and types of vectors. There are three properties of a vector: type, length, and attributes. There are six common types of atomic vectors: logical, integer, double (sometimes called numeric), character, and two rarer types knwon as complex and raw.
+
+```{r}
+## These are basic functions which support complex arithmetic in R
+c <- complex(length.out = 0, real = numeric(), imaginary = numeric(),
+        modulus = 1, argument = 0)
+c
+z <- complex(real = rnorm(100), imag = rnorm(100))
+head(z)
+
+# The raw type is intended to hold raw bytes.
+x <- "A test string"
+(y <- charToRaw(x))
+is.vector(y) # TRUE
+rawToChar(y)
+```
+
+What about "types" of lists in R? You can make a “list-array” by assigning dimensions to a list. On a seperate note, you can make a matrix a column of a data frame with df$x <- matrix(), or using I() when creating a new data frame data.frame(x = I(matrix())).
+
+How do you assign dimensions to a list? You can nest lists inside of lists:
+```{r}
+#You can have infinitely nested lists:
+
+list1 <- list()
+list1 
+
+list1[[1]] <- list() # 1 list nested 
+list1
+
+list1[[1]][[1]] <- list() #  list nested deeper in the list
+list1
+
+my.list.1 <- list()
+my.list.1[[1]] <- list()
+my.list.1[[2]] <- list()
+my.list.1[[3]] <- list()
+my.list.1 # three little lists inside one big list
+
+# Quick way to create 5 little lists in one big list?
+
+my.lists <- replicate(n=5, expr=list()) # will create 5 lists all at once and store them in my.lists
+
+my.lists
+
+array(data = NA, dim = c(3,3,3))
+```
+
+But what about mathematical operations between vectors and lists? Why can't I take the mean of a list? 
+
+```{r}
+mylist <- list (a = 1:5, b = "Hi There", c = function(x) x * sin(x))
+mylist
+
+```
+
+Their lengths are different: a has length 5, b has length 1, and c is a function, so it doesn't really have a length. (Technically, it has length 1, just because somebody decided that the "length" of a function should be one.) To extract an item from a list, you can use [] or [[]] , but that will give you back a list. If you want to extract one element of a list within a list, as noted before, you need use [[]] followed by [].
+
+```{r}
+mylist[[1]][3] # this returns single numeric element 
+```
+
+```{r}
+# So can we do math on a list? No, you can't do math on a list. For example,
+
+# mylist[1] + 1   # This will produce an Error: non-numeric argument to binary operator
+```
+
+BUT if we want one of the items in its original form, we can extract it with double square brackets, or by using the $ operator and the name
+mylist$a + 1 # Can we do math on this? yes.
+
+```{r}
+mylist$a + 1 # Can we do math on this? yes.
+mylist$a[2] # What's the second element of the item named "a"? 2
+mylist$a[-2] # Give me everything from "a" except the second element (this is a negative subscript)
+```
+
+Adding and deleting elements/items to a list:
+
+Furthermore you can add a new element to the list simply by assigning something to a new name
+```{r}
+# Furthermore you can add a new element to the list simply by assigning something to a new name
+mylist$d <- "New item"  
+mylist
+
+# delete item 
+mylist$c <- NULL 
+mylist
+
+length(mylist) # The length of a list is the number of elements
+df <- as.data.frame(mylist)
+length(df) # But for a data frame, the length is the number of columns
+
+```
+
+## (5) Attributes
+
+But is there anything that can be done to any R object (except NULL)? Yes, assigning one or more attributes to an R object.
+
+Attributes are any kind of information (e.g. additional metadata) that is assigned to an element of an object, and you can use them yourself to add information to any object. 
+
+They are not stored internally as a list and should be thought of as a set or name=value pairs (where elements are named) and not a vector, i.e, the order of the elements of attributes() does not matter.
+
+You can get and set individual attributes with attr(x, "y") and attr(x, "y") <- value; or get and set all attributes at once with attributes().
+
+Additionally, both the names and the dimensions of matrices and arrays are stored in R as attributes of the object. They can include any kind of information, and you can use them yourself to add information to any object.
+
+To see all the attributes of an object, you can use the attributes() function. This function returns a named list, where each item in the list is an attribute.
+
+```{r}
+x <- cbind(a = 1:3, pi = pi) # simple matrix with dimnames
+x
+attributes(x)
+
+rownames(x) <- c("A", "B", "C")
+x
+attributes(x)
+
+# To get or set a single attribute, you can use the attr() function. This function takes two important arguments. attr(object, name of attribute want to set/change). 
+
+# attributes(x) <- value
+
+#You can delete attributes again by setting their value to NULL, like this:
+
+attr(x,'pi') <- 'not the kind you eat'
+attributes(x)
+
+attr(x,'pi') <- NULL
+attributes(x)
+```

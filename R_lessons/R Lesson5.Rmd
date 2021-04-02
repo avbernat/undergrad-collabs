@@ -1,0 +1,73 @@
+---
+title: "Loops Continued"
+author: "Anastasia Bernat"
+date: "3/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(knitr)
+#library(stringr)
+
+# Set R output size a bit smaller than default
+knitr::opts_chunk$set(size='small', prompt=FALSE, comment="")
+
+setwd("/Users/anastasiabernat/Desktop/Rlessons/")
+```
+
+# Lesson 5 | 1 April 2020
+
+## While Loops
+
+In R programming, while loops are used to loop until a specific condition is met. While the condition of the test expression/condition is TRUE the block of instructions runs UNTIL the test expression evaluates to FALSE.
+
+The logical condition of the while loop is typically expressed by the comparison between a control variable and a value, by using greater than, less than or equal to, but any expression that evaluates to a logical value, True or False, is legitimate.
+
+For example,
+```{r}
+i <- 1
+while(i < 6) {
+  print(i)
+  i <- i + 1
+}
+```
+Given above example, then the control flow would then look something like this:
+
+![Fig 1. While loop logics.](while.png)
+
+## Repeat Loops
+
+Repeat loops are similar to while loops in that they also can create infinite conditions until a certain condition is not met. However, repeat loops check the condition at the END of each iteration but while loops check it at the BEGINNING of each iteration. So repeat loops execute at least one iteration but loops may not execute any iterations if the condition is not fulfilled.
+
+Let's see a couple examples,
+
+```{r}
+x <- 0
+repeat{
+  x <- x + 5
+  print(x)
+  if(x==20)
+    break
+  }
+```
+Here is the control flow of a repeat loop:
+
+![Fig 2. Repeat loop logics.](repeat.png)
+```{r}
+x <- c("Hello World")
+count <- 2
+
+repeat {
+  print(x)
+  count <- count + 1
+  if (count > 7) {
+    cat("This is about to stop at count, ", str(count)) 
+    break}
+}
+````
+
+The control flows for the **for, while, and repeat loops** can be summarized by this diagram (source: DataCamp): 
+
+![Fig 3. All loop control flow logics.](control_flow.png)
